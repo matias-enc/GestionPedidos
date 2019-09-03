@@ -15,10 +15,21 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/admin', function () {
-    return view('admin_panel.index');
-});
+
+
+
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('admin');
+
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+
+    Route::get('/admin', function () {
+        return view('admin_panel.index');
+    });
+
+    Route::resource('users', 'UserController');
+
+});

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/adminlte.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.min.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -65,7 +65,7 @@
     <script src="{{asset('admin_panel/plugins/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/select2/js/select2.js')}}"></script>
-    <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
+    {{-- <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script> --}}
 
     <!-- OPTIONAL SCRIPTS -->
     <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>

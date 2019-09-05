@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use Auth;
 use Caffeinated\Shinobi\Models\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -16,6 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
+
         $users = User::all();
 
         return view('admin_panel.usuarios.index', compact('users'));
@@ -28,7 +31,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all()->pluck('name', 'id');
+
+        return view('admin_panel.usuarios.create', compact('roles'));
     }
 
     /**
@@ -39,7 +44,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $user = User::create($request->all());
+        $user->roles()->sync($request->input('roles', []));
+
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -59,9 +68,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        $roles = Role::all()->pluck('slug','id');
+        $user = User::find($id);
+        $roles = Role::all()->pluck('name','id');
 
         return view('admin_panel.usuarios.edit', compact('roles', 'user'));
     }
@@ -73,9 +83,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $user->update($request->all());
+        $user->roles()->sync($request->input('roles', []));
+
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -84,8 +97,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return back();
     }
 }

@@ -17,9 +17,6 @@
                                     {{ $errors->first('name') }}
                                 </p>
                             @endif
-                            <p class="helper-block">
-                                esd
-                            </p>
                         </div>
                         <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                             <label for="email">Email*</label>
@@ -29,32 +26,28 @@
                                     {{ $errors->first('email') }}
                                 </p>
                             @endif
-                            <p class="helper-block">
-                               Asd
-                            </p>
                         </div>
 
+
+
                         <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
-                                <label for="roles">Roles*
-                                    <span class="btn btn-info btn-xs select-all">Seleccionar Todos</span>
-                                    <span class="btn btn-info btn-xs deselect-all">Deseleccionar Todos</span></label>
-                                <select name="roles[]" id="roles" class="form-control select2" multiple="multiple" required>
-                                    @foreach($roles as $id => $roles)
-                                        <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $roles }}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('roles'))
-                                    <p class="help-block">
-                                        {{ $errors->first('roles') }}
-                                    </p>
-                                @endif
-                                <p class="helper-block">
-                                    petoleano rex
+                            <label for="roles">Roles*</label>
+                            <select name="roles[]" id="roles" class="roles-js form-control" multiple="multiple" required>
+                                @foreach($roles as $id => $roles)
+                                    <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $roles }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('roles'))
+                                <p class="help-block">
+                                    {{ $errors->first('roles') }}
                                 </p>
-                            </div>
+                            @endif
+                        </div>
+                        @can('usuarios_update')
                         <div>
                             <input class="btn btn-danger" type="submit" value="Guardar">
                         </div>
+                        @endcan
                     </form>
 
 
@@ -63,3 +56,11 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('.roles-js').select2();
+        theme: "classic"
+    });
+</script>
+@endpush

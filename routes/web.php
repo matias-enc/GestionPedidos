@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('admin');
+Route::get('/admin', 'HomeController@index')->name('admin');
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
@@ -30,6 +30,52 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         return view('admin_panel.index');
     });
 
-    Route::resource('users', 'UserController');
+    //Route::resource('users', 'UserController');
+    Route::get('users', 'UserController@index')->name('users.index')->middleware('has.permission:usuarios_index');
+    Route::get('users/create','UserController@create')->name('users.create')->middleware('has.permission:usuarios_create')  ;
+    Route::post('users','UserController@store')->name('users.store')->middleware('has.permission:usuarios_create') ;
+    Route::get('users/{user}','UserController@show')->name('users.show')->middleware('has.permission:usuarios_show') ;
+    Route::get('users/{id}/edit' , 'UserController@edit')->name('users.edit')->middleware('has.permission:usuarios_edit');
+    Route::put('users/{user}' , 'UserController@update')->name('users.update')->middleware('has.permission:usuarios_update');
+    Route::delete('users/{id}' , 'UserController@destroy')->name('users.destroy')->middleware('has.permission:usuarios_destroy') ;
 
+    //Rutas Roles
+    Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
+    Route::get('roles/create','RolController@create')->name('roles.create')->middleware('has.permission:roles_create')  ;
+    Route::post('roles','RolController@store')->name('roles.store')->middleware('has.permission:roles_create') ;
+    Route::get('roles/{rol}','RolController@show')->name('roles.show')->middleware('has.permission:roles_show') ;
+    Route::get('roles/{id}/edit' , 'RolController@edit')->name('roles.edit')->middleware('has.permission:roles_edit');
+    Route::put('roles/{rol}' , 'RolController@update')->name('roles.update')->middleware('has.permission:roles_update');
+    Route::delete('roles/{id}' , 'RolController@destroy')->name('roles.destroy')->middleware('has.permission:roles_destroy') ;
+
+    //Rutas Permisos
+    Route::get('permisos', 'PermissionController@index')->name('permisos.index')->middleware('has.permission:permisos_index');
+    Route::get('permisos/create','PermissionController@create')->name('permisos.create')->middleware('has.permission:permisos_create')  ;
+    Route::post('permisos','PermissionController@store')->name('permisos.store')->middleware('has.permission:permisos_create') ;
+    Route::get('permisos/{permiso}','PermissionController@show')->name('permisos.show')->middleware('has.permission:permisos_show') ;
+    Route::get('permisos/{permiso}/edit' , 'PermissionController@edit')->name('permisos.edit')->middleware('has.permission:permisos_edit');
+    Route::put('permisos/{permiso}' , 'PermissionController@update')->name('permisos.update')->middleware('has.permission:permisos_update');
+    Route::delete('permisos/{permiso}' , 'PermissionController@destroy')->name('permisos.destroy')->middleware('has.permission:permisos_destroy') ;
+
+});
+Route::group(['middleware' => 'auth'], function () {
+
+
+// //Rutas Roles
+//     Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
+//     Route::get('roles/create','RolController@create')->name('roles.create')->middleware('has.permission:roles_create')  ;
+//     Route::post('roles','RolController@store')->name('roles.store')->middleware('has.permission:roles_create') ;
+//     Route::get('roles/{rol}','RolController@show')->name('roles.show')->middleware('has.permission:roles_show') ;
+//     Route::get('roles/{id}/edit' , 'RolController@edit')->name('roles.edit')->middleware('has.permission:roles_edit');
+//     Route::put('roles/{rol}' , 'RolController@update')->name('roles.update')->middleware('has.permission:roles_update');
+//     Route::delete('roles/{id}' , 'RolController@destroy')->name('roles.destroy')->middleware('has.permission:roles_destroy') ;
+
+// //Rutas Permisos
+//     Route::get('permisos', 'PermissionController@index')->name('permisos.index')->middleware('has.permission:permisos_index');
+//     Route::get('permisos/create','PermissionController@create')->name('permisos.create')->middleware('has.permission:permisos_create')  ;
+//     Route::post('permisos','PermissionController@store')->name('permisos.store')->middleware('has.permission:permisos_create') ;
+//     Route::get('permisos/{permiso}','PermissionController@show')->name('permisos.show')->middleware('has.permission:permisos_show') ;
+//     Route::get('permisos/{permiso}/edit' , 'PermissionController@edit')->name('permisos.edit')->middleware('has.permission:permisos_edit');
+//     Route::put('permisos/{permiso}' , 'PermissionController@update')->name('permisos.update')->middleware('has.permission:permisos_update');
+//     Route::delete('permisos/{permiso}' , 'PermissionController@destroy')->name('permisos.destroy')->middleware('has.permission:permisos_destroy') ;
 });

@@ -63,3 +63,25 @@
 </div>
 @endsection
 
+@push('scripts')
+<script>
+        $(function () {
+          $('#permisos').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "columns": [
+    null,
+    null,
+    null,
+    null,
+    { "width": "15%" }
+  ],
+
+          });
+        });
+</script>
+@endpush

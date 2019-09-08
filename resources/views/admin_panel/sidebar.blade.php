@@ -70,6 +70,24 @@
                 </ul>
               </li>
 
+              <li class="nav-item has-treeview {{ request()->is('admin/*') ? 'menu-open' : ''}}">
+                <a class="nav-link nav-dropdown-toggle {{ request()->is('admin/*') ? 'active' : ''}}">
+                    <i class="nav-icon fas fa-users-cog  "></i>
+                    <p>
+                      Flujos de Trabajo
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route("transiciones.index") }}" class="nav-link {{ request()->is('/transiciones') || request()->is('transiciones/*') ? 'active' : '' }}">
+                        <i class="far fa-user nav-icon"></i>
+                        <p><span>Transiciones</span></p>
+                        </a>
+                    </li>
+                </ul>
+              </li>
+
             </ul>
           </nav>
           <!-- /.sidebar-menu -->

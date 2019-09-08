@@ -8,6 +8,6 @@ class FlujoTrabajo extends Model
 {
     public function transiciones()
     {
-        return $this->hasMany(Transicion::class);
+        return $this->hasMany(Transicion::class, 'flujoTrabajo_id');
     }
 }

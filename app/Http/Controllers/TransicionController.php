@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Estado;
+use App\FlujoTrabajo;
 use App\Transicion;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,8 @@ class TransicionController extends Controller
      */
     public function index()
     {
-        //
+        $flujo = FlujoTrabajo::find(1);
+        return view('admin_panel.transiciones.index', compact('flujo'));
     }
 
     /**
@@ -24,7 +27,11 @@ class TransicionController extends Controller
      */
     public function create()
     {
-        //
+        $transicion = new Transicion();
+        $estado1 = Estado::all()->pluck('nombre', 'id');
+        $estado2 = Estado::all()->pluck('nombre', 'id');
+        $flujos = FlujoTrabajo::all()->pluck('nombre', 'id');
+        return view('admin_panel.transiciones.create', compact('estado1', 'estado2','flujos'));
     }
 
     /**
@@ -35,7 +42,9 @@ class TransicionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        abort_if($request->estadoInicial == $request->estadoFinal, 403);
+        $transicion = Transicion::create($request->all());
+        return redirect()->route('transiciones.index');
     }
 
     /**
@@ -82,4 +91,7 @@ class TransicionController extends Controller
     {
         //
     }
+
+
+
 }

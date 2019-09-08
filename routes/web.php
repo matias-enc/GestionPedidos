@@ -26,9 +26,6 @@ Route::get('/admin', 'HomeController@index')->name('admin');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
 
-    Route::get('/admin', function () {
-        return view('admin_panel.index');
-    });
 
     //Route::resource('users', 'UserController');
     Route::get('users', 'UserController@index')->name('users.index')->middleware('has.permission:usuarios_index');
@@ -60,7 +57,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 });
 Route::group(['middleware' => 'auth'], function () {
 
-
+    Route::get('transiciones', 'TransicionController@index')->name('transiciones.index');
+    Route::get('transiciones/create','TransicionController@create')->name('transiciones.create');
+    Route::post('transiciones','TransicionController@store')->name('transiciones.store');
 // //Rutas Roles
 //     Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
 //     Route::get('roles/create','RolController@create')->name('roles.create')->middleware('has.permission:roles_create')  ;

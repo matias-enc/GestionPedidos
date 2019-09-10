@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="{{ asset('admin_panel/plugins/fontawesome-free/css/all.min.css') }}">
 <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
   <!-- IonIcons -->
-  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  {{-- <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/adminlte.min.css') }}">
+  {{-- <link rel="stylesheet" href="{{ asset('admin_panel/dist/css/adminlte.min.css') }}"> --}}
 
 <!-- Tempusdominus Bbootstrap 4 -->
 {{-- <link rel="stylesheet" href="{{ asset('admin_panel/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"> --}}
@@ -34,7 +34,7 @@
 </head>
 
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
         <div class="wrapper">
             <!-- Inicio Header -->
             @include('admin_panel/header')
@@ -45,6 +45,7 @@
             <!-- Inicio ContentWrapper -->
 
             <div class="content-wrapper">
+
                     <!-- Content Header (Page header) -->
                     <div class="content-header">
                       <div class="container-fluid">
@@ -79,29 +80,28 @@
     <!-- DataTables -->
     <script src="{{asset('admin_panel/plugins/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> --}}
 
 
-<!-- JQVMap -->
-<script src="{{asset('admin_panel/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{asset('admin_panel/plugins/jqvmap/maps/jquery.vmap.world.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{asset('admin_panel/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('admin_panel/plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
-<script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('admin_panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-<!-- Summernote -->
-<script src="{{asset('admin_panel/plugins/summernote/summernote-bs4.min.js')}}"></script>
-<!-- overlayScrollbars -->
-<script src="{{asset('admin_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+    <!-- JQVMap -->
+    <script src="{{asset('admin_panel/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/jqvmap/maps/jquery.vmap.world.js')}}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{{asset('admin_panel/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+    <!-- daterangepicker -->
+    <script src="{{asset('admin_panel/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{{asset('admin_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 
     <!-- OPTIONAL SCRIPTS -->
     <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>
+    <script src="{{asset('js/sweetalert.min.js')}}"></script>
 
-    <script src="{{asset('admin_panel/dist/js/demo.js')}}"></script>
-    @stack('scripts')
+    {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
+
+@stack('scripts')
+@include('sweet::alert')
 </body>
 </html>

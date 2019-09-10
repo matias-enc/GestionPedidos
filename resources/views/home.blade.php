@@ -28,7 +28,7 @@
 <script>
     $('#datepicker-example').datepicker({});
 </script>
-
+@include('sweet::alert')
 @endsection
 
 

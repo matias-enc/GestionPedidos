@@ -1,13 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use Auth;
 use Caffeinated\Shinobi\Models\Role;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -47,7 +44,6 @@ class UserController extends Controller
 
         $user = User::create($request->all());
         $user->roles()->sync($request->input('roles', []));
-
         return redirect()->route('admin.users.index');
     }
 
@@ -87,7 +83,7 @@ class UserController extends Controller
     {
         $user->update($request->all());
         $user->roles()->sync($request->input('roles', []));
-
+        alert()->success('success', 'Usuario Editado!');
         return redirect()->route('admin.users.index');
     }
 

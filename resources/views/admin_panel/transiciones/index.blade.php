@@ -6,7 +6,7 @@
 
 <div style="margin-bottom: 10px;" class="row">
     <div class="col-lg-12">
-        <a class="btn btn-success" href="{{ route("transiciones.create") }}">
+        <a class="btn btn-success" href="{{ route("workflow.transiciones.create") }}">
             Crear Transicion
         </a>
     </div>
@@ -19,16 +19,28 @@
             <table id="roles" class="table table-bordered table-striped table-hover datatable">
                     <thead>
                     <tr>
-                      <th>Nombre</th>
+                      <th>Flujo de Trabajo</th>
+                      <th>Nombre de Transicion</th>
+                      <th>Estado Inicial</th>
+                      <th>Estado Final</th>
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($flujo->transiciones as $transicion)
+                        @foreach ($transiciones as $tr)
                             <tr>
-                                <td>{{$transicion->nombre}}</td>
+                                <td>{{$tr->flujoTrabajo->nombre}}</td>
+
+                                <td>{{$tr->nombre}}</td>
+
+                                <td>{{$tr->estadoInicial->nombre}}</td>
+
+                                <td>{{$tr->estadoFinal->nombre}}</td>
                             </tr>
+
+
                         @endforeach
-                    </tbody>
+
+                        </tbody>
                   </table>
                 </div>
     </div>

@@ -3,18 +3,18 @@
 @section('content')
 @can('usuarios_create')
     <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.users.create") }}">
+        <div class="col-lg-12 offset-1">
+            <a class="btn btn-success btn-pill" href="{{ route("admin.users.create") }}">
                 Crear Usuario
             </a>
         </div>
     </div>
 @endcan
-<div class="card">
+<div class="card col-10 offset-1">
 
     <div class="card-body">
-        <div class="table-responsive">
-            <table id="usuarios" class="table table-bordered table-striped dt-responsive table-hover datatable" style="width: 90%">
+        <div class="table">
+            <table id="usuarios" class="table table-bordered table-striped table-hover datatable">
                     <thead>
                     <tr>
                       <th>Usuario</th>
@@ -30,7 +30,7 @@
                                 <td>{{$user->email}}</td>
                                 <td>
                                     @foreach($user->roles as $rol)
-                                        <span class="badge badge-info">{{ $rol->name }}</span>
+                                        <span class="badge badge-pill badge-info">{{ $rol->name }}</span>
                                     @endforeach
                                 </td>
                                 <td>
@@ -68,7 +68,6 @@
         $(function () {
           $('#usuarios').DataTable({
             "paging": true,
-            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": false,

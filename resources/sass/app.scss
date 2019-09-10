@@ -1,6 +1,6 @@
 
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+// @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swapf');
 
 // Variables
@@ -9,8 +9,12 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-// Shards ui
-//@import '~shards-ui/dist/css/shards.min.css';
+@import 'admin_panel/scss/AdminLTE.scss';
+
+//Shards ui
+@import '~shards-ui/dist/css/shards.min.css';
+
+@import '~sweetalert2/src/sweetalert2.scss';
 
 //Shards dashboard
 //@import 'admin_panel/styles/scss/shards-dashboards';
@@ -19,3 +23,5 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+

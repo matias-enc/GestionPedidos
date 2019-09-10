@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Transicion extends Model
 {
     protected $fillable = [
-        'nombre', 'flujoTrabajo', 'estadoInicial', 'estadoFinal',
+        'nombre', 'flujoTrabajo_id', 'estadoInicial_id', 'estadoFinal_id',
     ];
     public function flujoTrabajo()
     {

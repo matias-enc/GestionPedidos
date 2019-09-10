@@ -70,18 +70,24 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview {{ request()->is('admin/*') ? 'menu-open' : ''}}">
-                <a class="nav-link nav-dropdown-toggle {{ request()->is('admin/*') ? 'active' : ''}}">
-                    <i class="nav-icon fas fa-users-cog  "></i>
+              <li class="nav-item has-treeview {{ request()->is('workflow/*') ? 'menu-open' : ''}}">
+                <a class="nav-link nav-dropdown-toggle {{ request()->is('workflow/*') ? 'active' : ''}}">
+                    <i class="nav-icon fas fa-sitemap "></i>
                     <p>
-                      Flujos de Trabajo
+                      Gestion Workflow
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{ route("transiciones.index") }}" class="nav-link {{ request()->is('/transiciones') || request()->is('transiciones/*') ? 'active' : '' }}">
-                        <i class="far fa-user nav-icon"></i>
+                            <a href="{{ route("workflow.flujos.index") }}" class="nav-link {{ request()->is('workflow/flujo/*') || request()->is('workflow/flujos/*') ? 'active' : '' }}">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p><span>Flujos de Trabajo</span></p>
+                            </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route("workflow.transiciones.index") }}" class="nav-link {{ request()->is('workflow/transiciones') || request()->is('transiciones/*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
                         <p><span>Transiciones</span></p>
                         </a>
                     </li>

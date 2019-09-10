@@ -20,18 +20,54 @@ $line-height-base: 1.6;
 // $cyan: #6cb2eb;
 
 //rober
-$primary:#2f3c48;
-$secondary:#6f7f8c;
-$success:#3e4d59;
-$danger:#cc330d;
-$info:#5c8f94;
-$warning:#6e9fa5;
-$light:#eceeec;
-$dark:#1e2b37;
+$primary:#007bff;
+$secondary:#5A6169;
+$success:#17c671;
+$danger:#c4183c;
+$info:#00b8d8;
+$warning:#ffb400;
+$light:#FBFBFB;
+$dark:#212529;
 $spacer:1rem;
-$border-width:1px;
+// $border-width:1px;
 
 // $border-radius: 0.75rem;
 
 // //$card-border-radius: .50rem;
-// $input-btn-focus-width: 0.1em;
+$input-btn-focus-width: 0.1em;
+
+// Light sidebar
+// $sidebar-light-bg: $white !default;
+// $sidebar-light-hover-bg: lighten(#d8d8dd, 1.5%) !default;
+// $sidebar-light-color: $gray-800 !default;
+// $sidebar-light-hover-color: $gray-900 !default;
+// $sidebar-light-active-color: $white !default;
+// $sidebar-light-submenu-bg: transparent !default;
+// $sidebar-light-submenu-color: #777 !default;
+// $sidebar-light-submenu-hover-color: #000 !default;
+// $sidebar-light-submenu-hover-bg: $sidebar-light-hover-bg !default;
+// $sidebar-light-submenu-active-color: $sidebar-light-hover-color !default;
+// $sidebar-light-submenu-active-bg: $sidebar-light-submenu-hover-bg !default;
+// $sidebar-light-header-color: $gray-800 !default;
+
+// --blue: #007bff;
+//     --indigo: #674eec;
+//     --purple: #8445f7;
+//     --pink: #ff4169;
+//     --red: #c4183c;
+//     --orange: #fb7906;
+//     --yellow: #ffb400;
+//     --green: #17c671;
+//     --teal: #1adba2;
+//     --cyan: #00b8d8;
+//     --white: #fff;
+//     --gray: #868e96;
+//     --gray-dark: #343a40;
+//     --primary: #007bff;
+//     --secondary: #5A6169;
+//     --success: #17c671;
+//     --info: #00b8d8;
+//     --warning: #ffb400;
+//     --danger: #c4183c;
+//     --light: #FBFBFB;
+//     --dark: #212529;

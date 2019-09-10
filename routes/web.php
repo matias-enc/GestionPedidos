@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    return redirect('admin');
 });
 
 
@@ -55,26 +55,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('permisos/{permiso}' , 'PermissionController@destroy')->name('permisos.destroy')->middleware('has.permission:permisos_destroy') ;
 
 });
-Route::group(['middleware' => 'auth'], function () {
 
+//Rutas Flujo de Trabajo
+Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workflow', 'middleware' => ['auth']], function () {
     Route::get('transiciones', 'TransicionController@index')->name('transiciones.index');
     Route::get('transiciones/create','TransicionController@create')->name('transiciones.create');
     Route::post('transiciones','TransicionController@store')->name('transiciones.store');
-// //Rutas Roles
-//     Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
-//     Route::get('roles/create','RolController@create')->name('roles.create')->middleware('has.permission:roles_create')  ;
-//     Route::post('roles','RolController@store')->name('roles.store')->middleware('has.permission:roles_create') ;
-//     Route::get('roles/{rol}','RolController@show')->name('roles.show')->middleware('has.permission:roles_show') ;
-//     Route::get('roles/{id}/edit' , 'RolController@edit')->name('roles.edit')->middleware('has.permission:roles_edit');
-//     Route::put('roles/{rol}' , 'RolController@update')->name('roles.update')->middleware('has.permission:roles_update');
-//     Route::delete('roles/{id}' , 'RolController@destroy')->name('roles.destroy')->middleware('has.permission:roles_destroy') ;
+    Route::delete('transiciones/{transicion}' , 'TransicionController@destroy')->name('transiciones.destroy');
 
-// //Rutas Permisos
-//     Route::get('permisos', 'PermissionController@index')->name('permisos.index')->middleware('has.permission:permisos_index');
-//     Route::get('permisos/create','PermissionController@create')->name('permisos.create')->middleware('has.permission:permisos_create')  ;
-//     Route::post('permisos','PermissionController@store')->name('permisos.store')->middleware('has.permission:permisos_create') ;
-//     Route::get('permisos/{permiso}','PermissionController@show')->name('permisos.show')->middleware('has.permission:permisos_show') ;
-//     Route::get('permisos/{permiso}/edit' , 'PermissionController@edit')->name('permisos.edit')->middleware('has.permission:permisos_edit');
-//     Route::put('permisos/{permiso}' , 'PermissionController@update')->name('permisos.update')->middleware('has.permission:permisos_update');
-//     Route::delete('permisos/{permiso}' , 'PermissionController@destroy')->name('permisos.destroy')->middleware('has.permission:permisos_destroy') ;
+    Route::get('flujos', 'FlujoTrabajoController@index')->name('flujos.index');
+    Route::get('flujos/create', 'FlujoTrabajoController@create')->name('flujos.create');
+    Route::get('flujos/{flujo}/asignar', 'FlujoTrabajoController@asignarTransiciones')->name('flujos.asignarTransiciones');
+    Route::post('flujos/asignacion', 'FlujoTrabajoController@asignacion')->name('flujos.asignacion');
+    Route::post('flujos','FlujoTrabajoController@store')->name('flujos.store');
+    Route::get('flujos/{flujo}','FlujoTrabajoController@show')->name('flujos.show');
+
 });

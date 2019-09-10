@@ -1,7 +1,12 @@
 @extends('admin_panel.index')
 
 @section('content')
-<div class="card col-6 offset-3">
+<div class="card card-outline card-success col-6 offset-3">
+    <div class="card-header">
+        <div class="card-title">
+            <strong>Crear Nuevo Usuario</strong>
+        </div>
+    </div>
     <div class="card-body ">
             <div class="card-body">
                     <form action="{{ route("admin.users.store") }}" method="POST" enctype="multipart/form-data">
@@ -45,13 +50,13 @@
                                         {{ $errors->first('roles') }}
                                     </p>
                                 @endif
-                            </div>
-                            <div>
-                                <input class="btn btn-danger" type="submit" value="Guardar">
-                            </div>
+                        </div>
+                        <div >
+                                <input class="btn btn-success" type="submit" value="Crear Usuario">
+                        </div>
 
-                        </form>
-                </div>
+                    </form>
+            </div>
     </div>
 </div>
 @endsection

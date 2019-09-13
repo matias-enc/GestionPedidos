@@ -13,4 +13,12 @@ class FlujoTrabajo extends Model
     {
         return $this->hasMany(Transicion::class, 'flujoTrabajo_id');
     }
+    public function pedidos(){
+        return $this->hasMany(Pedido::class, 'flujoTrabajo_id');
+
+    }
+    public function tipoItems(){
+        return $this->hasMany(TipoItem::class, 'flujoTrabajo_id');
+
+    }
 }

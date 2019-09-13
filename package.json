@@ -27,6 +27,7 @@
     "dependencies": {
         "select2": "^4.0.10",
         "shards-ui": "^3.0.0",
-        "sweetalert2": "^8.17.1"
+        "sweetalert2": "^8.17.1",
+        "vue-form-wizard": "^0.8.4"
     }
 }

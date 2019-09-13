@@ -14,4 +14,10 @@ class Estado extends Model
     {
         return $this->hasMany(Transicion::class, 'estadoFinal_id');
     }
+    public function pedidos(){
+        return $this->hasMany(Pedido::class);
+    }
+    public function historiales(){
+        return $this->hasMany(Historial::class);
+    }
 }

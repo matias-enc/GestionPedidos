@@ -11,12 +11,14 @@
 <div class="card col-10 offset-1">
 
     <div class="card-body">
+        <h3><strong>Flujos de Trabajo</strong></h3>
+        <br>
         <div class="table">
             <table id="flujos" class="table table-bordered table-striped table-hover datatable">
                     <thead>
                     <tr>
-                      <th>nombre</th>
-                      <th>transiciones</th>
+                      <th>Nombre</th>
+                      <th>Transiciones</th>
                       <th>Acciones</th>
                     </tr>
                     </thead>
@@ -34,10 +36,6 @@
                                             Ver
                                         </a>
 
-                                        <a class="btn btn-xs btn-info" href="#">
-                                            Editar
-                                        </a>
-
                                 </td>
                             </tr>
                         @endforeach
@@ -52,9 +50,14 @@
         $(function () {
           $('#flujos').DataTable({
             "paging": true,
-            "searching": true,
+            "searching": false,
             "ordering": true,
             "info": false,
+            "columns": [
+    { "width": "25%" },
+    null,
+    { "width": "10%" }
+  ],
           });
         });
 </script>

@@ -66,17 +66,16 @@ class FlujoTrabajoController extends Controller
         $flujo = FlujoTrabajo::find($request->flujoTrabajo_id);
         $transiciones = $flujo->transiciones;
         foreach ($transiciones as $tr){
-            if($tr->estadoInicial->id == $request->estadoInicial_id && $tr->estadoFinal->id == $request->estadoFinal_id){
-                Alert::error('Error al Asignar Transicion', 'No pueden existir transiciones con mismos estados');
-                return redirect()->back()->withInput();
-            }elseif($tr->nombre == $request->nombre){
-                Alert::error('Error al Asignar Transicion', 'Ya existe una transicion con ese Nombre');
+            if($tr->nombre == $request->nombre){
+                Alert::error('Error al Asignar Transicion', 'Ya existe una Transicion con ese Nombre');
                 return redirect()->back()->with('error' , 'Existe una transicion con el mismo nombre')->withInput();
+            }elseif($tr->estadoInicial->id == $request->estadoInicial_id && $tr->estadoFinal->id == $request->estadoFinal_id){
+                Alert::error('Error al Asignar Transicion', 'No pueden existir Transiciones identicas');
+                return redirect()->back()->withInput();
             }
         }
         $tr = Transicion::create($this->validarTransicion());
-        Alert::success('Transicion Asignada');
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Transicion Asignada');
 
         // abort_if($request->estadoInicial_id == $request->estadoFinal_id, 403);
         // $transicion = Transicion::create($request->all());
@@ -127,6 +126,8 @@ class FlujoTrabajoController extends Controller
             'flujoTrabajo_id' => 'required',
             'estadoInicial_id' => 'required',
             'estadoFinal_id' => 'different:estadoInicial_id',
+        ],[
+            'estadoFinal_id.different' => 'El Estado Final tiene que ser distinto al Inicial'
         ]);
     }
 }

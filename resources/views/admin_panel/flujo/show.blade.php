@@ -21,7 +21,7 @@
 
 
                             <div class="card card-primary card-outline col-md-6 offset-1">
-                                    <div class="card-body box-profile">
+                                    <div class="card-body">
                                       <div class="text-center">
                                         {{-- <img class="profile-user-img img-fluid img-circle"
                                              src="../../dist/img/user4-128x128.jpg"
@@ -48,7 +48,8 @@
                                                 @endforeach
                                             </tbody>
                                           </table>
-                                          <a href="{{ route('workflow.flujos.asignarTransiciones', $flujo->id) }}" class="btn btn-primary btn-block"><b>Asignar Transiciones</b></a>
+                                          <br>
+                                          <a href="{{ route('workflow.flujos.asignarTransiciones', $flujo->id) }}" class="btn btn-primary btn-pill"><b>Asignar Transiciones &rarr;</b></a>
                                         </div>
 
                                     </div>

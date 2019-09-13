@@ -1,5 +1,6 @@
 <?php
 
+use App\TipoItem;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
             PermisoTableSeeder::class,
             EstadosTableSeeder::class,
             FlujoTrabajosTableSeeder::class,
+            TipoItemsTableSeeder::class,
+            ItemsTableSeeder::class,
             ]);
 
     }

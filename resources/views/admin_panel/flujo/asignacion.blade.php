@@ -1,7 +1,6 @@
 @extends('admin_panel.index')
 
 @section('content')
-
 <div class="card card-primary card-outline col-8 offset-2">
 
         <div class="card-header">
@@ -41,7 +40,7 @@
                                     <div class="form-group {{ $errors->has('estadoInicial_id') ? 'has-error' : '' }}">
                                             <select name="estadoInicial_id" id="estadoInicial_id" class="estados-js form-control" required>
                                                 @foreach($estados as $id => $estado)
-                                                    <option value="{{ $id }}" {{ (in_array($id, old('estados', [])) || isset($transicion) && $transicion->estadoInicial->contains($id)) ? 'selected' : '' }}>{{ $estado }}</option>
+                                                    <option value="{{ $id }}" >{{ $estado }}</option>
                                                 @endforeach
                                             </select>
                                     </div>
@@ -53,18 +52,12 @@
                                     <div class="form-group {{ $errors->has('estadoFinal_id') ? 'has-error' : '' }}">
                                             <select name="estadoFinal_id" id="estadoFinal_id" class="estados-js form-control" required>
                                                 @foreach($estados as $id => $estado)
-                                                    <option value="{{ $id }}" {{ (in_array($id, old('estados', [])) || isset($transicion) && $transicion->estadoFinal->contains($id)) ? 'selected' : '' }}>{{ $estado }}</option>
+                                                    <option value="{{ $id }}">{{ $estado }}</option>
                                                 @endforeach
                                             </select>
                                     </div>
 
                                 </td>
-
-                                @if($errors->has('estadoFinal_id'))
-                                <p class="help-block text-danger">
-                                    {{ $errors->first('estadoFinal_id') }}
-                                </p>
-                                @endif
 
                             </tr>
 
@@ -132,6 +125,5 @@
         theme: "classic"
     });
 </script>
-
 
 @endpush

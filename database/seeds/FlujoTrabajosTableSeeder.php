@@ -13,10 +13,10 @@ class FlujoTrabajosTableSeeder extends Seeder
     public function run()
     {
         FlujoTrabajo::create([
-            'nombre' => 'Pedido Sin Pago'
+            'nombre' => 'Pedidos'
         ]);
         FlujoTrabajo::create([
-            'nombre' => 'Pedido Con Pago'
+            'nombre' => 'Albergues'
         ]);
 
     }

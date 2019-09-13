@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return redirect('admin');
+    return redirect('auto_gestion');
 });
 
 
@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/admin', 'HomeController@index')->name('admin');
+Route::get('/auto_gestion', 'HomeController@index')->name('auto_gestion');
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
@@ -70,4 +70,22 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
     Route::post('flujos','FlujoTrabajoController@store')->name('flujos.store');
     Route::get('flujos/{flujo}','FlujoTrabajoController@show')->name('flujos.show');
 
+});
+
+
+
+//Rutas de Pedidos
+Route::group(['middleware' => ['auth']], function () {
+
+    //Rutas de Administracion de Pedidos
+
+    Route::get('pedidos/index', 'PedidoController@index')->name('pedidos.index');
+    Route::get('pedidos/{pedido}','PedidoController@show')->name('pedidos.show');
+
+
+    //Rutas de Pedidos de un usuario y funcionalidades
+    Route::get('mis_pedidos', 'PedidoController@pedidos_usuario')->name('pedidos.mis_pedidos');
+    Route::get('nuevo_pedido', 'PedidoController@index_items')->name('pedidos.nuevo_pedido');
+    Route::post('consultar_disponibilidad', 'PedidoController@consultar_disponibilidad')->name('pedidos.consultar_disponibilidad');
+    Route::get('mis_pedidos/{pedido}','PedidoController@seguimiento')->name('pedidos.seguimiento');
 });

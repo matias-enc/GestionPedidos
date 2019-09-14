@@ -9,6 +9,7 @@ use App\Item;
 use App\Seguimiento;
 use App\TipoItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class PedidoController extends Controller
 {
@@ -73,27 +74,10 @@ class PedidoController extends Controller
 
     public function consultar_disponibilidad(Request $request)
     {
-        // $fechaInicial=$request->inicial;
-        // $fechaFinal=$request->final;
-        // $seguimientos = Seguimiento::all();
-        // foreach ($seguimientos as $seguimiento) {
-        //     if($request->tipoItem==$seguimiento->item->tipoItem->id){
-        //         $fechaInicialSeg=\Carbon\Carbon::parse($seguimiento->fechaInicial)->format('d/m/Y');
-        //         $fechaFinalSeg=\Carbon\Carbon::parse($seguimiento->fechaFinal)->format('d/m/Y');
-        //         if(($fechaInicial>$fechaInicialSeg && $fechaInicial >= $fechaFinalSeg) || ($fechaInicial<$fechaInicialSeg && $fechaFinal <= $fechaInicialSeg)){
-        //             // Agregar item aca a array
-        //         }elseif($fechaInicial==$fechaInicialSeg){
-        //             Alert::error('No hay Disponibilidad en la fecha Seleccionada', '');
-        //             return redirect()->back()->withInput();
-        //         }else{
-        //             Alert::error('No hay Disponibilidad en la fecha Seleccionada', '');
-        //             return redirect()->back()->withInput();
-        //         }
-        //     }
-        // }
         $fechaInicial=$request->inicial;
         $fechaFinal=$request->final;
-        $items = TipoItem::find($request->tipoItem)->items;
+        $tipoItem = TipoItem::find($request->tipoItem);
+        $items = $tipoItem->items;
         foreach ($items as $item){
             foreach($item->seguimientos as $seguimiento){
                 $fechaInicialSeg=\Carbon\Carbon::parse($seguimiento->fechaInicial)->format('d/m/Y');
@@ -111,8 +95,24 @@ class PedidoController extends Controller
             }
             $disponible = true;
         }
-        return $items->pluck('nombre');
+        $items->pluck('nombre', 'id');
+        return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
 
+    }
+    function detalle_pedido(Request $request){
+        $item = Item::find($request->item_id);
+        $fechaInicial = $request->fechaInicial;
+        $fechaFinal = $request->fechaFinal;
+        return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal'));
+    }
+    function confirmar_pedido(Request $request){
+        $seguimiento = new Seguimiento();
+        $seguimiento->fechaInicial = Carbon::createFromFormat('d/m/Y',$request->fechaInicial);
+        $seguimiento->fechaFinal = Carbon::createFromFormat('d/m/Y',$request->fechaFinal);
+        $seguimiento->item_id = $request->item_id;
+        $seguimiento->save();
+        return $seguimiento;
+        return view('admin_panel.pedidos.detalle_pedido', compact(''));
     }
 
     /**

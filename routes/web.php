@@ -87,5 +87,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('mis_pedidos', 'PedidoController@pedidos_usuario')->name('pedidos.mis_pedidos');
     Route::get('nuevo_pedido', 'PedidoController@index_items')->name('pedidos.nuevo_pedido');
     Route::post('consultar_disponibilidad', 'PedidoController@consultar_disponibilidad')->name('pedidos.consultar_disponibilidad');
+    Route::post('detalle_pedido', 'PedidoController@detalle_pedido')->name('pedidos.detalle_pedido');
+    Route::post('confimar_pedido','PedidoController@confirmar_pedido')->name('pedidos.confirmar_pedido');
     Route::get('mis_pedidos/{pedido}','PedidoController@seguimiento')->name('pedidos.seguimiento');
 });

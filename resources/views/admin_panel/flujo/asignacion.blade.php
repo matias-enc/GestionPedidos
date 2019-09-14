@@ -11,6 +11,8 @@
     <div class="card-body ">
         <form action="{{ route("workflow.flujos.asignacion") }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" id="fechaInicial" name="fechaInicial" class="form-control" value="{{$fechaInicial}}">
+            <input type="hidden" id="fechaFinal" name="fechaFinal" class="form-control" value="{{$fechaFinal}}">
             <table id="roles" class="table table-bordered table-striped table-hover datatable">
                     <thead>
                     <tr>

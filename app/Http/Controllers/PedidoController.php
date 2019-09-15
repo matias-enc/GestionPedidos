@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Alert;
+use App\Historial;
 use App\Pedido;
 use App\Item;
 use App\Seguimiento;
@@ -66,25 +67,29 @@ class PedidoController extends Controller
     {
         //
     }
-    public function index_items()
+    public function nuevo_pedido()
     {
         $tipoItems = TipoItem::all()->pluck('nombre', 'id');
-        return view('admin_panel.pedidos.index_items', compact('tipoItems'));
+        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
     }
 
     public function consultar_disponibilidad(Request $request)
     {
-        $fechaInicial=$request->inicial;
-        $fechaFinal=$request->final;
+        $this->validate($request,[
+            'inicial'=> 'required',
+            'final'=> 'required'
+        ]);
+        $fechaInicial=Carbon::createFromFormat('d/m/Y',$request->inicial);
+        $fechaFinal=Carbon::createFromFormat('d/m/Y',$request->final);
         $tipoItem = TipoItem::find($request->tipoItem);
         $items = $tipoItem->items;
         foreach ($items as $item){
             foreach($item->seguimientos as $seguimiento){
-                $fechaInicialSeg=\Carbon\Carbon::parse($seguimiento->fechaInicial)->format('d/m/Y');
-                $fechaFinalSeg=\Carbon\Carbon::parse($seguimiento->fechaFinal)->format('d/m/Y');
-                if(($fechaInicial>$fechaInicialSeg && $fechaInicial >= $fechaFinalSeg) || ($fechaInicial<$fechaInicialSeg && $fechaFinal <= $fechaInicialSeg)){
+                $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
+                $fechaFinalSeg=Carbon::create($seguimiento->fechaFinal);
+                if(($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))){
                     $disponible = true;
-                }elseif($fechaInicial==$fechaInicialSeg){
+                }elseif($fechaInicial->equalTo($fechaInicialSeg)){
                     $disponible = false;
                 }else{
                     $disponible = false;
@@ -106,13 +111,21 @@ class PedidoController extends Controller
         return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal'));
     }
     function confirmar_pedido(Request $request){
+        $pedido = new Pedido();
+        $pedido->user_id = auth()->user()->id;
+        $pedido->estado_id = 5; //CAMBIAR HARDCODEADO DURO - INSTANCIAR WORKFLOW DE PEDIDO
+        $pedido->save();
+        $historial = new Historial();
+        $historial->estado_id = $pedido->estado_id;
+        $historial->pedido_id = $pedido->id;
+        $historial->save();
         $seguimiento = new Seguimiento();
-        $seguimiento->fechaInicial = Carbon::createFromFormat('d/m/Y',$request->fechaInicial);
-        $seguimiento->fechaFinal = Carbon::createFromFormat('d/m/Y',$request->fechaFinal);
+        $seguimiento->pedido_id = $pedido->id;
+        $seguimiento->fechaInicial = $request->fechaInicial;
+        $seguimiento->fechaFinal = $request->fechaFinal;
         $seguimiento->item_id = $request->item_id;
         $seguimiento->save();
-        return $seguimiento;
-        return view('admin_panel.pedidos.detalle_pedido', compact(''));
+        return redirect()->route('pedidos.mis_pedidos');
     }
 
     /**
@@ -135,8 +148,8 @@ class PedidoController extends Controller
 
     public function seguimiento(Pedido $pedido)
     {
-        $seguimientos = $pedido->seguimientos;
-        return view('admin_panel.pedidos.seguimiento', compact('pedido', 'seguimientos'));
+        $historiales = $pedido->historiales;
+        return view('admin_panel.pedidos.seguimiento', compact('historiales'));
     }
 
     /**

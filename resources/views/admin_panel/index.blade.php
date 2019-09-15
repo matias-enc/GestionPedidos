@@ -99,6 +99,8 @@
     <!-- OPTIONAL SCRIPTS -->
     <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
     <script src="{{asset('js/sweetalert.min.js')}}"></script>
     {{-- <script src="{{asset('admin_panel/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script> --}}
 

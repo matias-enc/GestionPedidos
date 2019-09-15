@@ -21,8 +21,14 @@
               <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route("pedidos.mis_pedidos") }}" class="nav-link {{ request()->is('mis_pedidos') || request()->is('mis_pedidos/*') || request()->is('nuevo_pedido')   ? 'active' : '' }}">
+                    <a href="{{ route("pedidos.nuevo_pedido") }}" class="nav-link {{ request()->is('nuevo_pedido') || request()->is('nuevo_pedido') || request()->is('consultar_disponibilidad')  || request()->is('detalle_pedido')  ? 'active' : '' }}">
                     <i class="fal fa-box-open nav-icon"></i>
+                    <p><span>Nuevo Pedido</span></p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("pedidos.mis_pedidos") }}" class="nav-link {{ request()->is('mis_pedidos') || request()->is('mis_pedidos/*')   ? 'active' : '' }}">
+                    <i class="fal fa-boxes nav-icon"></i>
                     <p><span>Mis Pedidos</span></p>
                     </a>
                 </li>

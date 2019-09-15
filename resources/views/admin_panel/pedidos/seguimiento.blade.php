@@ -10,52 +10,62 @@
     <br>
 <div class="container-fluid">
 
-        <div class="row">
-                <div class="card card-primary card-outline col-md-3 offset-1 h-100">
-                        <div class="card-body box-profile">
-                          <div class="text-center">
-                          </div>
-                          <h3 class="profile-username text-center">{{$pedido->id}}</h3>
-                          <p class="text-muted text-center">Id del Pedido</p>
-                          <h3 class="profile-username text-center">Estado actual: <span class="text-success">{{$pedido->estado->nombre}}</span></h3>
+        <div class="d-flex row justify-content-center">
+            <div class="card card-primary card-outline col-md-4 offset-1">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
                         </div>
-                </div>
+                        <div class="timeline">
+                                <div class="time-label">
+                                  <span class="bg-blue">Seguimiento</span>
+                                </div>
+                                <!-- /.timeline-label -->
+                                <!-- timeline item -->
+                                @foreach ($historiales as $historial)
+                                @if($historial->estado->nombre != 'Finalizado')
+                                <div>
+                                        <i class="fas fa-check bg-green"></i>
 
-
-
-
-                            <div class="card card-primary card-outline col-md-6 offset-1">
-                                    <div class="card-body box-profile">
-                                      <div class="text-center">
-                                      </div>
-
-                                      <h3 class="profile-username text-center">Historial de Estados</h3>
-
-                                      <table id="transicion" class="table table-bordered table-striped table-hover datatable">
-                                            <thead>
-                                            <tr>
-                                              <th>Estado</th>
-                                              <th>Fecha</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($seguimientos as $seguimiento)
-                                                    <tr>
-                                                        <td>{{$seguimiento->estado->nombre}}</td>
-                                                        <td>{{date('d-m-Y', strtotime($seguimiento->created_at))}}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                          </table>
+                                        <div class="timeline-item">
+                                          <span class="time"><i class="fal fa-check"></i> {{$historial->created_at->diffForHumans()}}</span>
+                                          <h3 class="timeline-header"><strong>{{$historial->estado->nombre}} </strong></h3>
 
                                         </div>
+                                      </div>
+                                @else
+                                    <div>
+                                        <i class="fas fa-times bg-red"></i>
 
-                                    </div>
-                                    <!-- /.card-body -->
-                                  </div>
+                                        <div class="timeline-item">
+                                          <span class="time"><i class="fal fa-check"></i> {{$historial->created_at->diffForHumans()}}</span>
+                                          <h3 class="timeline-header"><strong>{{$historial->estado->nombre}} </strong></h3>
+
+                                        </div>
+                                      </div>
+                                @endIf
+
+                                <!-- END timeline item -->
+                                @endforeach
+                                @if($historial->estado->nombre != 'Finalizado')
+                                <div>
+                                  <i class="fas fa-clock bg-gray"></i>
+                                </div>
+                                @endif
+                              </div>
+                            </div>
+                            <!-- /.col -->
+                            </div>
+                            </div>
+                            <!-- /.timeline -->
+                    </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    </div>
                               <!-- /.card -->
         </div>
 </div>
+
 
 
 

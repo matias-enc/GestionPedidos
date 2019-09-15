@@ -28,10 +28,10 @@
                                             <strong><Label>Llegada</Label></strong>
                                             <strong><Label>Salida</Label></strong>
                                         </div>
-                                            <div class="input-group input-daterange" id="datepicker" data-date-format="dd/mm/yyyy">
-                                                <input type="text" class="input-sm form-control" name="inicial" placeholder="Llegada" />
-                                                <input type="text" class="input-sm form-control" name="final" placeholder="Salida" />
-                                            </div>
+                                        <div class="input-group input-daterange" id="datepicker" data-date-format="dd/mm/yyyy" data-date-container='#datepicker'>
+                                            <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : ''}}" name="inicial" placeholder="Llegada"/>
+                                            <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : '' }}" name="final" placeholder="Salida" />
+                                        </div>
 
                                         <br>
                                         <div class="d-flex justify-content-end">
@@ -51,7 +51,8 @@
 <script>
     $('#datepicker').datepicker({
         weekStart: 1,
-        daysOfWeekHighlighted: "6,0",
+        startDate: "today",
+        endDate: "1/1/2021",
         language: "es",
         todayHighlight: true,
     });

@@ -30,12 +30,11 @@
                         @foreach ($pedidos as $pedido)
                             <tr>
                                 <td>{{$pedido->id}}</td>
+                                @if($pedido->estado->nombre !='Finalizado')
                                 <td><span class="badge badge-pill badge-success">{{ $pedido->estado->nombre }}</span></td>
-                                {{-- <td>
-                                    @foreach($pedido->transiciones as $tr)
-                                        <span class="badge badge-pill badge-info">{{ $tr->nombre }}</span>
-                                    @endforeach
-                                </td> --}}
+                                @else
+                                <td><span class="badge badge-pill badge-danger">{{ $pedido->estado->nombre }}</span></td>
+                                @endif
                                 <td>
                                         <a class="btn btn-xs btn-primary" href="{{route('pedidos.seguimiento', $pedido)}}">
                                             Seguimiento
@@ -50,12 +49,37 @@
 </div>
 @endsection
 @push('scripts')
-{{-- <script>
+<script>
         $(function () {
           $('#pedidos').DataTable({
             "ordering": true,
             "info": false,
+            "lengthChange": false,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "columns": [
+    null,
+    { "width": "10%" },
+    { "width": "10%" }],
           });
         });
-</script> --}}
+</script>
 @endpush

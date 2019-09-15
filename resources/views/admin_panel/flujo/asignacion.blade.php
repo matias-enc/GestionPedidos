@@ -11,9 +11,7 @@
     <div class="card-body ">
         <form action="{{ route("workflow.flujos.asignacion") }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <input type="hidden" id="fechaInicial" name="fechaInicial" class="form-control" value="{{$fechaInicial}}">
-            <input type="hidden" id="fechaFinal" name="fechaFinal" class="form-control" value="{{$fechaFinal}}">
-            <table id="roles" class="table table-bordered table-striped table-hover datatable">
+            <table id="roles" class="table table-bordered ">
                     <thead>
                     <tr>
                       <th>Nombre Transicion</th>
@@ -24,23 +22,21 @@
                     <tbody>
                             <tr>
                                 <td>
-
-                                    <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }}">
-                                        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ old('nombre', isset($transicion) ? $transicion->nombre : '') }}" required>
-                                        <input type="hidden" id="flujoTrabajo_id" name="flujoTrabajo_id" class="form-control" value="{{$flujo->id}}">
-                                        @if($errors->has('nombre'))
-                                            <p class="help-block">
-                                                {{ $errors->first('nombre') }}
-                                            </p>
-                                        @endif
-                                    </div>
-
+                                        <div class="form-group {{ $errors->has('nombre') ? 'has-error' : '' }}">
+                                            <input type="text" id="nombre" name="nombre" class="form-control" value="{{ old('nombre', isset($transicion) ? $transicion->nombre : '') }}" required>
+                                            <input type="hidden" id="flujoTrabajo_id" name="flujoTrabajo_id" class="form-control" value="{{$flujo->id}}">
+                                            @if($errors->has('nombre'))
+                                                <p class="help-block">
+                                                    {{ $errors->first('nombre') }}
+                                                </p>
+                                            @endif
+                                        </div>
                                 </td>
 
                                 <td>
 
                                     <div class="form-group {{ $errors->has('estadoInicial_id') ? 'has-error' : '' }}">
-                                            <select name="estadoInicial_id" id="estadoInicial_id" class="estados-js form-control" required>
+                                            <select name="estadoInicial_id" id="estadoInicial_id" class=" form-control" required>
                                                 @foreach($estados as $id => $estado)
                                                     <option value="{{ $id }}" >{{ $estado }}</option>
                                                 @endforeach
@@ -52,7 +48,7 @@
                                 <td>
 
                                     <div class="form-group {{ $errors->has('estadoFinal_id') ? 'has-error' : '' }}">
-                                            <select name="estadoFinal_id" id="estadoFinal_id" class="estados-js form-control" required>
+                                            <select name="estadoFinal_id" id="estadoFinal_id" class="form-control" required>
                                                 @foreach($estados as $id => $estado)
                                                     <option value="{{ $id }}">{{ $estado }}</option>
                                                 @endforeach
@@ -80,7 +76,7 @@
         </div>
     </div>
         <div class="card-body box-profile">
-          <table id="transicion" class="table table-bordered table-striped table-hover datatable">
+          <table id="transiciones" class="table table-bordered table-striped table-hover datatable">
                 <thead>
                 <tr>
                   <th>Nombre</th>
@@ -126,6 +122,42 @@
         $('.estados-js').select2();
         theme: "classic"
     });
+</script>
+<script>
+$(function () {
+          $('#transiciones').DataTable({
+            "paging": false,
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ Entradas",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "columns": [
+    { "width": "25%" },
+    null,
+    null,
+    { "width": "10%" }
+  ],
+          });
+        });
 </script>
 
 @endpush

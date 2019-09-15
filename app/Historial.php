@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Historial extends Model
 {
@@ -14,4 +15,9 @@ class Historial extends Model
     {
         return $this->belongsTo(Estado::class);
     }
+    // public function creado()
+    // {
+    //     $actual = Carbon::parse($this->created_at);
+    //     return $actual->diffForHumans();
+    // }
 }

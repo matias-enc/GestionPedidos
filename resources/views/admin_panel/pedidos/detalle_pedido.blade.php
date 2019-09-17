@@ -8,8 +8,8 @@
         </div>
     </div>
     <br> --}}
-        <div class="d-flex row justify-content-center">
-                <div class="card mr-5" style="width: 20rem;">
+        <div class="row col-12">
+                <div class="card mr-5 offset-1" style="width: 20rem;">
                         <input type="hidden" id="item" name="item_id" class="form-control" value="{{$item->id}}">
                         <img class="card-img-top" style="height: 15rem" src="{{asset('imagenes/albergue.jpg')}}" alt="Card image cap">
                         <div class="card-header">
@@ -29,8 +29,9 @@
 
 
 
-            <form action="{{ route("pedidos.confirmar_pedido") }}" method="POST" enctype="multipart/form-data">
-                <div class="ml-5 card card-primary card-outline offset-1">
+
+            <form class="col-4" action="{{ route("pedidos.agregar_carrito") }}" method="POST" enctype="multipart/form-data">
+                <div class="ml-5 card card-primary card-outline">
                     <div class="card-header">
                             <h2 class="card-title text-center"><strong>Detalles de Pedido</strong></h2>
                             <div class="card-tools">
@@ -39,15 +40,21 @@
 
                     <div class="card-body box-profile">
                             <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>Nombre: </strong>{{$item->nombre}}</li>
-                                    <li class="list-group-item"><strong>Llegada </strong>{{$fechaInicial}}</li>
-                                    <li class="list-group-item"><strong>Salida </strong>{{$fechaFinal}}</li>
+                                <div class="form-group ">
+                                    <strong>Nombre: </strong>{{$item->nombre}}
+                                </div>
+                                <div class="form-group">
+                                        <strong>Llegada: </strong>{{\Carbon\Carbon::create($fechaInicial)->format('d/m/Y')}}
+                                </div>
+                                <div class="form-group">
+                                        <strong>Salida: </strong>{{\Carbon\Carbon::create($fechaFinal)->format('d/m/Y')}}
+                                </div>
                                 </ul>
                                 <br>
                                 <div class="d-flex justify-content-center">
                                     <button class="btn btn-primary btn-pill">
-                                        <i class="fal fa-plus"></i>
-                                        Solicitar
+                                        <i class="fal fa-box-full"></i>
+                                        Agregar al Pedido
                                     </button>
                                 </div>
                     </div>

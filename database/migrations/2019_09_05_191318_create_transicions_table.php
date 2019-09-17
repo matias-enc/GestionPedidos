@@ -22,6 +22,7 @@ class CreateTransicionsTable extends Migration
             $table->foreign('estadoInicial_id')->references('id')->on('estados');
             $table->unsignedBigInteger('estadoFinal_id')->unsigned();
             $table->foreign('estadoFinal_id')->references('id')->on('estados');
+            $table->integer('orden')->unsigned();
             $table->timestamps();
         });
     }

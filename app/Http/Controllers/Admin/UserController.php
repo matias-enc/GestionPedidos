@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use Alert;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -95,8 +96,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        if(auth()->user()->id != $user->id){
+            $user->delete();
+            return back();
+        }else{
+            Alert::error('Error al Eliminar Usuario', 'No pueden eliminar su Usuario');
+            return back();
+        }
 
-        return back();
     }
 }

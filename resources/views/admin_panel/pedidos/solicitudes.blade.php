@@ -1,19 +1,18 @@
 @extends('admin_panel.index')
 
 @section('content')
-
 <div class="card col-10 offset-1">
 
     <div class="card-body">
-        <div class="table">
-            <h3><strong>Mis Pedidos</strong></h3>
+            <h3><strong>Nuevas Solicitudes de Pedidos</strong></h3>
             <br>
+        <div class="table">
             <table id="pedidos" class="table table-bordered table-striped table-hover datatable">
-
                     <thead>
                     <tr>
+                      <th>Nr°</th>
+                      <th>Usuario</th>
                       <th>Items</th>
-                      {{-- <th>Items</th> --}}
                       <th>Estado</th>
                       <th>Acciones</th>
                     </tr>
@@ -21,19 +20,22 @@
                     <tbody>
                         @foreach ($pedidos as $pedido)
                             <tr>
-                                @foreach ($pedido->seguimientos as $seguimiento)
-
-                                <td><span class="badge badge-pill badge-success">{{ $seguimiento->item->nombre }}</span></td>
-                                @endforeach
-                                @if($pedido->estado->nombre !='Finalizado')
-                                <td><span class="badge badge-pill badge-success">{{ $pedido->estado->nombre }}</span></td>
-                                @else
-                                <td><span class="badge badge-pill badge-danger">{{ $pedido->estado->nombre }}</span></td>
-                                @endif
+                                <td>{{$pedido->id}}</td>
                                 <td>
-                                        <a class="btn btn-xs btn-primary" href="{{route('pedidos.seguimiento', $pedido)}}">
-                                            Seguimiento
-                                        </a>
+                                        <span class="badge badge-warning">{{ $pedido->usuario->name }}</span>
+                                </td>
+                                <td>
+                                    @foreach ($pedido->seguimientos as $seguimiento)
+                                        <span class="badge badge-info">{{ $seguimiento->item->nombre }}</span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                        <span class="badge badge-pill badge-success">{{ $pedido->estado->nombre }}</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-primary" href="{{route('pedidos.ver_solicitud', $pedido)}}">
+                                        Ver
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -47,9 +49,7 @@
 <script>
         $(function () {
           $('#pedidos').DataTable({
-            "ordering": true,
-            "info": false,
-            "lengthChange": false,
+            "paging": true,
             language: {
                 "decimal": "",
                 "emptyTable": "No hay información",
@@ -70,10 +70,16 @@
                     "previous": "Anterior"
                 }
             },
+            "searching": true,
+            "ordering": true,
+            "info": false,
             "columns": [
     null,
-    { "width": "10%" },
-    { "width": "10%" }],
+    null,
+    null,
+    null,
+    { "width": "15%" }
+  ],
           });
         });
 </script>

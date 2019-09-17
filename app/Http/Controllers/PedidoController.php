@@ -57,6 +57,11 @@ class PedidoController extends Controller
         return view('admin_panel.pedidos.show', compact('pedido'));
     }
 
+    public function ver_solicitud(Pedido $pedido)
+    {
+        return view('admin_panel.pedidos.ver_solicitud', compact('pedido'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -76,29 +81,32 @@ class PedidoController extends Controller
     public function consultar_disponibilidad(Request $request)
     {
         $this->validate($request,[
-            'inicial'=> 'required',
-            'final'=> 'required'
+            'inicial'=> 'required'
+        ],[
+            'inicial.required' => 'Seleccione una fecha'
         ]);
         $fechaInicial=Carbon::createFromFormat('d/m/Y',$request->inicial);
         $fechaFinal=Carbon::createFromFormat('d/m/Y',$request->final);
         $tipoItem = TipoItem::find($request->tipoItem);
         $items = $tipoItem->items;
-        foreach ($items as $item){
-            foreach($item->seguimientos as $seguimiento){
-                $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
-                $fechaFinalSeg=Carbon::create($seguimiento->fechaFinal);
-                if(($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))){
-                    $disponible = true;
-                }elseif($fechaInicial->equalTo($fechaInicialSeg)){
-                    $disponible = false;
-                }else{
-                    $disponible = false;
+        $disponible = true;
+        foreach ($items as $key => $item){
+                foreach($item->seguimientos as $seguimiento){
+                    $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
+                    $fechaFinalSeg=Carbon::create($seguimiento->fechaFinal);
+                    if(($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))){
+                        $disponible = true;
+                    }elseif($fechaInicial->equalTo($fechaInicialSeg)){
+                        $disponible = false;
+                    }else{
+                        $disponible = false;
+                    }
                 }
-            }
-            if($disponible == false){
-                $items->pull($item->id-1);
-            }
-            $disponible = true;
+                if($disponible == false){
+                    $items->pull($key);
+                }
+                $disponible = true;
+
         }
         $items->pluck('nombre', 'id');
         return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
@@ -114,6 +122,7 @@ class PedidoController extends Controller
         $pedido = new Pedido();
         $pedido->user_id = auth()->user()->id;
         $pedido->estado_id = 5; //CAMBIAR HARDCODEADO DURO - INSTANCIAR WORKFLOW DE PEDIDO
+        $pedido->flujoTrabajo_id = 1;
         $pedido->save();
         $historial = new Historial();
         $historial->estado_id = $pedido->estado_id;
@@ -150,6 +159,16 @@ class PedidoController extends Controller
     {
         $historiales = $pedido->historiales;
         return view('admin_panel.pedidos.seguimiento', compact('historiales'));
+    }
+    public function solicitudes()
+    {
+        $pedidos = Pedido::all();
+        foreach ($pedidos as $key => $pedido) {
+            if($pedido->estado->nombre != "Solicitado"){
+                $pedidos->pull($key);
+            }
+        }
+        return view('admin_panel.pedidos.solicitudes', compact('pedidos'));
     }
 
     /**

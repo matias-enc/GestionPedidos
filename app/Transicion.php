@@ -23,21 +23,4 @@ class Transicion extends Model
         return $this->belongsTo(Estado::class, 'estadoFinal_id');
     }
 
-    // public function asignarEstadoInicial(Estado $estado){
-    //     $this->estadoInicial = $estado->id;
-    //     return true;
-    // }
-    // public function asignarEstadoFinal(Estado $estado){
-    //     // $transiciones = Transicion::all();
-    //     // foreach ($transiciones as $transicion) {
-    //     //     if ($transicion->estadoInicial==$this->estadoInicial && $transicion->estadoFinal==$estado->id) {
-    //     //         return 'ya existe una transicion con dichos estados';
-    //     //     }
-    //     // }
-    //     if ($this->estadoInicial!=$estado->id) {
-    //         $this->estadoFinal = $estado->id;
-    //         return true;
-    //     }
-    //     return false;
-    // }
 }

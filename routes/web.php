@@ -34,7 +34,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('users/{user}','UserController@show')->name('users.show')->middleware('has.permission:usuarios_show') ;
     Route::get('users/{id}/edit' , 'UserController@edit')->name('users.edit')->middleware('has.permission:usuarios_edit');
     Route::put('users/{user}' , 'UserController@update')->name('users.update')->middleware('has.permission:usuarios_update');
-    Route::delete('users/{id}' , 'UserController@destroy')->name('users.destroy')->middleware('has.permission:usuarios_destroy') ;
+    Route::delete('users/{user}' , 'UserController@destroy')->name('users.destroy')->middleware('has.permission:usuarios_destroy') ;
 
     //Rutas Roles
     Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
@@ -90,4 +90,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('detalle_pedido', 'PedidoController@detalle_pedido')->name('pedidos.detalle_pedido');
     Route::post('confimar_pedido','PedidoController@confirmar_pedido')->name('pedidos.confirmar_pedido');
     Route::get('mis_pedidos/{pedido}','PedidoController@seguimiento')->name('pedidos.seguimiento');
+
+    //Solicitudes
+    Route::get('solicitudes','PedidoController@solicitudes')->name('pedidos.solicitudes');
+    Route::get('solicitudes/{pedido}','PedidoController@ver_solicitud')->name('pedidos.ver_solicitud');
 });

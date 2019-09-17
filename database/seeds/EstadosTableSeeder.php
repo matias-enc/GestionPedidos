@@ -13,6 +13,9 @@ class EstadosTableSeeder extends Seeder
     public function run()
     {
         Estado::create([
+            'nombre' => 'Carrito'
+        ]);
+        Estado::create([
             'nombre' => 'Iniciado'
         ]);
         Estado::create([
@@ -23,6 +26,18 @@ class EstadosTableSeeder extends Seeder
         ]);
         Estado::create([
             'nombre' => 'Finalizado'
+        ]);
+        Estado::create([
+            'nombre' => 'Solicitado'
+        ]);
+        Estado::create([
+            'nombre' => 'Espera de Pago'
+        ]);
+        Estado::create([
+            'nombre' => 'Pagado'
+        ]);
+        Estado::create([
+            'nombre' => 'Pago Rechazado'
         ]);
     }
 

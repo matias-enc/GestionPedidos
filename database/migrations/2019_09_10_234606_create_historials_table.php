@@ -15,9 +15,9 @@ class CreateHistorialsTable extends Migration
     {
         Schema::create('historials', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('pedido_id');
+            $table->unsignedBigInteger('pedido_id')->nullable();
             $table->foreign('pedido_id')->references('id')->on('pedidos');
-            $table->unsignedBigInteger('estado_id');
+            $table->unsignedBigInteger('estado_id')->nullable();
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->timestamps();
         });

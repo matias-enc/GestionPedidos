@@ -74,12 +74,13 @@ class PedidoController extends Controller
     }
     public function nuevo_pedido()
     {
-        $tipoItems = TipoItem::all()->pluck('nombre', 'id');
-        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
+            $tipoItems = TipoItem::all();
+            return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
     }
 
     public function consultar_disponibilidad(Request $request)
     {
+        // return $request;
         $this->validate($request,[
             'inicial'=> 'required'
         ],[
@@ -90,27 +91,44 @@ class PedidoController extends Controller
         $tipoItem = TipoItem::find($request->tipoItem);
         $items = $tipoItem->items;
         $disponible = true;
-        foreach ($items as $key => $item){
-                foreach($item->seguimientos as $seguimiento){
+
+        if ($tipoItem->nombre!='Secundarios') {
+                foreach ($items as $key => $item){
+
+                    foreach($item->seguimientos as $seguimiento){
+                        $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
+                        $fechaFinalSeg=Carbon::create($seguimiento->fechaFinal);
+                        if(($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))){
+                            $disponible = true;
+                        }elseif($fechaInicial->equalTo($fechaInicialSeg)){
+                            $disponible = false;
+                        }else{
+                            $disponible = false;
+                        }
+                    }
+                    if($disponible == false){
+                        $items->pull($key);
+                    }
+                    $disponible = true;
+
+                }
+                $items->pluck('nombre', 'id');
+                return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
+
+        }else{
+            foreach ($tipoItem->items as $key => $itemSec) {
+                $cantidad = $itemSec->cantidad;
+                foreach($itemSec->seguimientos as $seguimiento){
                     $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
                     $fechaFinalSeg=Carbon::create($seguimiento->fechaFinal);
-                    if(($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))){
-                        $disponible = true;
-                    }elseif($fechaInicial->equalTo($fechaInicialSeg)){
-                        $disponible = false;
-                    }else{
-                        $disponible = false;
+                    if(($fechaFinalSeg->greaterThanOrEqualTo($fechaInicial))||($fechaInicialSeg->lessThanOrEqualTo($fechaFinal))||($fechaInicial->equalTo($fechaInicialSeg))){
+                        $cantidad = $cantidad - $seguimiento->cantidad;
                     }
                 }
-                if($disponible == false){
-                    $items->pull($key);
-                }
-                $disponible = true;
+                return 'la cantidad para el item:'. $itemSec->nombre. ' es:' . $cantidad;
+        }
 
         }
-        $items->pluck('nombre', 'id');
-        return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
-
     }
     function detalle_pedido(Request $request){
         $item = Item::find($request->item_id);
@@ -118,6 +136,41 @@ class PedidoController extends Controller
         $fechaFinal = $request->fechaFinal;
         return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal'));
     }
+
+    function agregar_carrito(Request $request){
+        foreach (auth()->user()->pedidos as $pedido) {
+            if($pedido->estado->nombre == 'Carrito'){
+                $seguimiento = new Seguimiento();
+                $seguimiento->pedido_id = $pedido->id;
+                $seguimiento->fechaInicial = $request->fechaInicial;
+                $seguimiento->fechaFinal = $request->fechaFinal;
+                $seguimiento->item_id = $request->item_id;
+                $seguimiento->save();
+                return view('admin_panel.pedidos.items_pedido', compact('pedido', 'fechaInicial', 'fechaFinal'));
+            }
+        }
+
+        $pedido = new Pedido();
+        $pedido->user_id = auth()->user()->id;
+        $pedido->estado_id = 1; //hardcode
+        $pedido->save();
+        $seguimiento = new Seguimiento();
+        $seguimiento->pedido_id = $pedido->id;
+        $seguimiento->fechaInicial = $request->fechaInicial;
+        $seguimiento->fechaFinal = $request->fechaFinal;
+        $seguimiento->item_id = $request->item_id;
+        $seguimiento->save();
+        return view('admin_panel.pedidos.items_pedido', compact('pedido', 'fechaInicial', 'fechaFinal'));
+    }
+
+    function listar_carrito(){
+        foreach (auth()->user()->pedidos as $pedido) {
+            if($pedido->estado->nombre == 'Carrito'){
+                return view('admin_panel.pedidos.items_pedido', compact('pedido'));
+            }
+        }
+    }
+
     function confirmar_pedido(Request $request){
         $pedido = new Pedido();
         $pedido->user_id = auth()->user()->id;

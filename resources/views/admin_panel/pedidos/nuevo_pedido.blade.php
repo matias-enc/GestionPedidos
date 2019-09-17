@@ -17,13 +17,31 @@
                                         <strong><Label>Seleccione una Categoria</Label></strong>
                                         <div class="form-group">
                                             <div class="form-group {{ $errors->has('tipoItem') ? 'has-error' : '' }}">
-                                                <select name="tipoItem" id="tipoItem" class="estados-js form-control" required>
-                                                    @foreach($tipoItems as $id => $tipo)
-                                                        <option  placeholder="Categoria"  value="{{ $id }}" >{{ $tipo }}</option>
+                                                <select name="tipoItem" id="tipoItem" class="estados-js form-control" onchange="d1(this)" required>
+                                                    @foreach($tipoItems as $tipo)
+                                                        <option  placeholder="Categoria"  value="{{ $tipo->id }}" >{{ $tipo->nombre }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
+                                        @foreach ($tipoItems as $id => $tipoItem)
+
+                                            @if($tipoItem->nombre=='Secundarios')
+
+                                            <div class="form-group" id="prg1" style="display:none">
+                                                <strong><Label>Seleccione un Item</Label></strong>
+                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
+                                                    <select name="itemSecundario"   class="estados-js form-control"  required>
+                                                        @foreach($tipoItem->items as $tipo)
+                                                            <option  placeholder="Categoria"  value="{{ $tipo->id }}" >{{ $tipo->nombre }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @endif
+
+                                        @endforeach
+
                                         <div class="d-flex justify-content-between">
                                             <strong><Label>Llegada</Label></strong>
                                             <strong><Label>Salida</Label></strong>
@@ -32,7 +50,13 @@
                                             <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : ''}}" name="inicial" placeholder="Llegada"/>
                                             <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : '' }}" name="final" placeholder="Salida" />
                                         </div>
-
+                                        <br>
+                                            <div class="form-group" id="cant" style="display:none" class="m-1">
+                                                <strong><Label>Cantidad de Huespedes</Label></strong>
+                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
+                                                        <input class="input-sm form-control " type="number">
+                                                </div>
+                                            </div>
                                         <br>
                                         <div class="d-flex justify-content-end">
                                             <input class="btn btn-pill btn-success" type="submit" value="Consultar Disponibilidad">
@@ -57,4 +81,18 @@
         todayHighlight: true,
     });
 </script>
+<script language="javascript" type="text/javascript">
+    function d1(selectTag){
+     if(selectTag.value == 4){
+    document.getElementById('prg1').style.display = "block";
+     }else{
+     document.getElementById('prg1').style.display = "none";
+     }
+     if(selectTag.value == 3){
+        document.getElementById('cant').style.display = "block";
+    }else{
+    document.getElementById('cant').style.display = "none";
+    }
+    }
+    </script>
 @endpush

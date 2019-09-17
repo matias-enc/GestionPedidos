@@ -16,11 +16,19 @@
         <ul class="navbar-nav ml-auto">
           <!-- Messages Dropdown Menu -->
 
-          {{-- </li>
-          <li class="nav-item">
-            <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
-                class="fas fa-th-large"></i></a>
-          </li> --}}
+          </li>
+          @foreach (auth()->user()->pedidos as $pedido)
+            @if ($pedido->estado->nombre == 'Carrito')
+            <li class="nav-item">
+                    <a href="{{ route("pedidos.listar_carrito") }}" class="nav-link">
+                    <i class="far fa-shopping-cart nav-icon"></i>
+
+                    <span class="badge badge-warning navbar-badge">{{sizeof($pedido->seguimientos)}}</span>
+                    </a>
+                </li>
+            @endif
+          @endforeach
+
           <li class="nav-item dropdown">
                 <div class="user-panel d-flex">
                         <div class="image">
@@ -31,6 +39,7 @@
                         </div>
                       </div>
             </li>
+
         </ul>
       </nav>
       <!-- /.navbar -->

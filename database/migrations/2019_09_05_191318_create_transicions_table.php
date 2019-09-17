@@ -16,11 +16,11 @@ class CreateTransicionsTable extends Migration
         Schema::create('transicions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
-            $table->unsignedBigInteger('flujoTrabajo_id')->unsigned();
+            $table->unsignedBigInteger('flujoTrabajo_id')->unsigned()->nullable();
             $table->foreign('flujoTrabajo_id')->references('id')->on('flujo_trabajos');
-            $table->unsignedBigInteger('estadoInicial_id')->unsigned();
+            $table->unsignedBigInteger('estadoInicial_id')->unsigned()->nullable();
             $table->foreign('estadoInicial_id')->references('id')->on('estados');
-            $table->unsignedBigInteger('estadoFinal_id')->unsigned();
+            $table->unsignedBigInteger('estadoFinal_id')->unsigned()->nullable();
             $table->foreign('estadoFinal_id')->references('id')->on('estados');
             $table->integer('orden')->unsigned();
             $table->timestamps();

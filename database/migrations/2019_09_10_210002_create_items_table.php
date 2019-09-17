@@ -17,8 +17,9 @@ class CreateItemsTable extends Migration
             $table->bigIncrements('id');
             $table->string('nombre');
             $table->string('descripcion');
-            $table->integer('capacidad');
-            $table->unsignedBigInteger('tipoItems_id');
+            $table->integer('capacidad')->nullable();
+            $table->integer('cantidad')->nullable();
+            $table->unsignedBigInteger('tipoItems_id')->nullable();
             $table->foreign('tipoItems_id')->references('id')->on('tipo_items');
             $table->timestamps();
         });

@@ -88,8 +88,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('nuevo_pedido', 'PedidoController@nuevo_pedido')->name('pedidos.nuevo_pedido');
     Route::post('consultar_disponibilidad', 'PedidoController@consultar_disponibilidad')->name('pedidos.consultar_disponibilidad');
     Route::post('detalle_pedido', 'PedidoController@detalle_pedido')->name('pedidos.detalle_pedido');
+    Route::post('agregar_carrito', 'PedidoController@agregar_carrito')->name('pedidos.agregar_carrito');
     Route::post('confimar_pedido','PedidoController@confirmar_pedido')->name('pedidos.confirmar_pedido');
     Route::get('mis_pedidos/{pedido}','PedidoController@seguimiento')->name('pedidos.seguimiento');
+    Route::get('listar_carrito','PedidoController@listar_carrito')->name('pedidos.listar_carrito');
 
     //Solicitudes
     Route::get('solicitudes','PedidoController@solicitudes')->name('pedidos.solicitudes');

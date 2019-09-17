@@ -13,17 +13,22 @@ class TipoItemsTableSeeder extends Seeder
     public function run()
     {
         TipoItem::create([
-            'nombre' => 'Albergues',
-            'flujoTrabajo_id' => '2',
-            'descripcion' => '',
-        ]);
-        TipoItem::create([
             'nombre' => 'Salones de Eventos',
             'flujoTrabajo_id' => '2',
             'descripcion' => '',
         ]);
         TipoItem::create([
             'nombre' => 'Complejos',
+            'flujoTrabajo_id' => '2',
+            'descripcion' => '',
+        ]);
+        TipoItem::create([
+            'nombre' => 'Albergues',
+            'flujoTrabajo_id' => '2',
+            'descripcion' => '',
+        ]);
+        TipoItem::create([
+            'nombre' => 'Secundarios',
             'flujoTrabajo_id' => '2',
             'descripcion' => '',
         ]);

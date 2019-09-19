@@ -10,6 +10,10 @@ class TipoItem extends Model
     {
         return $this->belongsTo(FlujoTrabajo::class, 'flujoTrabajo_id');
     }
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
     public function items()
     {
         return $this->hasMany(Item::class, 'tipoItems_id');

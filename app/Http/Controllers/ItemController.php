@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Categoria;
 use App\Item;
 use App\TipoItem;
 use Illuminate\Http\Request;
@@ -16,13 +17,14 @@ class ItemController extends Controller
     public function index()
      {
          $items = Item::all();
+
          $muebles = collect();
          $inmuebles = collect();
 
          foreach ($items as $id => $item) {
-            if ($item->cantidad==null) {
+            if ($item->tipoItem->categoria->nombre=='Muebles') {
                 $muebles->push($item);
-            }elseif($item->capacidad==null){
+            }elseif($item->tipoItem->categoria->nombre=='Inmuebles'){
                 $inmuebles->push($item);
             }
          }
@@ -36,8 +38,9 @@ class ItemController extends Controller
       */
      public function create()
      {
-        $tipoItems = TipoItem::all();
-         return view('admin_panel.inventario.create', compact('items', 'tipoItems'));
+
+        $categorias = Categoria::all();
+         return view('admin_panel.inventario.create', compact('categorias'));
      }
 
      /**

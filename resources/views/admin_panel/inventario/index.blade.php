@@ -26,7 +26,7 @@
                     <tr>
                       <th>Nombre</th>
                       <th>Descripcion</th>
-                      <th>Cantidad</th>
+                      <th>Capacidad</th>
                       <th >Acciones</th>
                     </tr>
                     </thead>
@@ -35,7 +35,7 @@
                             <tr>
                                 <td>{{$inmueble->nombre}}</td>
                                 <td>{{$inmueble->descripcion}}</td>
-                                <td>{{$inmueble->cantidad}}</td>
+                                <td>{{$inmueble->capacidad}}</td>
                                 <td width="21%">
                                         <a class="btn btn-xs btn-primary" href="{{ route('item.show', $inmueble->id) }}">
                                             Ver
@@ -70,8 +70,8 @@
                             <tr>
                               <th>Nombre</th>
                               <th>Descripcion</th>
-                              <th>Capacidad</th>
-                              <th >Acciones</th>
+                              <th>Cantidad</th>
+                              <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -79,7 +79,7 @@
                                     <tr>
                                         <td>{{$mueble->nombre}}</td>
                                         <td>{{$mueble->descripcion}}</td>
-                                        <td>{{$mueble->capacidad}}</td>
+                                        <td>{{$mueble->cantidad}}</td>
                                         <td width="21%">
                                                 <a class="btn btn-xs btn-primary" href="{{ route('item.show', $mueble->id) }}">
                                                     Ver

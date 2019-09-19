@@ -14,34 +14,47 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <strong><Label>Categoria</Label></strong>
-                                        <div class="form-group">
-                                            <div class="form-group {{ $errors->has('tipoItem') ? 'has-error' : '' }}">
-                                                <select name="tipoItem" id="tipoItem" class="estados-js form-control" onchange="d1(this)" required>
-                                                    <option value="" selected disabled>Seleccione una Categoria</option>
-                                                    @foreach($tipoItems as $tipo)
-                                                        <option  placeholder="Categoria"  value="{{ $tipo->id }}" >{{ $tipo->nombre }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        @foreach ($tipoItems as $id => $tipoItem)
-
-                                            @if($tipoItem->nombre=='Secundarios')
-
-                                            <div class="form-group" id="prg1" style="display:none">
-                                                <strong><Label>Seleccione un Item</Label></strong>
-                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                                                    <select name="itemSecundario"   class="estados-js form-control"  required>
-                                                        @foreach($tipoItem->items as $tipo)
-                                                            <option  placeholder="Categoria"  value="{{ $tipo->id }}" >{{ $tipo->nombre }}</option>
+                                            <div class="form-group {{ $errors->has('descripcion') ? 'has-error' : '' }}">
+                                                    <strong><Label>Categoria</Label></strong>
+                                                <select id="categorias" class="estados-js form-control" onchange="d1(this)" >
+                                                        <option value="" disabled selected style="">Seleccione una Categoria</option>
+                                                        @foreach($categorias as $categoria)
+                                                            <option  placeholder="Categoria"  value="{{ $categoria->id }}" >{{ $categoria->nombre }}</option>
                                                         @endforeach
-                                                    </select>
+                                                </select>
+                                                @if($errors->has('descripcion'))
+                                                    <p class="help-block">
+                                                        {{ $errors->first('descripcion') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+
+
+                                                            @foreach($categorias as $id => $categoria)
+                                                            <div  class="form-group " style="display:none"  id="{{$categoria->id}}">
+
+
+                                                            <strong><Label>Tipo de Item</Label></strong>
+                                                                <select id="tipoItem"   class="estados-js form-control {{ $errors->has('tipoItems') ? 'is-invalid' : '' }}"  name="tipoItem">
+                                                                        <option value="" disabled selected style="">Seleccione una Categoria</option>
+                                                                @foreach ($categoria->tipoItems as $tipoItem)
+                                                                        <option  placeholder="Categoria"  value="{{ $tipoItem->id }}" >{{ $tipoItem->nombre }}</option>
+                                                                @endforeach
+                                                                </select>
+                                                            </div>
+                                                            @endforeach
+                                            <div class="form-group" id="cantidad" type="hidden"   style="display:none" class="m-1">
+                                                <strong><Label>Cantidad</Label></strong>
+                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
+                                                        <input class="input-sm form-control " type="number" name="cantidad">
                                                 </div>
                                             </div>
-                                            @endif
-
-                                        @endforeach
+                                            <div class="form-group" id="capacidad"   style="display:none" class="m-1">
+                                                <strong><Label>Capacidad</Label></strong>
+                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
+                                                        <input class="input-sm form-control " type="number" name="capacidad">
+                                                </div>
+                                            </div>
 
                                         <div class="d-flex justify-content-between">
                                             <strong><Label>Llegada</Label></strong>
@@ -51,13 +64,6 @@
                                             <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : ''}}" name="inicial" placeholder="Llegada"/>
                                             <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : '' }}" name="final" placeholder="Salida" />
                                         </div>
-                                        <br>
-                                            <div class="form-group" id="cant"   style="display:none" class="m-1">
-                                                <strong><Label>Cantidad de Huespedes</Label></strong>
-                                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                                                        <input class="input-sm form-control " type="number" name="capacidad">
-                                                </div>
-                                            </div>
                                         <br>
                                         <div class="d-flex justify-content-end">
                                             <input class="btn btn-pill btn-success" type="submit" value="Consultar Disponibilidad">
@@ -84,16 +90,25 @@
 </script>
 <script language="javascript" type="text/javascript">
     function d1(selectTag){
-     if(selectTag.value == 4){
-    document.getElementById('prg1').style.display = "block";
+     if(selectTag.value == 1){
+    document.getElementById('1').style.display = "block";
+    document.getElementById('1').style.visibility = "visible";
+    document.getElementById('capacidad').style.display = "block";
+    document.getElementById('capacidad').style.visibility = "visible";
+    document.getElementById('2').style.display = "none";
+    document.getElementById('2').style.visibility = "hidden";
+        document.getElementById('cantidad').style.display = "none";
+        document.getElementById('cantidad').style.visibility = "hidden";
      }else{
-     document.getElementById('prg1').style.display = "none";
+    document.getElementById('2').style.display = "block";
+    document.getElementById('2').style.visibility = "visible";
+    document.getElementById('cantidad').style.display = "block";
+    document.getElementById('cantidad').style.visibility = "visible";
+    document.getElementById('1').style.display = "none";
+    document.getElementById('1').style.visibility = "hidden";
+        document.getElementById('capacidad').style.display = "none";
+        document.getElementById('capacidad').style.visibility = "hidden";
      }
-     if(selectTag.value == 3){
-        document.getElementById('cant').style.display = "block";
-    }else{
-    document.getElementById('cant').style.display = "none";
-    }
     }
     </script>
 @endpush

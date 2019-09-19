@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PermisoTableSeeder::class,
             EstadosTableSeeder::class,
             FlujoTrabajosTableSeeder::class,
+            CategoriasTableSeeder::class,
             TipoItemsTableSeeder::class,
             ItemsTableSeeder::class,
             ]);

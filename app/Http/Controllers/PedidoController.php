@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Alert;
+use App\Categoria;
 use App\Estado;
 use App\FlujoTrabajo;
 use App\Historial;
@@ -76,8 +77,8 @@ class PedidoController extends Controller
     }
     public function nuevo_pedido()
     {
-        $tipoItems = TipoItem::all();
-        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
+        $categorias = Categoria::all();
+        return view('admin_panel.pedidos.nuevo_pedido', compact('categorias'));
     }
 
     public function consultar_disponibilidad(Request $request)

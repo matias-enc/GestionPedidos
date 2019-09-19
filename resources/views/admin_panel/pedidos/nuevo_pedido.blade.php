@@ -14,10 +14,11 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <strong><Label>Seleccione una Categoria</Label></strong>
+                                        <strong><Label>Categoria</Label></strong>
                                         <div class="form-group">
                                             <div class="form-group {{ $errors->has('tipoItem') ? 'has-error' : '' }}">
                                                 <select name="tipoItem" id="tipoItem" class="estados-js form-control" onchange="d1(this)" required>
+                                                    <option value="" selected disabled>Seleccione una Categoria</option>
                                                     @foreach($tipoItems as $tipo)
                                                         <option  placeholder="Categoria"  value="{{ $tipo->id }}" >{{ $tipo->nombre }}</option>
                                                     @endforeach
@@ -51,10 +52,10 @@
                                             <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : '' }}" name="final" placeholder="Salida" />
                                         </div>
                                         <br>
-                                            <div class="form-group" id="cant" style="display:none" class="m-1">
+                                            <div class="form-group" id="cant"   style="display:none" class="m-1">
                                                 <strong><Label>Cantidad de Huespedes</Label></strong>
                                                 <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                                                        <input class="input-sm form-control " type="number">
+                                                        <input class="input-sm form-control " type="number" name="capacidad">
                                                 </div>
                                             </div>
                                         <br>

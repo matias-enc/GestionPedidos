@@ -15,49 +15,49 @@ class ItemsTableSeeder extends Seeder
         Item::create([
             'nombre' => 'Habitacion 1',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '5',
         ]);
         Item::create([
             'nombre' => 'Habitacion 2',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '5',
         ]);
         Item::create([
             'nombre' => 'Habitacion 3',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '4',
         ]);
         Item::create([
             'nombre' => 'Habitacion 4',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '8',
         ]);
         Item::create([
             'nombre' => 'Habitacion 5',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '8',
         ]);
         Item::create([
             'nombre' => 'Habitacion 6',
             'tipoItems_id' => '3',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => 'Habitacion de un Albergue',
             'capacidad' => '4',
         ]);
         Item::create([
             'nombre' => 'Mesas de Madera',
             'tipoItems_id' => '4',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => '',
             'cantidad' => '80',
         ]);
         Item::create([
             'nombre' => 'Sillas de Plastico',
             'tipoItems_id' => '4',
-            'descripcion' => 'Habitacion de un Alvergue',
+            'descripcion' => '',
             'cantidad' => '100',
         ]);
     }

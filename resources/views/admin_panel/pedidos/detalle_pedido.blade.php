@@ -26,10 +26,6 @@
                         </div>
                 </div>
 
-
-
-
-
             <form class="col-4" action="{{ route("pedidos.agregar_carrito") }}" method="POST" enctype="multipart/form-data">
                 <div class="ml-5 card card-primary card-outline">
                     <div class="card-header">

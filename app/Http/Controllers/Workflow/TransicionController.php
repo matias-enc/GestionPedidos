@@ -90,17 +90,12 @@ class TransicionController extends Controller
      */
     public function destroy(Transicion $transicion)
     {
-        $transicion->delete();
-
+        if(sizeof($transicion->flujoTrabajo->pedidos)==0){
+            $transicion->delete();
+        }else{
+            Alert::error('Hay pedidos en curso!', 'Error al Borrar la Transicion')->persistent('Cerrar');
+        };
         return back();
-    }
-    public function validarTransicion(){
-        return request()->validate([
-            'nombre' => 'required',
-            'flujoTrabajo_id' => 'required',
-            'estadoInicial_id' => 'required',
-            'estadoFinal_id' => 'different:estadoInicial_id|required',
-        ]);
     }
 
 

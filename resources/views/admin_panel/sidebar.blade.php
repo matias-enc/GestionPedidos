@@ -118,6 +118,12 @@
                     </li>
                 </ul>
               </li>
+              <li class="nav-item">
+                <a href="{{ route("item.index") }}" class="nav-link {{ request()->is('index')  ? 'active' : '' }}">
+                <i class="fal fa-inventory nav-icon"></i>
+                <p><span>Gestion Inventario</span></p>
+                </a>
+              </li>
 
             </ul>
           </nav>

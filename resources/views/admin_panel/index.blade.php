@@ -57,7 +57,7 @@
                         </div><!-- /.row -->
                       </div><!-- /.container-fluid -->
                     </div>
-                    <div class="content">
+                    <div class="main-content-container container-fluid px-4">
                         @yield('content')
                     </div>
             </div>

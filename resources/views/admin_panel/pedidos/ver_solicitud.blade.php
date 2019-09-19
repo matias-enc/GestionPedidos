@@ -7,9 +7,15 @@
                     <h3 class="profile-username text-center"><strong>Solicitud de Pedido N°: {{ $pedido->id }}</strong> </h3>
                 </div>
             <div class="card-body box-profile">
-
-
-                    <br>
+                        <div class="offset-2 col-8 justify-content-center">
+                            <div class="d-flex justify-content-between row  ">
+                                <input class="btn btn-pill btn-success" type="submit" value="Aceptar Solicitud">
+                                <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-12 border-bottom"></div>
+                            <br>
                         <div class=" row">
                             <div class="col-6">
                                 <div class="form-group border-bottom ">
@@ -41,20 +47,7 @@
 
                             </div>
                         </div>
-                        <br>
-                        <div class="form-group border-top border-bottom text-center">
-                            <br>
-                            <h5><label class="text-center "><i class="fal fa-check"></i><strong> Acciones Disponibles</strong> </label></h5>
 
-                        </div>
-                        <div class="offset-2 col-8 justify-content-center">
-                            <br>
-                                <div class="d-flex justify-content-between row ">
-                                    <input class="btn btn-pill btn-success" type="submit" value="Aceptar Solicitud">
-                                    <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
-                                </div>
-                            </div>
-                            <br>
             </div>
 
             </div>

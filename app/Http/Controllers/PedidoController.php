@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 
 use Alert;
+use App\Estado;
+use App\FlujoTrabajo;
 use App\Historial;
 use App\Pedido;
 use App\Item;
@@ -70,17 +72,16 @@ class PedidoController extends Controller
      */
     public function edit(Pedido $pedido)
     {
-        //
+
     }
     public function nuevo_pedido()
     {
-            $tipoItems = TipoItem::all();
-            return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
+        $tipoItems = TipoItem::all();
+        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
     }
 
     public function consultar_disponibilidad(Request $request)
     {
-        // return $request;
         $this->validate($request,[
             'inicial'=> 'required'
         ],[
@@ -90,10 +91,15 @@ class PedidoController extends Controller
         $fechaFinal=Carbon::createFromFormat('d/m/Y',$request->final);
         $tipoItem = TipoItem::find($request->tipoItem);
         $items = $tipoItem->items;
+        foreach ($items as $key => $item) { //Filtrar items por capacidad
+            if($item->capacidad<$request->capacidad && $request->capacidad != ''){
+                $items->pull($key);
+            }
+        }
         $disponible = true;
 
         if ($tipoItem->nombre!='Secundarios') {
-                foreach ($items as $key => $item){
+                foreach ($items as $key => $item){ //Filtrar items por disponibilidad
 
                     foreach($item->seguimientos as $seguimiento){
                         $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
@@ -103,6 +109,10 @@ class PedidoController extends Controller
                         }elseif($fechaInicial->equalTo($fechaInicialSeg)){
                             $disponible = false;
                         }else{
+                            $disponible = false;
+                        }
+                        if($seguimiento->item->capacidad<$request->capacidad){
+                            return 'peroncho';
                             $disponible = false;
                         }
                     }
@@ -116,7 +126,7 @@ class PedidoController extends Controller
                 return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
 
         }else{
-            foreach ($tipoItem->items as $key => $itemSec) {
+            foreach ($tipoItem->items as $key => $itemSec) { //Filtrar items por disponibilidad en cuanto a su cantidad
                 $cantidad = $itemSec->cantidad;
                 foreach($itemSec->seguimientos as $seguimiento){
                     $fechaInicialSeg=Carbon::create($seguimiento->fechaInicial);
@@ -146,13 +156,15 @@ class PedidoController extends Controller
                 $seguimiento->fechaFinal = $request->fechaFinal;
                 $seguimiento->item_id = $request->item_id;
                 $seguimiento->save();
-                return view('admin_panel.pedidos.items_pedido', compact('pedido', 'fechaInicial', 'fechaFinal'));
+                return redirect()->route('pedidos.nuevo_pedido');
             }
         }
 
         $pedido = new Pedido();
         $pedido->user_id = auth()->user()->id;
-        $pedido->estado_id = 1; //hardcode
+        $workflow = Pedido::first()->flujoTrabajo;
+        $pedido->flujoTrabajo_id=$workflow->id;
+        $pedido->estado_id = $workflow->estado_inicial()->id;
         $pedido->save();
         $seguimiento = new Seguimiento();
         $seguimiento->pedido_id = $pedido->id;
@@ -160,7 +172,7 @@ class PedidoController extends Controller
         $seguimiento->fechaFinal = $request->fechaFinal;
         $seguimiento->item_id = $request->item_id;
         $seguimiento->save();
-        return view('admin_panel.pedidos.items_pedido', compact('pedido', 'fechaInicial', 'fechaFinal'));
+        return redirect()->route('pedidos.nuevo_pedido');
     }
 
     function listar_carrito(){
@@ -171,22 +183,13 @@ class PedidoController extends Controller
         }
     }
 
-    function confirmar_pedido(Request $request){
-        $pedido = new Pedido();
-        $pedido->user_id = auth()->user()->id;
-        $pedido->estado_id = 5; //CAMBIAR HARDCODEADO DURO - INSTANCIAR WORKFLOW DE PEDIDO
-        $pedido->flujoTrabajo_id = 1;
+    function confirmar_pedido(Pedido $pedido){
+        $pedido->estado_id = 6;
         $pedido->save();
         $historial = new Historial();
         $historial->estado_id = $pedido->estado_id;
         $historial->pedido_id = $pedido->id;
         $historial->save();
-        $seguimiento = new Seguimiento();
-        $seguimiento->pedido_id = $pedido->id;
-        $seguimiento->fechaInicial = $request->fechaInicial;
-        $seguimiento->fechaFinal = $request->fechaFinal;
-        $seguimiento->item_id = $request->item_id;
-        $seguimiento->save();
         return redirect()->route('pedidos.mis_pedidos');
     }
 
@@ -234,4 +237,15 @@ class PedidoController extends Controller
     {
         //
     }
+    public function eliminar_seguimiento(Seguimiento $seguimiento)
+    {
+        $pedido = $seguimiento->pedido;
+        $seguimiento->delete();
+        if(sizeOf($pedido->seguimientos) == 0){
+            $pedido->delete();
+            return redirect()->route('pedidos.nuevo_pedido');
+        }
+        return back();
+    }
+
 }

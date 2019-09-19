@@ -21,10 +21,11 @@
                     <tbody>
                         @foreach ($pedidos as $pedido)
                             <tr>
-                                @foreach ($pedido->seguimientos as $seguimiento)
-
-                                <td><span class="badge badge-pill badge-success">{{ $seguimiento->item->nombre }}</span></td>
-                                @endforeach
+                                <td>
+                                    @foreach ($pedido->seguimientos as $seguimiento)
+                                        <span class="badge badge-pill badge-info">{{ $seguimiento->item->nombre }}</span>
+                                    @endforeach
+                                </td>
                                 @if($pedido->estado->nombre !='Finalizado')
                                 <td><span class="badge badge-pill badge-success">{{ $pedido->estado->nombre }}</span></td>
                                 @else

@@ -185,7 +185,7 @@ class PedidoController extends Controller
     }
 
     function confirmar_pedido(Pedido $pedido){
-        $pedido->estado_id = 6;
+        $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
         $pedido->save();
         $historial = new Historial();
         $historial->estado_id = $pedido->estado_id;

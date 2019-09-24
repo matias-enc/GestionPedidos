@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Seguimiento extends Model
@@ -19,5 +20,18 @@ class Seguimiento extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function adicionales(){
+        return $this->hasMany(Adicional::class);
+    }
+
+    public function getFechaLlegada(){
+        $fecha = Carbon::create($this->fechaInicial)->format('d/m/Y');
+        return $fecha;
+    }
+    public function getFechaSalida(){
+        $fecha = Carbon::create($this->fechaFinal)->format('d/m/Y');
+        return $fecha;
     }
 }

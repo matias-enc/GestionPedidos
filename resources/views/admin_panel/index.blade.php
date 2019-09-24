@@ -70,12 +70,16 @@
 
         </div>
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
     <!-- jQuery -->
+
     <script src="{{asset('admin_panel/plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+    {{-- <script src="{{asset('admin_panel/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script> --}}
+    <script src="{{asset('admin_panel/plugins/bootstrap/js/bootstrap.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/toastr/toastr.min.js')}}"></script>
     <!-- Bootstrap -->
-    <script src="{{asset('admin_panel/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <!-- AdminLTE -->
     <script src="{{asset('admin_panel/dist/js/adminlte.js')}}"></script>
     <!-- DataTables -->
@@ -92,12 +96,12 @@
     <!-- daterangepicker -->
     <script src="{{asset('admin_panel/plugins/moment/moment.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/popper/popper.js')}}"></script>
     {{-- <script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script> --}}
     <!-- overlayScrollbars -->
     <script src="{{asset('admin_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 
     <!-- OPTIONAL SCRIPTS -->
-    <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>

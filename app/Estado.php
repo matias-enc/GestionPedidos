@@ -20,4 +20,7 @@ class Estado extends Model
     public function historiales(){
         return $this->hasMany(Historial::class);
     }
+    public function adicionales(){
+        return $this->hasMany(Adicional::class);
+    }
 }

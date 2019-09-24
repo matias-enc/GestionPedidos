@@ -5,8 +5,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 import Swal from 'sweetalert2/dist/sweetalert2.js';
-import VueFormWizard from 'vue-form-wizard';
-import 'vue-form-wizard/dist/vue-form-wizard.min.css';
 require('./bootstrap');
 // require('./admin_panel/scripts/shards-dashboards.1.1.0.min');
 // require('./admin_panel/scripts/extras.1.1.0.min');
@@ -25,7 +23,6 @@ Vue.use(VueFormWizard);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('nuevo_pedido', require('./components/nuevo_pedido.vue').default);
 
 
 /**

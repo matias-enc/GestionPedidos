@@ -24,4 +24,5 @@ class Pedido extends Model
     public function seguimientos(){
         return $this->hasMany(Seguimiento::class);
     }
+
 }

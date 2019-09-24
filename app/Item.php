@@ -15,4 +15,7 @@ class Item extends Model
     {
         return $this->belongsTo(TipoItem::class, 'tipoItems_id');
     }
+    public function adicionales(){
+        return $this->hasMany(Adicional::class);
+    }
 }

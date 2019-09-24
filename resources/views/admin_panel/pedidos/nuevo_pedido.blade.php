@@ -87,6 +87,7 @@
 <script>
     $('#datepicker').datepicker({
         weekStart: 1,
+        orientation: "top",
         startDate: "today",
         endDate: "1/1/2021",
         language: "es",

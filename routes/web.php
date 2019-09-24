@@ -87,12 +87,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('mis_pedidos', 'PedidoController@pedidos_usuario')->name('pedidos.mis_pedidos');
     Route::get('nuevo_pedido', 'PedidoController@nuevo_pedido')->name('pedidos.nuevo_pedido');
     Route::post('consultar_disponibilidad', 'PedidoController@consultar_disponibilidad')->name('pedidos.consultar_disponibilidad');
+    Route::post('disponibilidad_secundarios', 'PedidoController@disponibilidad_secundarios')->name('pedidos.disponibilidad_secundarios');
     Route::post('detalle_pedido', 'PedidoController@detalle_pedido')->name('pedidos.detalle_pedido');
     Route::post('agregar_carrito', 'PedidoController@agregar_carrito')->name('pedidos.agregar_carrito');
     Route::get('confimar_pedido/{pedido}','PedidoController@confirmar_pedido')->name('pedidos.confirmar_pedido');
     Route::get('mis_pedidos/{pedido}','PedidoController@seguimiento')->name('pedidos.seguimiento');
     Route::get('listar_carrito','PedidoController@listar_carrito')->name('pedidos.listar_carrito');
-    Route::delete('detalle_pedido/{seguimiento}' , 'PedidoController@eliminar_seguimiento')->name('pedidos.eliminar_seguimiento');
+    Route::delete('listar_carrito/{seguimiento}' , 'PedidoController@eliminar_seguimiento')->name('pedidos.eliminar_seguimiento');
+    Route::delete('listar_carrito/seguimiento/{adicional}' , 'PedidoController@eliminar_adicional')->name('pedidos.eliminar_adicional');
 
 
     //Solicitudes

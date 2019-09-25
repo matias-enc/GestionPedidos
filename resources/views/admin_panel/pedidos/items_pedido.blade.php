@@ -3,8 +3,8 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card card-small">
-            <div class="card-header ">
+        <div class="card card-small card-outline card-primary">
+            <div class="card-header">
 
                 <div class="d-flex justify-content-between">
                     <h3><strong>Items dentro del Carrito ( {{sizeof($pedido->seguimientos)}} )</strong></h3>
@@ -25,7 +25,7 @@
                                 <strong>Salida:</strong>
                                 {{$seguimiento->getFechaSalida()}}</p>
                         </div>
-                        <button type="button" class="btn btn-warning btn-pill btn-xs " data-toggle="modal"
+                        <button type="button" class="btn btn-outline-primary btn-pill btn-xs" data-toggle="modal"
                             data-target="#exampleModalScrollable{{ $seguimiento->id }}">
                             <i class="fal fa-plus"></i> Adicional
                         </button>
@@ -48,6 +48,11 @@
                         @foreach ($seguimiento->adicionales as $adicional)
                         <div class="card card-small col-lg-9 border shadow-sm">
                             <div class="card-body d-flex">
+                                <div class="d-flex flex-column justify-content-start mt-auto mb-auto">
+                                    <i class="far fa-circle fa-xs" style="color:black">
+
+                                    </i>
+                                </div>
                                 <div class="d-flex flex-column justify-content-center ml-3">
                                     <span class="card-post__author-name">{{$adicional->item->nombre}}</span>
                                     <small class="text-muted">Cantidad: {{$adicional->cantidad}}</small>

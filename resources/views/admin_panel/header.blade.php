@@ -28,14 +28,15 @@
         </li>
         @endif
         @endforeach
-        <li class="nav-item dropdown user user-menu  border-left border-right d-flex justify-content-center " >
-                <div>
-                        <a href="#" class="nav-link " data-toggle="dropdown">
-                                <img src="{{asset('imagenes/user.png')}}" class="user-image img-circle" alt=" User Image">
+        <li class="nav-item dropdown  border-left border-right d-flex justify-content-center " >
+                <div >
+                        <a href="#" class="nav-link navbar-brand" data-toggle="dropdown">
+                                <img src="{{asset('imagenes/user.png')}}" class="brand-image img-circle">
                                 <span class="hidden-xs">{{auth()->user()->name}}</span>
+                                <i class="right far fa-angle-down fa-xs"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-small dropdown-menu-right">
-                                <a class="dropdown-item text-center" href="user-profile-lite.html"><i class="fal fa-user-cog"></i> Perfil</a>
+                                <a class="dropdown-item text-center" href="{{ route('mi_perfil') }}"><i class="fal fa-user-cog"></i> Perfil</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-center text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

@@ -4,8 +4,6 @@
     <form action="{{ route("pedidos.consultar_disponibilidad") }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        {{-- <nuevo_pedido>
-                                </nuevo_pedido> --}}
         <br>
         <div class="card card-outline card-primary col-5 offset-3">
             <div class="card-header text-center">

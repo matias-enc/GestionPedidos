@@ -36,6 +36,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::put('users/{user}' , 'UserController@update')->name('users.update')->middleware('has.permission:usuarios_update');
     Route::delete('users/{user}' , 'UserController@destroy')->name('users.destroy')->middleware('has.permission:usuarios_destroy') ;
 
+
+
+
     //Rutas Roles
     Route::get('roles', 'RolController@index')->name('roles.index')->middleware('has.permission:roles_index');
     Route::get('roles/create','RolController@create')->name('roles.create')->middleware('has.permission:roles_create')  ;
@@ -100,6 +103,13 @@ Route::group(['middleware' => ['auth']], function () {
     //Solicitudes
     Route::get('solicitudes','PedidoController@solicitudes')->name('pedidos.solicitudes');
     Route::get('solicitudes/{pedido}','PedidoController@ver_solicitud')->name('pedidos.ver_solicitud');
+    Route::post('asignar','PedidoController@asignar_estado')->name('pedidos.asignar_estado');
+
+
+
+    //Rutas Configuracion Usuario
+    Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');
+    Route::post('actualizar_perfil' , 'PedidoController@actualizar_perfil')->name('actualizar_perfil');
 });
 
 Route::group(['middleware' => ['auth']], function () {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use Alert;
+use Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -59,6 +60,7 @@ class UserController extends Controller
         return view('admin_panel.usuarios.show', compact('user'));
     }
 
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -72,6 +74,8 @@ class UserController extends Controller
 
         return view('admin_panel.usuarios.edit', compact('roles', 'user'));
     }
+
+
 
     /**
      * Update the specified resource in storage.

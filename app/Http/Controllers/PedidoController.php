@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use Hash;
 use Alert;
 use App\Adicional;
 use App\Categoria;
@@ -236,6 +236,17 @@ class PedidoController extends Controller
         return redirect()->route('pedidos.mis_pedidos');
     }
 
+    function asignar_estado(Request $request){
+        $pedido = Pedido::find($request->pedido);
+        $historial = Historial::create();
+        $historial->estado_id = $request->estado;
+        $historial->pedido_id = $pedido->id;
+        $historial->save();
+        $pedido->estado_id = $request->estado;
+        $pedido->save();
+        return redirect()->route('pedidos.index')->with('success', 'Pedido Guardado');
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -299,5 +310,25 @@ class PedidoController extends Controller
     {
         $adicional->delete();
         return back();
+    }
+
+
+
+    public function actualizar_perfil(Request $request){
+        $user = auth()->user();
+        $user->name = $request->name;
+        $user->apellido = $request->apellido;
+        $user->dni = $request->dni;
+        $user->telefono = $request->telefono;
+        $user->email = $request->email;
+        // $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect()->back()->with('success', 'Cuenta Actualizada');
+    }
+
+    public function mi_perfil()
+    {
+        $user = auth()->user();
+        return view('admin_panel.usuarios.perfil', compact('user'));
     }
 }

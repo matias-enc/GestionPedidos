@@ -32,10 +32,17 @@
                         <p><span>Mis Pedidos</span></p>
                     </a>
                 </li>
+                <li class="nav-item">
+                        <a href="{{ route("pedidos.solicitudes") }}"
+                            class="nav-link {{ request()->is('solicitudes')  ? 'active' : '' }}">
+                            <i class="fal fa-exclamation-circle nav-icon"></i>
+                            <p><span>Solicitudes</span></p>
+                        </a>
+                    </li>
                 <li
-                    class="nav-item has-treeview {{ request()->is('pedidos/*') ||request()->is('solicitudes') ? 'menu-open' : ''}}">
+                    class="nav-item has-treeview {{ request()->is('pedidos/*')  ? 'menu-open' : ''}}">
                     <a
-                        class="nav-link nav-dropdown-toggle {{ request()->is('pedidos/*') ||request()->is('solicitudes') ? 'active' : ''}}">
+                        class="nav-link nav-dropdown-toggle {{ request()->is('pedidos/*')  ? 'active' : ''}}">
                         <i class="nav-icon fal fa-dolly-flatbed"></i>
                         <p>
                             Gestion Pedidos
@@ -50,16 +57,11 @@
                                 <p><span>Pedidos</span></p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route("pedidos.solicitudes") }}"
-                                class="nav-link {{ request()->is('solicitudes')  ? 'active' : '' }}">
-                                <i class="fal fa-exclamation-circle nav-icon"></i>
-                                <p><span>Solicitudes</span></p>
-                            </a>
-                        </li>
+
                     </ul>
 
                 </li>
+
 
                 <li class="nav-item has-treeview {{ request()->is('admin/*') ? 'menu-open' : ''}}">
                     <a class="nav-link nav-dropdown-toggle {{ request()->is('admin/*') ? 'active' : ''}}">

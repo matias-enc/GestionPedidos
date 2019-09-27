@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Hash;
+
+
 use Alert;
 use App\Adicional;
 use App\Categoria;
@@ -15,6 +16,9 @@ use App\Seguimiento;
 use App\TipoItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Events\PedidoSolicitado;
+use Illuminate\Notifications\Notification;
+
 
 class PedidoController extends Controller
 {
@@ -76,6 +80,7 @@ class PedidoController extends Controller
     { }
     public function nuevo_pedido()
     {
+
         $categorias = Categoria::all();
         return view('admin_panel.pedidos.nuevo_pedido', compact('categorias'));
     }
@@ -233,6 +238,7 @@ class PedidoController extends Controller
         $historial->estado_id = $pedido->estado_id;
         $historial->pedido_id = $pedido->id;
         $historial->save();
+        event(new PedidoSolicitado('Nuevo Pedido Solicitado para su Revision'));
         return redirect()->route('pedidos.mis_pedidos');
     }
 
@@ -272,12 +278,8 @@ class PedidoController extends Controller
     }
     public function solicitudes()
     {
-        $pedidos = Pedido::all();
-        foreach ($pedidos as $key => $pedido) {
-            if ($pedido->estado->nombre != "Solicitado") {
-                $pedidos->pull($key);
-            }
-        }
+        $estado = Estado::where('nombre' , 'Solicitado')->firstOrFail();
+        $pedidos = Pedido::all()->where('estado_id', $estado->id);
         return view('admin_panel.pedidos.solicitudes', compact('pedidos'));
     }
 
@@ -330,5 +332,9 @@ class PedidoController extends Controller
     {
         $user = auth()->user();
         return view('admin_panel.usuarios.perfil', compact('user'));
+    }
+
+    public function cantidad_solicitudes(){
+        return sizeof(Pedido::all()->where('estado_id', 6));
     }
 }

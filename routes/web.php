@@ -110,6 +110,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Rutas Configuracion Usuario
     Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');
     Route::post('actualizar_perfil' , 'PedidoController@actualizar_perfil')->name('actualizar_perfil');
+    Route::get('cantidad_solicitudes' , 'PedidoController@cantidad_solicitudes')->name('cantidad_solicitudes');
 });
 
 Route::group(['middleware' => ['auth']], function () {

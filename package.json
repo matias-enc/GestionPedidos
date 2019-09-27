@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "laravel-echo": "^1.6.0",
+        "pusher-js": "^5.0.2",
         "select2": "^4.0.10",
         "shards-ui": "^3.0.0",
         "sweetalert2": "^8.17.1",

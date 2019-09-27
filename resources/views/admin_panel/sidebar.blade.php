@@ -32,11 +32,19 @@
                         <p><span>Mis Pedidos</span></p>
                     </a>
                 </li>
+
                 <li class="nav-item">
                         <a href="{{ route("pedidos.solicitudes") }}"
                             class="nav-link {{ request()->is('solicitudes')  ? 'active' : '' }}">
-                            <i class="fal fa-exclamation-circle nav-icon"></i>
-                            <p><span>Solicitudes</span></p>
+                            <i class="fal fa-exclamation-circle nav-icon">
+                            @if ((sizeof(App\Pedido::all()->where('estado_id', 6))>0) && !(request()->is('solicitudes')))
+                            <span id="span-solicitudes" class=" badge badge-danger navbar-badge">{{sizeof(\App\Pedido::all()->where('estado_id', 6))}}</span>
+                            @endif
+                            </i>
+                            <p><span>Solicitudes</span>
+
+                            </p>
+
                         </a>
                     </li>
                 <li

@@ -15,7 +15,9 @@ Route::get('/', function () {
     return redirect('auto_gestion');
 });
 Route::get('/pdf', function () {
-    return view('admin_panel.pdf.layout');
+    $pdf = PDF::loadView('admin_panel.pdf.pedidos');
+    return $pdf->stream();
+    // return view('admin_panel.pdf.layout');
 });
 
 

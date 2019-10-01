@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-
+use PDF;
 use Alert;
 use App\Adicional;
 use App\Categoria;
@@ -32,14 +32,14 @@ class PedidoController extends Controller
     {
         $estados = Estado::all();
         $usuarios = collect();
-        foreach(User::all() as $usuario){
-            if(sizeof($usuario->pedidos)>0){
+        foreach (User::all() as $usuario) {
+            if (sizeof($usuario->pedidos) > 0) {
                 $usuarios->push($usuario);
             }
         }
         $items = collect();
-        foreach (Item::all() as $item){
-            if($item->cantidad==null){
+        foreach (Item::all() as $item) {
+            if ($item->cantidad == null) {
                 $items->push($item);
             }
         }
@@ -59,31 +59,50 @@ class PedidoController extends Controller
     public function reporte(Request $request)
     {
         $pedidos = Pedido::all();
-        if($request->estado_id!=null){
+
+        $usuario = null;
+        $item = null;
+        $estado = null;
+        if ($request->estado_id != null) {
+            $estado = Estado::find($request->estado_id);
             foreach ($pedidos as $id => $pedido) {
-                if($pedido->estado->id !=$request->estado_id){
+                if ($pedido->estado->id != $request->estado_id) {
                     $pedidos->pull($id);
                 }
             }
         }
-        if($request->usuario_id!=null){
+        if ($request->usuario_id != null) {
+            $usuario = User::find($request->usuario_id);
             foreach ($pedidos as $id => $pedido) {
-                if($pedido->usuario->id !=$request->usuario_id){
+                if ($pedido->usuario->id != $request->usuario_id) {
                     $pedidos->pull($id);
                 }
             }
         }
-        if($request->item_id!=null){
+        if ($request->item_id != null) {
+            $item = Item::find($request->item_id);
             foreach ($pedidos as $id => $pedido) {
                 foreach ($pedido->seguimientos as $seguimiento) {
-                    if($seguimiento->item->id !=$request->item_id){
+                    if ($seguimiento->item->id != $request->item_id) {
                         $pedidos->pull($id);
                     }
                 }
-
             }
         }
-        return sizeof($pedidos);
+
+
+
+
+        $pdf = PDF::loadView('admin_panel.pdf.pedidos', compact('pedidos', 'usuario', 'item', 'estado'));
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf ->get_canvas();
+        $y = $canvas->get_height()-35;
+        // return $y;
+        $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        // $canvas = $dom_pdf->;
+        // $canvas;
+        return $pdf->stream();
+        // return sizeof($pedidos);
 
     }
 

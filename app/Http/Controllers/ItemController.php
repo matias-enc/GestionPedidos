@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
+use App\Adicional;
 use App\Categoria;
 use App\Item;
+use App\Seguimiento;
 use App\TipoItem;
 use Illuminate\Http\Request;
 
@@ -100,7 +103,17 @@ class ItemController extends Controller
       */
      public function destroy(Item $item)
      {
-         $item->delete();
+         $seguimientos = Seguimiento::all()->where('item_id', $item->id);
+         $adicionales = Adicional::all()->where('item_id', $item->id);
+        //  return sizeof($seguimientos);
+        if(sizeof($seguimientos)>0 ){
+            Alert::warning('Esta siendo referenciado dentro de un pedido', 'El item no puede ser Eliminado');
+        }elseif(sizeof($adicionales)>0){
+            Alert::warning('Esta siendo referenciado dentro de un pedido', 'El item no puede ser Eliminado');
+        }else{
+            $item->delete();
+
+        }
 
          return back();
      }

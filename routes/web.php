@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return redirect('auto_gestion');
 });
+Route::get('/pdf', function () {
+    return view('admin_panel.pdf.layout');
+});
 
 
 
@@ -79,6 +82,10 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
 
 //Rutas de Pedidos
 Route::group(['middleware' => ['auth']], function () {
+
+    //Rutas de conversion de Reportes
+    Route::post('pedidos/reporte', 'PedidoController@reporte')->name('pedidos.reporte');
+
 
     //Rutas de Administracion de Pedidos
 

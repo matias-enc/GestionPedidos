@@ -33,9 +33,9 @@
                                       <table id="transicion" class="table table-bordered table-striped table-hover datatable">
                                             <thead>
                                             <tr>
-                                              <th>Nombre</th>
-                                              <th>Estado Inicial</th>
-                                              <th>Estado Final</th>
+                                              <th>Transicion</th>
+                                              <th>Paso Inicial</th>
+                                              <th>Paso Final</th>
                                             </tr>
                                             </thead>
                                             <tbody>

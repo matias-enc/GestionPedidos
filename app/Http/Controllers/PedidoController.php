@@ -17,6 +17,7 @@ use App\TipoItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Events\PedidoSolicitado;
+use App\User;
 use Illuminate\Notifications\Notification;
 
 
@@ -29,8 +30,21 @@ class PedidoController extends Controller
      */
     public function index()
     {
+        $estados = Estado::all();
+        $usuarios = collect();
+        foreach(User::all() as $usuario){
+            if(sizeof($usuario->pedidos)>0){
+                $usuarios->push($usuario);
+            }
+        }
+        $items = collect();
+        foreach (Item::all() as $item){
+            if($item->cantidad==null){
+                $items->push($item);
+            }
+        }
         $pedidos = Pedido::all();
-        return view('admin_panel.pedidos.index', compact('pedidos'));
+        return view('admin_panel.pedidos.index', compact('pedidos', 'estados', 'usuarios', 'items'));
     }
 
     /**
@@ -41,6 +55,36 @@ class PedidoController extends Controller
     public function create()
     {
         //
+    }
+    public function reporte(Request $request)
+    {
+        $pedidos = Pedido::all();
+        if($request->estado_id!=null){
+            foreach ($pedidos as $id => $pedido) {
+                if($pedido->estado->id !=$request->estado_id){
+                    $pedidos->pull($id);
+                }
+            }
+        }
+        if($request->usuario_id!=null){
+            foreach ($pedidos as $id => $pedido) {
+                if($pedido->usuario->id !=$request->usuario_id){
+                    $pedidos->pull($id);
+                }
+            }
+        }
+        if($request->item_id!=null){
+            foreach ($pedidos as $id => $pedido) {
+                foreach ($pedido->seguimientos as $seguimiento) {
+                    if($seguimiento->item->id !=$request->item_id){
+                        $pedidos->pull($id);
+                    }
+                }
+
+            }
+        }
+        return sizeof($pedidos);
+
     }
 
     /**
@@ -81,29 +125,38 @@ class PedidoController extends Controller
     public function nuevo_pedido()
     {
 
-        $categorias = Categoria::all();
-        return view('admin_panel.pedidos.nuevo_pedido', compact('categorias'));
+        $tipoItems = TipoItem::all()->where('categoria_id', 1);
+        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
     }
 
     public function consultar_disponibilidad(Request $request)
     {
-        $this->validate($request, [
-            'inicial' => 'required'
-        ], [
-            'inicial.required' => 'Seleccione una fecha'
-        ]);
+        $this->validar_pedido(); // Validacion del Pedido
+
         $fechaInicial = Carbon::createFromFormat('d/m/Y', $request->inicial);
         $fechaFinal = Carbon::createFromFormat('d/m/Y', $request->final);
+        $fechaInicial->setTime(0, 0, 0);
+        $fechaFinal->setTime(0, 0, 0);
         $tipoItem = TipoItem::find($request->tipoItem);
+
         $items = $tipoItem->items;
         foreach ($items as $key => $item) { //Filtrar items por capacidad
             if ($item->capacidad < $request->capacidad && $request->capacidad != '') {
                 $items->pull($key);
             }
         }
-        $disponible = true;
 
+        $disponible = true;
         if ($tipoItem->nombre != 'Secundarios') {
+            if ($tipoItem->nombre == 'Albergues') {
+                if ($fechaInicial->equalTo($fechaFinal)) {
+                    $fechaInicial->addHours(9);
+                    $fechaFinal->addHours(32);
+                } else {
+                    $fechaInicial->addHours(9);
+                    $fechaFinal->addHours(8);
+                }
+            }
             foreach ($items as $key => $item) { //Filtrar items por disponibilidad
 
                 foreach ($item->seguimientos as $seguimiento) {
@@ -117,7 +170,6 @@ class PedidoController extends Controller
                         $disponible = false;
                     }
                     if ($seguimiento->item->capacidad < $request->capacidad) {
-                        return 'peroncho';
                         $disponible = false;
                     }
                 }
@@ -127,6 +179,7 @@ class PedidoController extends Controller
                 $disponible = true;
             }
             $items->pluck('nombre', 'id');
+            // return $fechaInicial . $fechaFinal;
             return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
         } else {
             foreach ($tipoItem->items as $key => $itemSec) { //Filtrar items por disponibilidad en cuanto a su cantidad
@@ -147,6 +200,7 @@ class PedidoController extends Controller
         $item = Item::find($request->item_id);
         $fechaInicial = $request->fechaInicial;
         $fechaFinal = $request->fechaFinal;
+        // return $fechaInicial . $fechaFinal;
         return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal'));
     }
 
@@ -187,12 +241,14 @@ class PedidoController extends Controller
                 $adicional->cantidad = $request->cantidad;
                 $adicional->save();
             }
-            return redirect()->back()->with('success', 'Item Asignado');
+            Alert::success('Item asignado', 'Se han agregado correctamente ' . $item->nombre);
+            return redirect()->back();
         }
     }
 
     function agregar_carrito(Request $request)
     {
+        // return $request->fechaInicial . $request->fechaFinal;
         foreach (auth()->user()->pedidos as $pedido) {
             if ($pedido->estado->nombre == 'Carrito') {
                 $seguimiento = new Seguimiento();
@@ -242,7 +298,8 @@ class PedidoController extends Controller
         return redirect()->route('pedidos.mis_pedidos');
     }
 
-    function asignar_estado(Request $request){
+    function asignar_estado(Request $request)
+    {
         $pedido = Pedido::find($request->pedido);
         $historial = Historial::create();
         $historial->estado_id = $request->estado;
@@ -278,7 +335,7 @@ class PedidoController extends Controller
     }
     public function solicitudes()
     {
-        $estado = Estado::where('nombre' , 'Solicitado')->firstOrFail();
+        $estado = Estado::where('nombre', 'Solicitado')->firstOrFail();
         $pedidos = Pedido::all()->where('estado_id', $estado->id);
         return view('admin_panel.pedidos.solicitudes', compact('pedidos'));
     }
@@ -316,7 +373,8 @@ class PedidoController extends Controller
 
 
 
-    public function actualizar_perfil(Request $request){
+    public function actualizar_perfil(Request $request)
+    {
         $user = auth()->user();
         $user->name = $request->name;
         $user->apellido = $request->apellido;
@@ -334,7 +392,17 @@ class PedidoController extends Controller
         return view('admin_panel.usuarios.perfil', compact('user'));
     }
 
-    public function cantidad_solicitudes(){
+    public function cantidad_solicitudes()
+    {
         return sizeof(Pedido::all()->where('estado_id', 6));
+    }
+
+    public function validar_pedido()
+    {
+        return request()->validate([
+            'inicial' => 'required',
+            'capacidad' => 'required|gt:0',
+            'tipoItem' => 'required',
+        ]);
     }
 }

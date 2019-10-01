@@ -21,7 +21,7 @@ $line-height-base: 1.6;
 
 //rober
 $primary:#007bff;
-$secondary:#5A6169;
+$secondary:rgb(119, 121, 124);
 $success:#17c671;
 $danger:#c4183c;
 $info:#00b8d8;
@@ -38,10 +38,11 @@ $input-btn-focus-width: 0.1em;
 
 $white : #ffffff;
 // Light sidebar
-$sidebar-light-hover-bg: $primary ;
+$sidebar-light-hover-bg: $light;
 $sidebar-light-hover-color: $white ;
 $sidebar-light-submenu-hover-bg: #e6e7e9;
 $sidebar-light-submenu-active-color: #000000;
+
 
 // --blue: #007bff;
 //     --indigo: #674eec;

@@ -4,20 +4,25 @@
     <form action="{{ route("pedidos.consultar_disponibilidad") }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <br>
-        <div class="card card-outline card-primary col-5 offset-3">
-            <div class="card-header text-center">
-                <div class="card-title">
-                    <h3><strong>Realizar un Nuevo Pedido</strong></h3>
+        <div class="row justify-content-center">
+
+
+            <div class="card card-outline card-primary">
+                <div class="card-header text-center">
+                    <div class="card-title">
+                        <h3><strong>Realizar un Nuevo Pedido</strong></h3>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="form-group {{ $errors->has('descripcion') ? 'has-error' : '' }}">
+                <div class="card-body">
+                    {{-- <div class="form-group {{ $errors->has('descripcion') ? 'has-error' : '' }}">
                     <strong><Label>Categoria</Label></strong>
-                    <select id="categorias" class="estados-js form-control" onchange="d1(this)">
+                    <select name=categorias id="categorias" class="estados-js form-control" onchange="d1(this)"
+                        required>
                         <option value="" disabled selected style="">Seleccione una Categoria</option>
                         @foreach($categorias as $categoria)
-                        <option placeholder="Categoria" value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                        <option placeholder="Categoria" value="{{ $categoria->id }}"
+                            {{ old('categorias') == $categoria->id ? 'selected' : '' }}>{{ $categoria->nombre }}
+                        </option>
                         @endforeach
                     </select>
                     @if($errors->has('descripcion'))
@@ -25,34 +30,30 @@
                         {{ $errors->first('descripcion') }}
                     </p>
                     @endif
-                </div>
+                </div> --}}
 
 
-                @foreach($categorias as $id => $categoria)
-                <div class="form-group " style="display:none" id="{{$categoria->id}}">
+                {{-- @foreach($categorias as $id => $categoria) id="{{$categoria->id}}"--}}
+                <div class="form-group ">
 
 
-                    <strong><Label>Tipo de Item</Label></strong>
+                    <strong><Label>Categoria</Label></strong>
                     <select id="tipoItem"
-                        class="estados-js form-control {{ $errors->has('tipoItems') ? 'is-invalid' : '' }}"
+                        class="estados-js form-control {{ $errors->has('tipoItem') ? 'is-invalid' : '' }}"
                         name="tipoItem">
-                        <option value="" disabled selected style="">Seleccione una Categoria</option>
-                        @foreach ($categoria->tipoItems as $tipoItem)
-                        <option placeholder="Categoria" value="{{ $tipoItem->id }}">{{ $tipoItem->nombre }}</option>
+                        <option value="" disabled selected style="">Seleccione un Tipo</option>
+                        @foreach ($tipoItems as $tipoItem)
+                        <option placeholder="Categoria" value="{{ $tipoItem->id }}"
+                            {{ old('tipoItem') == $tipoItem->id ? 'selected' : '' }}>{{ $tipoItem->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
-                @endforeach
-                <div class="form-group" id="cantidad" type="hidden" style="display:none" class="m-1">
-                    <strong><Label>Cantidad</Label></strong>
-                    <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                        <input class="input-sm form-control " type="number" name="cantidad">
-                    </div>
-                </div>
-                <div class="form-group" id="capacidad" style="display:none" class="m-1">
+                {{-- @endforeach --}}
+                <div class="form-group" id="capacidad" class="m-1">
                     <strong><Label>Capacidad</Label></strong>
-                    <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                        <input class="input-sm form-control " type="number" name="capacidad">
+                    <div class="form-group ">
+                        <input class="input-sm form-control {{ $errors->has('capacidad') ? 'is-invalid' : '' }} "
+                            type="number" name="capacidad" value="{{old('capacidad')}}" }}>
                     </div>
                 </div>
 
@@ -63,9 +64,9 @@
                 <div class="input-group input-daterange" id="datepicker" data-date-format="dd/mm/yyyy"
                     data-date-container='#datepicker'>
                     <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : ''}}"
-                        name="inicial" placeholder="Llegada" />
+                        name="inicial" placeholder="Llegada" value="{{old('inicial')}}" }} />
                     <input type="text" class="input-sm form-control {{ $errors->has('inicial') ? 'is-invalid' : '' }}"
-                        name="final" placeholder="Salida" />
+                        name="final" placeholder="Salida" value="{{ old('final') }}" />
                 </div>
                 <br>
                 <div class="d-flex justify-content-end">
@@ -75,7 +76,7 @@
         </div>
         <br>
     </form>
-
+</div>
 </div>
 
 
@@ -92,7 +93,7 @@
         todayHighlight: true,
     });
 </script>
-<script language="javascript" type="text/javascript">
+{{-- <script language="javascript" type="text/javascript">
     function d1(selectTag){
      if(selectTag.value == 1){
     document.getElementById('1').style.display = "block";
@@ -114,5 +115,5 @@
         document.getElementById('capacidad').style.visibility = "hidden";
      }
     }
-</script>
+</script> --}}
 @endpush

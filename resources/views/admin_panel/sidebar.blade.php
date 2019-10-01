@@ -41,9 +41,7 @@
                             <span id="span-solicitudes" class=" badge badge-danger navbar-badge">{{sizeof(\App\Pedido::all()->where('estado_id', 6))}}</span>
                             @endif
                             </i>
-                            <p><span>Solicitudes</span>
-
-                            </p>
+                            <p><span>Solicitudes</span></p>
 
                         </a>
                     </li>
@@ -136,7 +134,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route("item.index") }}" class="nav-link {{ request()->is('index')  ? 'active' : '' }}">
+                    <a href="{{ route("item.index") }}" class="nav-link {{ request()->is('item') || request()->is('item/*')  ? 'active' : '' }}">
                         <i class="fal fa-inventory nav-icon"></i>
                         <p><span>Gestion Inventario</span></p>
                     </a>

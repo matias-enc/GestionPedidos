@@ -22,8 +22,8 @@ class CreateSeguimientosTable extends Migration
             $table->unsignedBigInteger('item_id')->nullable();
             $table->foreign('item_id')->references('id')->on('items');
             $table->integer('cantidad')->nullable();
-            $table->date('fechaInicial');
-            $table->date('fechaFinal');
+            $table->timestamp('fechaInicial');
+            $table->timestamp('fechaFinal');
             $table->timestamps();
         });
     }

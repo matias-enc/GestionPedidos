@@ -2,11 +2,11 @@
 
 @section('content')
 
-<div class="d-flex justify-content-center">
+<div class="row justify-content-center">
 
 
-    <div class="card card-primary card-outline col-4 ">
-            <div class="card-header text-center">
+    <div class="card card-primary card-outline ">
+            <div class="card-body text-center">
                 <h3><strong> {{$tipoItem->nombre}} Disponibles </strong></h3>
             </div>
     </div>

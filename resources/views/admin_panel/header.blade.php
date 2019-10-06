@@ -19,7 +19,7 @@
         </li>
         @foreach (auth()->user()->pedidos as $pedido)
         @if ($pedido->estado->nombre == 'Carrito')
-        <li class="nav-item border-left">
+        <li class="nav-item border-left animated flash">
             <a href="{{ route("pedidos.listar_carrito") }}" class="nav-link">
                 <i class="fal fa-shopping-cart fa-lg nav-icon fa-pull-left" style="color:black"></i>
 

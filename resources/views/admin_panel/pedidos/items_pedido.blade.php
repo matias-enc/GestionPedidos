@@ -24,26 +24,45 @@
                     </div>
                     <div class="card-body">
 
+                        <div class="d-flex justify-content-start">
+                            <strong>Fechas</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
 
-                        <div class="row justify-content-between">
-                            <div class="col justify-content-start my-auto">
-                                <p><strong>Llegada:</strong> {{$seguimiento->getFechaLlegada()}}</p>
-                                <p><strong>Salida:</strong> {{$seguimiento->getFechaSalida()}}</p>
+                            <div class="d-flex justify-content-between py-1  border">
+
+                                <div class="d-flex justify-content-between">
+                                    <div class="pr-3 ml-2">
+                                        {{$seguimiento->getFechaLlegada()->format('d/m/Y')}}
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-arrow-right my-auto"></i>
+                                    </div>
+                                    <div class="pl-3 mr-2">
+                                        {{$seguimiento->getFechaSalida()->format('d/m/Y')}}
+                                    </div>
+                                </div>
+
                             </div>
+                            @if ($seguimiento->item->tipoItem->adicional==true)
                             <div class="col justify-content-center my-auto">
-                                <button type="button" class="btn btn-outline-primary btn-pill btn-xs"
-                                    data-toggle="modal" data-target="#exampleModalScrollable{{ $seguimiento->id }}">
+                                <button type="button" class="btn btn-white btn-sm btn-pill btn-outline-primary"
+                                    data-toggle="modal" data-target="#exampleModalScrollable{{ $seguimiento->id }}"
+                                    data-toggle="tooltip" data-placement="bottom"
+                                    title="Añadir un Elemento adicional a {{$seguimiento->item->nombre}}">
                                     <i class="fal fa-plus"></i> Adicional
                                 </button>
                             </div>
-                            <div class=" col my-auto ml-auto ">
+                            @endif
+
+                            <div class=" my-auto mr-2">
 
                                 <form action="{{ route('pedidos.eliminar_seguimiento', $seguimiento) }}" method="POST"
-                                    onsubmit="return confirm('Esta seguro que desea borrar el item: {{$seguimiento->item->nombre}}?');"
-                                    style="display: inline-block;">
+                                    id="form-seguimiento{{$seguimiento->id}}" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-white btn-sm bg-danger" type="submit">
+                                    <button class="btn btn-white btn-sm btn-pill bg-danger btn-seguimiento"
+                                        id="{{$seguimiento->id}}" type="submit">
                                         <i class="far fa-times mr-1"></i> Eliminar
                                     </button>
                                 </form>
@@ -68,13 +87,13 @@
                                         <small class="text-muted">Cantidad: {{$adicional->cantidad}}</small>
                                     </div>
                                     <div class="my-auto ml-auto ">
-                                        <form id="form-adicional" action="{{ route('pedidos.eliminar_adicional', $adicional) }}"
-                                            method="POST"
-
+                                        <form id="form-adicional{{$adicional->id}}"
+                                            action="{{ route('pedidos.eliminar_adicional', $adicional) }}" method="POST"
                                             style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-white btn-sm btn-pill border" id="btn-borrar" type="submit">
+                                            <button class="btn btn-white btn-sm btn-pill border btn-adicional"
+                                                id="{{$adicional->id}}" type="submit">
                                                 <i class="far fa-times mr-1"></i> Eliminar </a>
                                             </button>
                                         </form>
@@ -169,7 +188,8 @@
 @endsection
 @push('scripts')
 <script>
- $('#btn-borrar').on('click', function(e){
+    $('.btn-adicional').on('click', function(e){
+        var id = $(this).attr('id');
     e.preventDefault();
 
 swal({
@@ -188,7 +208,33 @@ swal({
     })
     .then ((willDelete) => {
         if (willDelete) {
-        $("#form-adicional").submit();
+        $("#form-adicional"+id).submit();
+        }
+    });
+ });
+</script>
+<script>
+    $('.btn-seguimiento').on('click', function(e){
+        var id = $(this).attr('id');
+    e.preventDefault();
+
+swal({
+        title: "Cuidado!",
+        text: "Esta seguro que desea eliminar?",
+        icon: "warning",
+        dangerMode: true,
+
+        buttons: {
+        cancel: "Cancelar",
+        confirm: "Aceptar",
+        },
+        customClass: {
+            confirmButton: 'btn-primary',
+        },
+    })
+    .then ((willDelete) => {
+        if (willDelete) {
+        $("#form-seguimiento"+id).submit();
         }
     });
  });

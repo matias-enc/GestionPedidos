@@ -7,7 +7,7 @@
     <div class="col-10">
 
 
-        <div class="card card-small ">
+        <div class="card card-small card-outline card-primary">
             <div class="card-header">
                 <div class="row justify-content-between ml-1 mr-1">
                     <h3><strong>Pedidos</strong></h3>
@@ -28,10 +28,10 @@
                             <div class="card-body ">
 
                                 <div class="row justify-content-start mr-2 ml-2">
-                                    <div class="mr-2 ml-2">
+                                    <div class="col mr-2 ml-2">
                                         <strong><label for="">Usuario</label></strong>
-                                        <select id="filtro2"
-                                            class="estados-js form-control {{ $errors->has('filtro1') ? 'is-invalid' : '' }}"
+                                        <select id="filtroUsuario"
+                                            class="estados-js form-control {{ $errors->has('filtroEstado') ? 'is-invalid' : '' }}"
                                             name="usuario_id">
                                             <option value="" disabled selected style="">Seleccione un Usuario</option>
                                             @foreach ($usuarios as $usuario)
@@ -41,9 +41,9 @@
                                     </div>
 
 
-                                    <div class="mr-2 ml-2">
+                                    <div class="col mr-2 ml-2">
                                         <strong><label for="">Item</label></strong>
-                                        <select id="filtro3"
+                                        <select id="filtroItem"
                                             class="estados-js form-control {{ $errors->has('filtro1') ? 'is-invalid' : '' }}"
                                             name="item_id">
                                             <option value="" disabled selected style="">Seleccione un Item</option>
@@ -52,10 +52,10 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="mr-2 ml-2">
+                                    <div class="col mr-2 ml-2">
                                         <strong><label for="">Tipo de Estado</label></strong>
-                                        <select id="filtro1"
-                                            class="estados-js form-control {{ $errors->has('filtro1') ? 'is-invalid' : '' }}"
+                                        <select id="filtroEstado"
+                                            class="estados-js form-control {{ $errors->has('filtroEstado') ? 'is-invalid' : '' }}"
                                             name="estado_id">
                                             <option value="" disabled selected style="">Seleccione un Estado</option>
                                             @foreach ($estados as $estado)
@@ -63,18 +63,32 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="col mr-2 ml-2">
+                                        <strong><label for="">Fechas</label></strong>
+                                        <div class="input-group input-daterange" id="datepicker"
+                                            data-date-format="dd/mm/yyyy" data-date-container='#datepicker'>
+                                            <input type="text"
+                                                class="input-sm form-control {{ $errors->has('llegada') ? 'is-invalid' : ''}}"
+                                                name="llegada" id="filtroLlegada" placeholder="Inicio"
+                                                value="{{old('llegada')}}" }} />
+                                            <input type="text"
+                                                class="input-sm form-control {{ $errors->has('salida') ? 'is-invalid' : '' }}"
+                                                name="salida" id="filtroSalida" placeholder="Final"
+                                                value="{{ old('salida') }}" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <div class="row justify-content-end  mr-2 ml-2">
-                                    <button class="btn btn-secondary shadow-sm mr-1 ml-1" type="button" id="limpiar">
+                                    <button class="btn btn-info shadow-sm mr-1 ml-1" type="button" id="limpiar">
                                         <i class="fal fa-recycle "></i>
                                         Limpiar
                                     </button>
-                                    <button class="btn btn-info shadow-sm mr-1 ml-1" type="button" id="filtrar">
-                                        <i class="fal fa-filter "></i>
-                                        Filtrar
+                                    <button class="btn btn-success shadow-sm mr-1 ml-1" type="button" id="filtrar">
+                                        <i class="fal fa-check "></i>
+                                        Aplicar
                                     </button>
-                                    <button class="btn btn-success shadow-sm mr-1 ml-1" type="submit" id="generar">
+                                    <button class="btn btn-danger shadow-sm mr-1 ml-1" type="submit" id="generar">
                                         <i class="fal fa-file-pdf "></i>
                                         Generar PDF
                                     </button>
@@ -89,8 +103,9 @@
                     <table id="pedidos" class="table table-bordered table-striped table-hover datatable">
                         <thead>
                             <tr>
-                                <th>Nr°</th>
                                 <th>Usuario</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Final</th>
                                 <th>Items</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
@@ -98,25 +113,34 @@
                         </thead>
                         <tbody>
                             @foreach ($pedidos as $pedido)
+                            @if ($pedido->usuario!=null)
                             <tr>
-                                <td>{{$pedido->id}}</td>
-                                <td>
-                                    <span class="badge badge-warning">{{ $pedido->usuario->name }}</span>
+                                <td class="text-center">
+                                    <span class="badge badge-warning">{{strtoupper($pedido->usuario->name) }}</span>
                                 </td>
+                                <td class="text-center"> {{$pedido->getFechaInicial()->format('d/m/Y')}}</td>
+                                <td class="text-center"> {{$pedido->getFechaFinal()->format('d/m/Y')}}</td>
                                 <td>
                                     @foreach ($pedido->seguimientos as $seguimiento)
-                                    <span class="badge badge-info">{{ $seguimiento->item->nombre }}</span>
+                                    <span class="badge badge-info">{{ $seguimiento->item->nombre }}
+                                        @if (sizeof($seguimiento->adicionales)>0)
+                                        <i class="fas fa-exclamation-circle "></i>
+                                        @endif
+
+
+                                    </span>
                                     @endforeach
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <span class="badge badge-pill badge-success">{{ $pedido->estado->nombre }}</span>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a class="btn btn-xs btn-primary" href="{{route('pedidos.show', $pedido)}}">
                                         Ver
                                     </a>
                                 </td>
                             </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -127,6 +151,7 @@
 </div>
 @endsection
 @push('scripts')
+
 <script>
     $(function () {
           $('#pedidos').DataTable({
@@ -154,16 +179,19 @@
             "searching": true,
             "ordering": true,
             "info": false,
-            "columns": [
-    null,
-    null,
-    null,
-    null,
-    { "width": "15%" }
-  ],
           });
         });
 </script>
+<script>
+        $('#datepicker').datepicker({
+                weekStart: 1,
+                orientation: "bottom    ",
+                startDate: "today",
+                endDate: "1/1/2021",
+                language: "es",
+                todayHighlight: true,
+            });
+    </script>
 <script>
     $(document).ready(function() {
 
@@ -171,9 +199,11 @@
     var contador = 0;
 
     $('#limpiar').click(function(){
-        $("#filtro1 ").prop("selectedIndex", 0) ;
-        $("#filtro2 ").prop("selectedIndex", 0) ;
-        $("#filtro3 ").prop("selectedIndex", 0) ;
+        $("#filtroEstado ").prop("selectedIndex", 0) ;
+        $("#filtroUsuario ").prop("selectedIndex", 0) ;
+        $("#filtroItem ").prop("selectedIndex", 0) ;
+        $("#filtroLlegada ").val('') ;
+        $("#filtroSalida ").val('') ;
         for(var i = 0; i < contador; i++){
             $.fn.dataTable.ext.search.pop();
         }
@@ -182,14 +212,18 @@
     }) ;
 
     $('#filtrar').click(function(){
-        var filtro1 = $('#filtro1').val();
-        var filtro2 = $('#filtro2').val();
-        var filtro3 = $('#filtro3').val();
+        var filtroEstado = $('#filtroEstado').val();
+        var filtroUsuario = $('#filtroUsuario').val();
+        console.log(filtroUsuario);
+        var filtroItem = $('#filtroItem').val();
+        var filtroLlegada = $('#filtroLlegada').val();
+        console.log(filtroLlegada)
+        var filtroSalida = $('#filtroSalida').val();
 
-        if(filtro1 != null){
-            var estadoSeleccionado = $('#filtro1 option:selected').text()
+        if(filtroEstado != null){
+            var estadoSeleccionado = $('#filtroEstado option:selected').text()
             var filtradoTabla1 = function FuncionFiltrado(settings, data, dataIndex){
-                if(data[3]==estadoSeleccionado){
+                if(data[4]==estadoSeleccionado){
                     return true;
                 }else{
                     return false;
@@ -201,11 +235,13 @@
 
             table.draw()
         }
-        if(filtro2 != null){
-            var usuarioSeleccionado = $('#filtro2 option:selected').text()
+        if(filtroUsuario != null){
+            var usuarioSeleccionado = $('#filtroUsuario option:selected').text()
+            console.log(usuarioSeleccionado)
             var filtradoTabla2 = function FuncionFiltrado(settings, data, dataIndex){
-                if(data[1]==usuarioSeleccionado){
+                if(data[0]==usuarioSeleccionado){
                     return true;
+                    console.log('entre')
                 }else{
                     return false;
                 }
@@ -215,10 +251,10 @@
 
             table.draw()
         }
-        if(filtro3 != null){
-            var itemSeleccionado = $('#filtro3 option:selected').text()
+        if(filtroItem != null){
+            var itemSeleccionado = $('#filtroItem option:selected').text()
             var filtradoTabla3 = function FuncionFiltrado(settings, data, dataIndex){
-                if(data[2].includes(itemSeleccionado)){
+                if(data[3].includes(itemSeleccionado)){
                     return true;
                 }else{
                     return false;
@@ -229,7 +265,36 @@
 
             table.draw()
         }
+        if(filtroLlegada != '' ){
+            var llegada = $('#filtroLlegada').val()
+            var datearray = llegada.split("/");
+            var newdate =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+            var llegada = $('#filtroLlegada').val()
+            var datearray = llegada.split("/");
+            llegada =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+            var salida = $('#filtroSalida').val()
+            datearray = salida.split("/");
+            salida =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+            var filtradoTablaFecha = function FuncionFiltrado(settings, data, dataIndex){
+                var llegadaTable = data[1]
+                datearray = llegadaTable.split("/");
+                llegadaTable =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                var salidaTable = data[2]
+                datearray = salidaTable.split("/");
+                salidaTable =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                if((moment(llegadaTable).isSameOrAfter(llegada) && moment(llegadaTable).isSameOrBefore(salida))&&(moment(salidaTable).isSameOrAfter(llegada) && moment(salidaTable).isSameOrBefore(salida))){
+                    return true;
+                }else{
+                    return false;
+                }
+
+            };
+            $.fn.dataTable.ext.search.push( filtradoTablaFecha )
+            contador++;
+            table.draw();
+        }
     });
 });
 </script>
+
 @endpush

@@ -74,7 +74,11 @@
                             data-target="#exampleModalScrollable">
                             Aceptar Solicitud
                         </button>
-                        <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
+                        <form action="{{ route("pedidos.finalizar_pedido") }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" value="{{$pedido->id}}" name='pedido_id'>
+                            <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
+                        </form>
                     </div>
                 </div>
 
@@ -104,8 +108,7 @@
                 <div class="modal-body">
                     <label for="">Estados Posibles</label>
                     <select id="estado"
-                        class="estados-js form-control {{ $errors->has('estados') ? 'is-invalid' : '' }}"
-                        name="estado">
+                        class="estados-js form-control {{ $errors->has('estados') ? 'is-invalid' : '' }}" name="estado">
                         <option value="" disabled selected style="">Seleccione una Accion</option>
                         @foreach ($pedido->flujoTrabajo->estados_posibles($pedido->estado) as $estado)
                         <option placeholder="Categoria" value="{{ $estado->id }}">{{ $estado->nombre }}</option>

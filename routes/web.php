@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('solicitudes','PedidoController@solicitudes')->name('pedidos.solicitudes');
     Route::get('solicitudes/{pedido}','PedidoController@ver_solicitud')->name('pedidos.ver_solicitud');
     Route::post('asignar','PedidoController@asignar_estado')->name('pedidos.asignar_estado');
+    Route::post('finalizar_pedido','PedidoController@finalizar_pedido')->name('pedidos.finalizar_pedido');
 
 
 

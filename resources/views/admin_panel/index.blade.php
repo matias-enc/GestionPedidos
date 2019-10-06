@@ -14,14 +14,18 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/animate/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/jqvmap/jqvmap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     @stack('styles')
+
+
 </head>
 
 
@@ -70,6 +74,7 @@
     <script src="{{asset('admin_panel/plugins/bootstrap/js/bootstrap.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/chart.js/Chart.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/toastr/toastr.min.js')}}"></script>
+
     <!-- Bootstrap -->
     <!-- AdminLTE -->
     <script src="{{asset('admin_panel/dist/js/adminlte.js')}}"></script>
@@ -86,15 +91,18 @@
     <script src="{{asset('admin_panel/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
     <!-- daterangepicker -->
     <script src="{{asset('admin_panel/plugins/moment/moment.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
-    <script src="{{asset('admin_panel/plugins/popper/popper.js')}}"></script>
+
+    <script src="{{asset('admin_panel/plugins/popper/popper.min.js')}}"></script>
+    {{-- <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script> --}}
     {{-- <script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script> --}}
     <!-- overlayScrollbars -->
     <script src="{{asset('admin_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 
     <!-- OPTIONAL SCRIPTS -->
     <script src="{{asset('admin_panel/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
-    <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    {{-- <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script> --}}
     <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script>
@@ -104,19 +112,19 @@
 
     {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
     {{-- {{-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> --}}
+
     @foreach (auth()->user()->roles as $rol)
     @if ($rol->name == 'Admin')
     <script>
-        Echo.channel('gestionpedidos').listen('PedidoSolicitado', (e) => {
-            $(function() {
-    const Toast = Swal.mixin({
+        const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
       timer: 3000
-    })
-
-            Toast.fire({
+    });
+        Echo.channel('gestionpedidos').listen('PedidoSolicitado', (e) => {
+            $(function() {
+                Toast.fire({
                 type: 'info',
                 title: e.message
             }),
@@ -125,8 +133,17 @@
             });
         });
     });
+        Echo.channel('pedidoIniciado').listen('PedidoIniciado', (e) => {
+            $(function() {
+            Toast.fire({
+                type: 'info',
+                title: e.message
+            });
+        });
+    });
 
     </script>
+
     @endif
     @endforeach
 

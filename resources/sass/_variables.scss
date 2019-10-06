@@ -19,21 +19,32 @@ $line-height-base: 1.6;
 // $teal: #4dc0b5;
 // $cyan: #6cb2eb;
 
-//rober
-$primary:#007bff;
-$secondary:rgb(119, 121, 124);
-$success:#17c671;
+
+
+//COLORES VIEJOS
+// $primary:#007bff;
+// $secondary:rgb(212, 224, 236);
+// $success:#17c671;
+// $danger:#c4183c;
+// $info:#00b8d8;
+// $warning:#ffb400;
+// $light:#FBFBFB;
+// $dark:#212529;
+//COLOR PRUEBA
+$primary:#188a66;
+$secondary:rgb(212, 224, 236);
+$success:#0fbe6c;
 $danger:#c4183c;
-$info:#00b8d8;
+$info:#69779b;
 $warning:#ffb400;
 $light:#FBFBFB;
 $dark:#212529;
 $spacer:1rem;
-// $border-width:1px;
-
-// $border-radius: 0.75rem;
 
 $card-border-radius: 0.75rem;
+
+// $card-box-shadows: 0 .125rem .25rem rgba($black, .075);
+
 $input-btn-focus-width: 0.1em;
 
 $white : #ffffff;

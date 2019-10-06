@@ -43,7 +43,7 @@ class PedidoController extends Controller
                 $items->push($item);
             }
         }
-        $pedidos = Pedido::all();
+        $pedidos = Pedido::all()->where('user_id', '!=', null);
         return view('admin_panel.pedidos.index', compact('pedidos', 'estados', 'usuarios', 'items'));
     }
 
@@ -58,11 +58,13 @@ class PedidoController extends Controller
     }
     public function reporte(Request $request)
     {
-        $pedidos = Pedido::all();
-
+        $pedidos = Pedido::all()->where('user_id', '!=', null);
+        // return $request;
         $usuario = null;
         $item = null;
         $estado = null;
+        $llegada = null;
+        $salida = null;
         if ($request->estado_id != null) {
             $estado = Estado::find($request->estado_id);
             foreach ($pedidos as $id => $pedido) {
@@ -89,21 +91,36 @@ class PedidoController extends Controller
                 }
             }
         }
+        if ($request->llegada != null) {
+            $llegada = Carbon::createFromFormat('d/m/Y', $request->llegada);
+            $llegada->setTime(0, 0, 0);
+            $salida = Carbon::createFromFormat('d/m/Y', $request->salida);
+            $salida->setTime(0, 0, 0);
+            foreach ($pedidos as $id => $pedido) {
+                foreach ($pedido->seguimientos as $seguimiento) {
+                    $llegadaPedido = $pedido->getFechaInicial();
+
+                    $salidaPedido = $pedido->getFechaFinal();
+                    $llegadaPedido->setTime(0, 0, 0);
+                    $salidaPedido->setTime(0, 0, 0);
+                    if (($salidaPedido->greaterThanOrEqualTo($llegada) && $salidaPedido->lessThanOrEqualTo($salida)) && ($llegadaPedido->greaterThanOrEqualTo($llegada) && $llegadaPedido->lessThanOrEqualTo($salida))) { } else {
+                        $pedidos->pull($id);
+                    }
+                }
+            }
+            $llegada = $llegada->format('d/m/Y');
+            $salida = $salida->format('d/m/Y');
+        }
 
 
 
 
-        $pdf = PDF::loadView('admin_panel.pdf.pedidos', compact('pedidos', 'usuario', 'item', 'estado'));
+        $pdf = PDF::loadView('admin_panel.pdf.pedidos', compact('pedidos', 'usuario', 'item', 'estado', 'llegada', 'salida'));
         $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf ->get_canvas();
-        $y = $canvas->get_height()-35;
-        // return $y;
+        $canvas = $dom_pdf->get_canvas();
+        $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        // $canvas = $dom_pdf->;
-        // $canvas;
         return $pdf->stream();
-        // return sizeof($pedidos);
-
     }
 
     /**
@@ -150,77 +167,89 @@ class PedidoController extends Controller
 
     public function consultar_disponibilidad(Request $request)
     {
-        $this->validar_pedido(); // Validacion del Pedido
-
+        // return $request;
+        if ($request->tipoItem != null) {
+            $tipoItem = TipoItem::find($request->tipoItem);
+            if ($tipoItem->nombre != 'Albergues') {
+                $this->validar_eventos();
+            } else {
+                $this->validar_pedido();
+            }
+        } else {
+            $this->validar_pedido();
+        }
         $fechaInicial = Carbon::createFromFormat('d/m/Y', $request->inicial);
         $fechaFinal = Carbon::createFromFormat('d/m/Y', $request->final);
         $fechaInicial->setTime(0, 0, 0);
         $fechaFinal->setTime(0, 0, 0);
-        $tipoItem = TipoItem::find($request->tipoItem);
 
-        $items = $tipoItem->items;
-        foreach ($items as $key => $item) { //Filtrar items por capacidad
-            if ($item->capacidad < $request->capacidad && $request->capacidad != '') {
-                $items->pull($key);
-            }
-        }
 
         $disponible = true;
-        if ($tipoItem->nombre != 'Secundarios') {
-            if ($tipoItem->nombre == 'Albergues') {
-                if ($fechaInicial->equalTo($fechaFinal)) {
-                    $fechaInicial->addHours(9);
-                    $fechaFinal->addHours(32);
-                } else {
-                    $fechaInicial->addHours(9);
-                    $fechaFinal->addHours(8);
-                }
-            }
-            foreach ($items as $key => $item) { //Filtrar items por disponibilidad
 
-                foreach ($item->seguimientos as $seguimiento) {
-                    $fechaInicialSeg = Carbon::create($seguimiento->fechaInicial);
-                    $fechaFinalSeg = Carbon::create($seguimiento->fechaFinal);
-                    if (($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))) {
-                        $disponible = true;
-                    } elseif ($fechaInicial->equalTo($fechaInicialSeg)) {
-                        $disponible = false;
-                    } else {
-                        $disponible = false;
-                    }
-                    if ($seguimiento->item->capacidad < $request->capacidad) {
-                        $disponible = false;
-                    }
-                }
-                if ($disponible == false) {
+        //TODO PARA MANEJO DE HORAS EN ALBERGUES
+        if ($tipoItem->nombre == 'Albergues') {
+            $tipoItem = TipoItem::find($request->tipoItem);
+            $items = $tipoItem->items;
+            foreach ($items as $key => $item) { //Filtrar items por capacidad
+                if ($item->capacidad < $request->capacidad) {
                     $items->pull($key);
                 }
-                $disponible = true;
             }
-            $items->pluck('nombre', 'id');
-            // return $fechaInicial . $fechaFinal;
-            return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
+            if ($fechaInicial->equalTo($fechaFinal)) {
+                $fechaInicial->addHours(9);
+                $fechaFinal->addHours(32);
+            } else {
+                $fechaInicial->addHours(9);
+                $fechaFinal->addHours(8);
+            }
+        //MANEJO DE HORAS PARA COMPLEJOS
         } else {
-            foreach ($tipoItem->items as $key => $itemSec) { //Filtrar items por disponibilidad en cuanto a su cantidad
-                $cantidad = $itemSec->cantidad;
-                foreach ($itemSec->seguimientos as $seguimiento) {
-                    $fechaInicialSeg = Carbon::create($seguimiento->fechaInicial);
-                    $fechaFinalSeg = Carbon::create($seguimiento->fechaFinal);
-                    if (($fechaFinalSeg->greaterThanOrEqualTo($fechaInicial)) || ($fechaInicialSeg->lessThanOrEqualTo($fechaFinal)) || ($fechaInicial->equalTo($fechaInicialSeg))) {
-                        $cantidad = $cantidad - $seguimiento->cantidad;
-                    }
-                }
-                return 'la cantidad para el item:' . $itemSec->nombre . ' es:' . $cantidad;
-            }
+            // return $request->hora_inicial;
+            $fechaInicial = Carbon::createFromFormat('d/m/Y H:i A', $request->inicial.' '.$request->hora_inicial);
+            $fechaFinal = Carbon::createFromFormat('d/m/Y H:i A', $request->final.' '.$request->hora_final);
+            $items = $tipoItem->items;
         }
+        foreach ($items as $key => $item) { //Filtrar items por disponibilidad
+
+            foreach ($item->seguimientos as $seguimiento) {
+                $fechaInicialSeg = Carbon::create($seguimiento->fechaInicial);
+                $fechaFinalSeg = Carbon::create($seguimiento->fechaFinal);
+                if (($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))) {
+                    $disponible = true;
+                } elseif ($fechaInicial->equalTo($fechaInicialSeg)) {
+                    $disponible = false;
+                } else {
+                    $disponible = false;
+                }
+                if ($seguimiento->item->capacidad < $request->capacidad) {
+                    $disponible = false;
+                }
+            }
+            if ($disponible == false) {
+                $items->pull($key);
+            }
+            $disponible = true;
+        }
+        if (sizeof($items) <= 0) {
+            Alert::error('No hay disponibilidad', 'En esta fecha no se encontro el item solicitado');
+            return redirect()->back()->withInput();
+        }
+        $items->pluck('nombre', 'id');
+        return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
     }
     function detalle_pedido(Request $request)
     {
         $item = Item::find($request->item_id);
         $fechaInicial = $request->fechaInicial;
         $fechaFinal = $request->fechaFinal;
+        if ($item->tipoItem->nombre == 'Albergues') {
+            $diferencia = Carbon::create($fechaInicial)->diffInDays(Carbon::create($fechaFinal)) + 1;
+        }else{
+            $diferencia = Carbon::create($fechaInicial)->diffInHours(Carbon::create($fechaFinal));
+        }
+
         // return $fechaInicial . $fechaFinal;
-        return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal'));
+        return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal', 'diferencia'));
     }
 
     function disponibilidad_secundarios(Request $request)
@@ -276,7 +305,7 @@ class PedidoController extends Controller
                 $seguimiento->fechaFinal = $request->fechaFinal;
                 $seguimiento->item_id = $request->item_id;
                 $seguimiento->save();
-                return redirect()->route('pedidos.nuevo_pedido');
+                return redirect()->route('pedidos.listar_carrito');
             }
         }
 
@@ -292,7 +321,7 @@ class PedidoController extends Controller
         $seguimiento->fechaFinal = $request->fechaFinal;
         $seguimiento->item_id = $request->item_id;
         $seguimiento->save();
-        return redirect()->route('pedidos.nuevo_pedido');
+        return redirect()->route('pedidos.listar_carrito');
     }
 
     function listar_carrito()
@@ -326,7 +355,7 @@ class PedidoController extends Controller
         $historial->save();
         $pedido->estado_id = $request->estado;
         $pedido->save();
-        return redirect()->route('pedidos.index')->with('success', 'Pedido Guardado');
+        return redirect()->route('pedidos.solicitudes')->with('success', 'Pedido Guardado');
     }
 
     /**
@@ -390,6 +419,20 @@ class PedidoController extends Controller
         return back();
     }
 
+    public function finalizar_pedido(Request $request)
+    {
+        // return $request;
+        $pedido = Pedido::find($request->pedido_id);
+        $historial = Historial::create();
+        $pedido->estado_id = $pedido->flujoTrabajo->estado_final()->id;
+        $historial->pedido_id = $pedido->id;
+        $historial->estado_id = $pedido->estado_id;
+        $historial->save();
+        $pedido->save();
+        Alert::success('Se han finalizado el pedido correctamente', 'Pedido Guardado ');
+        return redirect()->route('pedidos.index');
+    }
+
 
 
     public function actualizar_perfil(Request $request)
@@ -420,7 +463,18 @@ class PedidoController extends Controller
     {
         return request()->validate([
             'inicial' => 'required',
-            'capacidad' => 'required|gt:0',
+            'final' => 'required',
+            'capacidad' => 'required',
+            'tipoItem' => 'required',
+        ]);
+    }
+    public function validar_eventos()
+    {
+        return request()->validate([
+            'inicial' => 'required',
+            'final' => 'required',
+            'hora_inicial' => 'required',
+            'hora_final' => 'required',
             'tipoItem' => 'required',
         ]);
     }

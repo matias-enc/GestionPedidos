@@ -27,11 +27,13 @@ class Seguimiento extends Model
     }
 
     public function getFechaLlegada(){
-        $fecha = Carbon::create($this->fechaInicial)->format('d/m/Y');
+        $fecha = Carbon::create($this->fechaInicial);
         return $fecha;
     }
     public function getFechaSalida(){
-        $fecha = Carbon::create($this->fechaFinal)->format('d/m/Y');
+        $fecha = Carbon::create($this->fechaFinal);
         return $fecha;
+//         ->format('d/m/Y')
+// ->format('d/m/Y')
     }
 }

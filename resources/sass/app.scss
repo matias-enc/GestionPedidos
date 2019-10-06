@@ -9,11 +9,11 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
 //Shards ui
-@import '~shards-ui/dist/css/shards.min.css';
+@import '~shards-ui/dist/css/shards.css';
 
 @import 'admin_panel/scss/AdminLTE.scss';
-
 // @import '~vue-form-wizard/dist/vue-form-wizard.min.css';
 
 @import '~sweetalert2/src/sweetalert2.scss';
@@ -22,3 +22,7 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+// .card-box {
+
+// }

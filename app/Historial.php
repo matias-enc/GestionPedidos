@@ -15,9 +15,8 @@ class Historial extends Model
     {
         return $this->belongsTo(Estado::class);
     }
-    // public function creado()
-    // {
-    //     $actual = Carbon::parse($this->created_at);
-    //     return $actual->diffForHumans();
-    // }
+    public function getCreado()
+    {
+        return $this->created_at;
+    }
 }

@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             CategoriasTableSeeder::class,
             TipoItemsTableSeeder::class,
             ItemsTableSeeder::class,
+            PedidosTableSeeder::class
+
             ]);
 
     }

@@ -21,6 +21,7 @@ class CreateItemsTable extends Migration
             $table->integer('cantidad')->nullable();
             $table->unsignedBigInteger('tipoItems_id')->nullable();
             $table->foreign('tipoItems_id')->references('id')->on('tipo_items');
+            $table->double('precioUnitario')->nullable()->unsigned();
             $table->timestamps();
         });
     }

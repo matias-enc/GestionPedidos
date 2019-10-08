@@ -78,7 +78,8 @@ class ItemController extends Controller
       */
      public function edit(Item $item)
      {
-         return view('admin_panel.inventario.edit', compact('item'));
+         $categorias = Categoria::all();
+         return view('admin_panel.inventario.edit', compact('item', 'categorias'));
      }
 
      /**

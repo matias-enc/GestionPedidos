@@ -21,11 +21,51 @@
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/jqvmap/jqvmap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('admin_panel/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     @stack('styles')
 
+    <style>
+        .nav-item .nav-link .badgem {
+            position: absolute;
+            font-size: .65rem;
+            text-align: center;
+            color: white;
+            top: 0px;
+            right: 7px;
+            width: 1.3rem;
+            z-index: 3333;
+            border-radius: 50%;
+            background-color: #c4183c;
+            border: solid 2px white;
 
+        }
+
+        .sidebar:hover .badgem {
+            border: none;
+            width: 1rem;
+            /* border-color: #c7c5c5; */
+            top: 9px;
+        }
+
+        .nav-item .nav-link .badgeh {
+            position: absolute;
+            font-size: .65rem;
+            text-align: center;
+            padding-top: .06rem;
+            padding-left: .06rem;
+            color: black;
+            top: 2px;
+            right: 3px;
+            width: 1.2rem;
+            z-index: 3333;
+            border-radius: 50%;
+            background-color: #c4183c;
+            border: solid 2px white;
+
+        }
+    </style>
 </head>
 
 
@@ -116,6 +156,29 @@
     @foreach (auth()->user()->roles as $rol)
     @if ($rol->name == 'Admin')
     <script>
+        $(document).ready(function(){
+        //SOLICITUDES, NOTIFICACION AL CARGAR
+        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
+        var iniciados = "{{ url('/cantidad_iniciados') }}";
+        $.get(solicitudes, function(data){
+            if(data > 0){
+                $("span#span-solicitudes").css('visibility','visible');
+                $('#span-solicitudes').text(data);
+
+            }
+        }),
+        $.get(iniciados, function(data){
+            console.log(data);
+            if(data > 0){
+                $("span#span-iniciados").css('visibility','visible');
+                $('#span-iniciados').text(data);
+            }
+        });
+});
+    </script>
+    <script>
+        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
+        var iniciados = "{{ url('/cantidad_iniciados') }}";
         const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -128,17 +191,27 @@
                 type: 'info',
                 title: e.message
             }),
-            $.get('cantidad_solicitudes', function(data){
+            $.get(solicitudes, function(data){
+                $("#divsolicitud").removeClass("heartBeat");
+                $("span#span-solicitudes").css('visibility','visible');
                 $('#span-solicitudes').text(data);
+                $("#divsolicitud").addClass("heartBeat");
             });
         });
     });
-        Echo.channel('pedidoIniciado').listen('PedidoIniciado', (e) => {
+        Echo.channel('gestionpedidos').listen('PedidoIniciado', (e) => {
             $(function() {
             Toast.fire({
-                type: 'info',
+                type: 'success',
                 title: e.message
-            });
+            }),
+
+            $.get(iniciados, function(data){
+            if(data > 0){
+                $("span#span-iniciados").css('visibility','visible');
+                $('#span-iniciados').text(data);
+            }
+        });
         });
     });
 

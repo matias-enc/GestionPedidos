@@ -21,9 +21,9 @@
         @if ($pedido->estado->nombre == 'Carrito')
         <li class="nav-item border-left animated flash">
             <a href="{{ route("pedidos.listar_carrito") }}" class="nav-link">
-                <i class="fal fa-shopping-cart fa-lg nav-icon fa-pull-left" style="color:black"></i>
+                <i class="fal fa-shopping-cart fa-lg nav-icon fa-pull-left mt-2" style="color:black"></i>
 
-                <span class="badge badge-warning navbar-badge">{{sizeof($pedido->seguimientos)}}</span>
+                <span class="badgeh" style="background: #ffb400">{{sizeof($pedido->seguimientos)}}</span>
             </a>
         </li>
         @endif

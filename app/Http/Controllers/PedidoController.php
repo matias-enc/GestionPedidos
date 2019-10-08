@@ -430,10 +430,15 @@ class PedidoController extends Controller
         $historial->save();
         $pedido->save();
         Alert::success('Se han finalizado el pedido correctamente', 'Pedido Guardado ');
-        return redirect()->route('pedidos.index');
+        return redirect()->route('pedidos.solicitudes');
     }
 
-
+    public function iniciados()
+    {
+        $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
+        $pedidos = Pedido::all()->where('estado_id', $estado->id);
+        return view('admin_panel.pedidos.iniciados', compact('pedidos'));
+    }
 
     public function actualizar_perfil(Request $request)
     {
@@ -457,6 +462,12 @@ class PedidoController extends Controller
     public function cantidad_solicitudes()
     {
         return sizeof(Pedido::all()->where('estado_id', 6));
+    }
+
+    public function cantidad_iniciados()
+    {
+        $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
+        return sizeof(Pedido::all()->where('estado_id', $estado->id));
     }
 
     public function validar_pedido()

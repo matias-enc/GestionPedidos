@@ -114,13 +114,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('solicitudes/{pedido}','PedidoController@ver_solicitud')->name('pedidos.ver_solicitud');
     Route::post('asignar','PedidoController@asignar_estado')->name('pedidos.asignar_estado');
     Route::post('finalizar_pedido','PedidoController@finalizar_pedido')->name('pedidos.finalizar_pedido');
+    Route::get('cantidad_solicitudes' , 'PedidoController@cantidad_solicitudes')->name('cantidad_solicitudes');
 
+    //Pedidos Iniciados
+    Route::get('iniciados','PedidoController@iniciados')->name('pedidos.iniciados');
+    Route::get('cantidad_iniciados' , 'PedidoController@cantidad_iniciados')->name('cantidad_iniciados');
 
 
     //Rutas Configuracion Usuario
     Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');
     Route::post('actualizar_perfil' , 'PedidoController@actualizar_perfil')->name('actualizar_perfil');
-    Route::get('cantidad_solicitudes' , 'PedidoController@cantidad_solicitudes')->name('cantidad_solicitudes');
+
 });
 
 Route::group(['middleware' => ['auth']], function () {

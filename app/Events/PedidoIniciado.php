@@ -23,6 +23,6 @@ class PedidoIniciado implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('pedidoIniciado');
+        return new Channel('gestionpedidos');
     }
 }

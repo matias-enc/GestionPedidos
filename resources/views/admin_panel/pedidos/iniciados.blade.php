@@ -6,9 +6,9 @@
     <div class="col-8">
 
 
-        <div class="card">
+        <div class="card shadow-sm card-primary card-outline">
             <div class="card-header">
-                <h3><strong>Nuevas Solicitudes de Pedidos</strong></h3>
+                <h3><strong>Pedidos Activos</strong></h3>
             </div>
             <div class="card-body">
 
@@ -17,7 +17,7 @@
                     <table id="pedidos" class="table table-bordered table-striped table-hover datatable">
                         <thead>
                             <tr class="text-center">
-                                <th>Nr°</th>
+                                <th>Nr° Pedido</th>
                                 <th>Usuario</th>
                                 <th>Items</th>
                                 <th>Acciones</th>
@@ -36,10 +36,10 @@
                                     @endforeach
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-xs btn-primary"
+                                    {{-- <a class="btn btn-xs btn-primary"
                                         href="{{route('pedidos.ver_solicitud', $pedido)}}">
                                         Ver
-                                    </a>
+                                    </a> --}}
                                 </td>
                             </tr>
                             @endforeach
@@ -79,8 +79,6 @@
             "searching": true,
             "ordering": true,
             "info": false,
-    { "width": "15%" }
-  ],
           });
         });
 </script>

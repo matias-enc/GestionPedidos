@@ -14,23 +14,43 @@
                             Nombre
                         </th>
                         <td>
-                            {{ $permiso->name }}
+                            {{ $item->nombre }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            Slug
+                            Tipo de Item
                         </th>
                         <td>
-                            {{ $permiso->slug }}
+                            {{ $item->tipoItem->nombre }}
                         </td>
                     </tr>
+                    @if ($item->capacidad != null)
+                    <tr>
+                        <th>
+                            Capacidad
+                        </th>
+                        <td>
+                            {{ $item->capacidad }}
+                        </td>
+                    </tr>
+                    @endif
+                    @if ($item->cantidad != null)
+                    <tr>
+                        <th>
+                            Cantidad
+                        </th>
+                        <td>
+                            {{ $item->cantidad }}
+                        </td>
+                    </tr>
+                    @endif
                     <tr>
                         <th>
                             Descripcion
                         </th>
                         <td>
-                            {{ $permiso->description }}
+                            {{ $item->descripcion }}
                         </td>
                     </tr>
 

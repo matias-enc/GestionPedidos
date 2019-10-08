@@ -35,7 +35,7 @@
                                             name="usuario_id">
                                             <option value="" disabled selected style="">Seleccione un Usuario</option>
                                             @foreach ($usuarios as $usuario)
-                                            <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+                                            <option value="{{ $usuario->id }}">{{ strtoupper($usuario->name) }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -213,28 +213,16 @@
 
     $('#filtrar').click(function(){
         var filtroEstado = $('#filtroEstado').val();
+        console.log(filtroEstado)
         var filtroUsuario = $('#filtroUsuario').val();
+        filtroUsuario = filtroUsuario.toUpperCase();
         console.log(filtroUsuario);
         var filtroItem = $('#filtroItem').val();
         var filtroLlegada = $('#filtroLlegada').val();
         console.log(filtroLlegada)
         var filtroSalida = $('#filtroSalida').val();
 
-        if(filtroEstado != null){
-            var estadoSeleccionado = $('#filtroEstado option:selected').text()
-            var filtradoTabla1 = function FuncionFiltrado(settings, data, dataIndex){
-                if(data[4]==estadoSeleccionado){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-            contador++;
-            $.fn.dataTable.ext.search.push( filtradoTabla1 )
 
-
-            table.draw()
-        }
         if(filtroUsuario != null){
             var usuarioSeleccionado = $('#filtroUsuario option:selected').text()
             console.log(usuarioSeleccionado)
@@ -262,6 +250,21 @@
             }
             $.fn.dataTable.ext.search.push( filtradoTabla3 )
             contador++;
+
+            table.draw()
+        }
+        if(filtroEstado != null){
+            var estadoSeleccionado = $('#filtroEstado option:selected').text()
+            var filtradoTabla1 = function FuncionFiltrado(settings, data, dataIndex){
+                if(data[4]==estadoSeleccionado){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            contador++;
+            $.fn.dataTable.ext.search.push( filtradoTabla1 )
+
 
             table.draw()
         }

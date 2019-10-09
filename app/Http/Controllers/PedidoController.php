@@ -150,6 +150,11 @@ class PedidoController extends Controller
         return view('admin_panel.pedidos.ver_solicitud', compact('pedido'));
     }
 
+    public function ver_iniciado(Pedido $pedido)
+    {
+        return view('admin_panel.pedidos.ver_iniciado', compact('pedido'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -311,7 +316,8 @@ class PedidoController extends Controller
 
         $pedido = new Pedido();
         $pedido->user_id = auth()->user()->id;
-        $workflow = Pedido::first()->flujoTrabajo;
+        $workflow = FlujoTrabajo::where('nombre', 'Pedidos')->firstOrFail();
+        // $workflow = Pedido::first()->flujoTrabajo;
         $pedido->flujoTrabajo_id = $workflow->id;
         $pedido->estado_id = $workflow->estado_inicial()->id;
         $pedido->save();
@@ -384,7 +390,7 @@ class PedidoController extends Controller
     public function solicitudes()
     {
         $estado = Estado::where('nombre', 'Solicitado')->firstOrFail();
-        $pedidos = Pedido::all()->where('estado_id', $estado->id);
+        $pedidos = Pedido::all()->where('estado_id', $estado->id)->sortBy('FechaInicial');
         return view('admin_panel.pedidos.solicitudes', compact('pedidos'));
     }
 
@@ -435,8 +441,11 @@ class PedidoController extends Controller
 
     public function iniciados()
     {
+
         $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
-        $pedidos = Pedido::all()->where('estado_id', $estado->id);
+        $pedidos = Pedido::all()->where('estado_id', $estado->id)->sortBy('FechaInicial');
+        // $pedidos;
+        // return $pedidos;
         return view('admin_panel.pedidos.iniciados', compact('pedidos'));
     }
 

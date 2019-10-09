@@ -7,6 +7,7 @@ use App\Estado;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use App\Events\PedidoIniciado;
+use App\HistorialSeguimiento;
 
 class iniciarPedido extends Command
 {
@@ -51,6 +52,13 @@ class iniciarPedido extends Command
                 event(new PedidoIniciado('Hay un nuevo Pedido Iniciado'));
                 \Log::info('Pedido'. $pedido->id. ' ha sido iniciado');
             }
+            //TERMINAR AL TENER CREACION DE ESTADOS
+            // foreach ($pedido->seguimientos as $seguimiento) {
+            //     if ($seguimiento->getFechaLlegada()->lessThanOrEqualTo(Carbon::now())) {
+            //         $seguimiento->estado_id = $seguimiento
+            //         $historial = HistorialSeguimiento
+            //     }
+            // }
 
         }
 

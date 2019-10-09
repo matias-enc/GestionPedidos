@@ -18,4 +18,10 @@ class Item extends Model
     public function adicionales(){
         return $this->hasMany(Adicional::class);
     }
+    public function historial_adicionales(){
+        return $this->hasMany(HistorialAdicional::class);
+    }
+    public function historial_seguimientos(){
+        return $this->hasMany(HistorialSeguimiento::class);
+    }
 }

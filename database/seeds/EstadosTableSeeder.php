@@ -39,6 +39,9 @@ class EstadosTableSeeder extends Seeder
         Estado::create([
             'nombre' => 'Pago Rechazado'
         ]);
+        Estado::create([
+            'nombre' => 'Revision'
+        ]);
     }
 
 }

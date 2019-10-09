@@ -135,10 +135,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route("workflow.transiciones.index") }}"
-                                class="nav-link {{ request()->is('workflow/transiciones') || request()->is('transiciones/*') ? 'active' : '' }}">
+                            <a href="{{ route("workflow.estados.index") }}"
+                                class="nav-link {{ request()->is('workflow/estados') || request()->is('estados/*') ? 'active' : '' }}">
                                 <i class="fal fa-project-diagram nav-icon"></i>
-                                <p><span>Transiciones</span></p>
+                                <p><span>Estados</span></p>
                             </a>
                         </li>
                     </ul>

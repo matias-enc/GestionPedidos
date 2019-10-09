@@ -40,6 +40,15 @@ class Pedido extends Model
         }
         return $fechaInicial;
     }
+    public function getFechaInicialAttribute(){
+        $fechaInicial = Carbon::createFromFormat('d/m/Y', '1/1/2050');
+        foreach ($this->seguimientos as $seguimiento) {
+            if($seguimiento->getFechaLlegada()->lessThan($fechaInicial)){
+                $fechaInicial = $seguimiento->getFechaLlegada();
+            }
+        }
+        return $fechaInicial;
+    }
     public function getFechaFinal(){
         $fechaFinal = Carbon::createFromFormat('d/m/Y', '1/1/2010');
         foreach ($this->seguimientos as $seguimiento) {

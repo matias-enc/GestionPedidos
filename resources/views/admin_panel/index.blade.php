@@ -194,8 +194,10 @@
             $.get(solicitudes, function(data){
                 $("#divsolicitud").removeClass("heartBeat");
                 $("span#span-solicitudes").css('visibility','visible');
-                $('#span-solicitudes').text(data);
-                $("#divsolicitud").addClass("heartBeat");
+                if(data>0){
+                    $('#span-solicitudes').text(data);
+                    $("#divsolicitud").addClass("heartBeat");
+                }
             });
         });
     });

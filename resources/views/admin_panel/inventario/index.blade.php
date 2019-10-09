@@ -3,21 +3,24 @@
 
 
 @section('content')
-    <div style="margin-bottom: 10px;" class="row offset-1">
-        <div class="col-lg-12">
-            <a class="btn btn-success btn-pill btn-lg" href="{{ route("item.create") }}">
-                Crear Item
-                <i class="fal fa-plus"></i>
-            </a>
-        </div>
-    </div>
+
     <br>
 <div class="row justify-content-center">
 
 
 <div class="card card-outline card-success col-8">
 <div class="card-header">
-        <h3><strong>Listado de Inmuebles</strong></h3>
+    <div class="row justify-content-between">
+        <h3 class="my-auto"><strong>Listado de Inmuebles</strong></h3>
+        <div style="margin-bottom: 10px;" class="row offset-1">
+                <div class="col-lg-12">
+                    <a class="btn btn-success btn-pill btn-lg" href="{{ route("item.create") }}">
+                        Crear Item
+                        <i class="fal fa-plus"></i>
+                    </a>
+                </div>
+            </div>
+    </div>
 </div>
     <div class="card-body">
 

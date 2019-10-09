@@ -71,13 +71,17 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
     Route::post('transiciones','TransicionController@store')->name('transiciones.store');
     Route::delete('transiciones/{transicion}' , 'TransicionController@destroy')->name('transiciones.destroy');
 
+    Route::get('estados', 'EstadoController@index')->name('estados.index');
+    Route::get('estados/create','EstadoController@create')->name('estados.create');
+    Route::post('estados','EstadoController@store')->name('estados.store');
+    Route::delete('estados/{estado}' , 'EstadoController@destroy')->name('estados.destroy');
+
     Route::get('flujos', 'FlujoTrabajoController@index')->name('flujos.index');
     Route::get('flujos/create', 'FlujoTrabajoController@create')->name('flujos.create');
     Route::get('flujos/{flujo}/asignar', 'FlujoTrabajoController@asignarTransiciones')->name('flujos.asignarTransiciones');
     Route::post('flujos/asignacion', 'FlujoTrabajoController@asignacion')->name('flujos.asignacion');
     Route::post('flujos','FlujoTrabajoController@store')->name('flujos.store');
     Route::get('flujos/{flujo}','FlujoTrabajoController@show')->name('flujos.show');
-
 });
 
 
@@ -119,7 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Pedidos Iniciados
     Route::get('iniciados','PedidoController@iniciados')->name('pedidos.iniciados');
     Route::get('cantidad_iniciados' , 'PedidoController@cantidad_iniciados')->name('cantidad_iniciados');
-
+    Route::get('iniciados/{pedido}','PedidoController@ver_iniciado')->name('pedidos.ver_iniciado');
 
     //Rutas Configuracion Usuario
     Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Workflow;
+namespace App\Http\Controllers;
 
-use App\Estado;
-use App\Http\Controllers\Controller;
+use App\HistorialAdicional;
 use Illuminate\Http\Request;
 
-class EstadoController extends Controller
+class HistorialAdicionalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +14,7 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        $estados = Estado::all();
-        return view('admin_panel.estados.index', compact('estados'));
+        //
     }
 
     /**
@@ -26,7 +24,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        return view('admin_panel.estados.create');
+        //
     }
 
     /**
@@ -37,18 +35,16 @@ class EstadoController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
-        $estado = Estado::create($this->validarEstado());
-        return redirect()->route('workflow.estados.index');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\HistorialAdicional  $historialAdicional
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(HistorialAdicional $historialAdicional)
     {
         //
     }
@@ -56,10 +52,10 @@ class EstadoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\HistorialAdicional  $historialAdicional
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(HistorialAdicional $historialAdicional)
     {
         //
     }
@@ -68,10 +64,10 @@ class EstadoController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\HistorialAdicional  $historialAdicional
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, HistorialAdicional $historialAdicional)
     {
         //
     }
@@ -79,19 +75,11 @@ class EstadoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\HistorialAdicional  $historialAdicional
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(HistorialAdicional $historialAdicional)
     {
         //
-    }
-    public function validarEstado()
-    {
-        return request()->validate([
-            'nombre' => 'required|unique:flujo_trabajos',
-        ], [
-            'nombre.unique' => 'Ya existe un Estado con ese Nombre'
-        ]);
     }
 }

@@ -65,6 +65,28 @@
             border: solid 2px white;
 
         }
+
+        .inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .inputfile+label {
+            font-size: 1.25em;
+            font-weight: 700;
+            color: white;
+            background-color: black;
+            display: inline-block;
+        }
+
+        .inputfile:focus+label,
+        .inputfile+label:hover {
+            background-color: red;
+        }
     </style>
 </head>
 
@@ -160,8 +182,10 @@
         //SOLICITUDES, NOTIFICACION AL CARGAR
         var solicitudes = "{{ url('/cantidad_solicitudes') }}";
         var iniciados = "{{ url('/cantidad_iniciados') }}";
+        var revision = "{{ url('/cantidad_revision') }}";
         $.get(solicitudes, function(data){
             if(data > 0){
+                $("#divsolicitud").removeAttr("style").show()
                 $("span#span-solicitudes").css('visibility','visible');
                 $('#span-solicitudes').text(data);
 
@@ -170,21 +194,34 @@
         $.get(iniciados, function(data){
             console.log(data);
             if(data > 0){
+                $("#diviniciados").removeAttr("style").show()
                 $("span#span-iniciados").css('visibility','visible');
                 $('#span-iniciados').text(data);
+            }
+        });
+        $.get(revision, function(data){
+            console.log(data);
+            if(data > 0){
+                $("#divrevision").removeAttr("style").show()
+                $("span#span-revision").css('visibility','visible');
+                $('#span-revision').text(data);
             }
         });
 });
     </script>
     <script>
-        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
-        var iniciados = "{{ url('/cantidad_iniciados') }}";
         const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 3000
+      timer: 5000
     });
+    </script>
+    <script>
+        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
+        var iniciados = "{{ url('/cantidad_iniciados') }}";
+        var revision = "{{ url('/cantidad_revision') }}";
+
         Echo.channel('gestionpedidos').listen('PedidoSolicitado', (e) => {
             $(function() {
                 Toast.fire({
@@ -195,6 +232,7 @@
                 $("#divsolicitud").removeClass("heartBeat");
                 $("span#span-solicitudes").css('visibility','visible');
                 if(data>0){
+                    $("#divsolicitud").removeAttr("style").show()
                     $('#span-solicitudes').text(data);
                     $("#divsolicitud").addClass("heartBeat");
                 }
@@ -210,8 +248,26 @@
 
             $.get(iniciados, function(data){
             if(data > 0){
+                $("#diviniciados").removeAttr("style").show()
                 $("span#span-iniciados").css('visibility','visible');
                 $('#span-iniciados').text(data);
+            }
+        });
+        });
+    });
+        Echo.channel('gestionpedidos').listen('PedidoRevision', (e) => {
+            console.log(e);
+            $(function() {
+            Toast.fire({
+                type: 'warning',
+                title: e.message
+            }),
+
+            $.get(revision, function(data){
+            if(data > 0){
+                $("#divrevision").removeAttr("style").show()
+                $("span#span-revision").css('visibility','visible');
+                $('#span-revision').text(data);
             }
         });
         });

@@ -18,6 +18,15 @@ class FlujoTrabajosTableSeeder extends Seeder
         FlujoTrabajo::create([
             'nombre' => 'Albergues'
         ]);
+        FlujoTrabajo::create([
+            'nombre' => 'Complejos'
+        ]);
+        FlujoTrabajo::create([
+            'nombre' => 'Salon de Eventos'
+        ]);
+        FlujoTrabajo::create([
+            'nombre' => 'Secundarios'
+        ]);
 
     }
 }

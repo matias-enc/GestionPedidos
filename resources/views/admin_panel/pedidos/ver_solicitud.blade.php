@@ -89,7 +89,7 @@
         <!-- /.card-body -->
     </div>
 </div>
-
+</div>
 <form action="{{ route("pedidos.asignar_estado") }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
@@ -122,7 +122,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
 </form>

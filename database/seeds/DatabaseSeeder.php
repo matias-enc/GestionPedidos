@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             TipoItemsTableSeeder::class,
             ItemsTableSeeder::class,
             PedidosTableSeeder::class,
-            TransicionesTableSeeder::class
+            TransicionesTableSeeder::class,
+            CalificacionesTableSeeder::class
             ]);
 
     }

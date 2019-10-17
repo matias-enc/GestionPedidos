@@ -16,6 +16,7 @@ class CreateTransicionsTable extends Migration
         Schema::create('transicions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
+            $table->boolean('devolucion')->default(false);
             $table->unsignedBigInteger('flujoTrabajo_id')->unsigned()->nullable();
             $table->foreign('flujoTrabajo_id')->references('id')->on('flujo_trabajos');
             $table->unsignedBigInteger('estadoInicial_id')->unsigned()->nullable();

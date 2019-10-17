@@ -15,6 +15,9 @@ class CreateHistorialSeguimientosTable extends Migration
     {
         Schema::create('historial_seguimientos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('revision')->nullable();
+            $table->unsignedBigInteger('seguimiento_id')->nullable();
+            $table->foreign('seguimiento_id')->references('id')->on('seguimientos');
             $table->unsignedBigInteger('estado_id')->nullable();
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->unsignedBigInteger('item_id')->nullable();

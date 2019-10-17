@@ -42,6 +42,18 @@ class EstadosTableSeeder extends Seeder
         Estado::create([
             'nombre' => 'Revision'
         ]);
+        Estado::create([
+            'nombre' => 'Entregado'
+        ]);
+        Estado::create([
+            'nombre' => 'Devuelto'
+        ]);
+        Estado::create([
+            'nombre' => 'Terminado'
+        ]);
+        Estado::create([
+            'nombre' => 'Pendiente'
+        ]);
     }
 
 }

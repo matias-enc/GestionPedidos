@@ -6,8 +6,10 @@ namespace App\Http\Controllers;
 use PDF;
 use Alert;
 use App\Adicional;
+use App\Calificacion;
 use App\Categoria;
 use App\Estado;
+use App\Events\PedidoPendiente;
 use App\FlujoTrabajo;
 use App\Historial;
 use App\Pedido;
@@ -17,6 +19,9 @@ use App\TipoItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Events\PedidoSolicitado;
+use App\HistorialAdicional;
+use App\HistorialSeguimiento;
+use App\Reputacion;
 use App\User;
 use Illuminate\Notifications\Notification;
 
@@ -147,13 +152,61 @@ class PedidoController extends Controller
 
     public function ver_solicitud(Pedido $pedido)
     {
-        return view('admin_panel.pedidos.ver_solicitud', compact('pedido'));
+        if ($pedido->estado->nombre == 'Solicitado') {
+            return view('admin_panel.pedidos.ver_solicitud', compact('pedido'));
+        }
+        Alert::error('No se ha encontrado la solicitud', 'Error en Solicitud');
+        return redirect()->back();
     }
 
     public function ver_iniciado(Pedido $pedido)
     {
-        return view('admin_panel.pedidos.ver_iniciado', compact('pedido'));
+        if ($pedido->estado->nombre == 'Iniciado') {
+            return view('admin_panel.pedidos.ver_iniciado', compact('pedido'));
+        }
+        Alert::error('No se ha encontrado la Revision', 'Error en Revision');
+        return redirect()->back();
     }
+    public function ver_pendiente(Pedido $pedido)
+    {
+        if ($pedido->estado->nombre == 'Pendiente') {
+            return view('admin_panel.pedidos.ver_pendiente', compact('pedido'));
+        }
+        Alert::error('No se ha encontrado el Pedido', 'Error en Faltante de Documentacion');
+        return redirect()->back();
+    }
+
+    public function ver_revision(Pedido $pedido)
+    {
+        if ($pedido->estado->nombre == 'Revision') {
+            return view('admin_panel.pedidos.ver_revision', compact('pedido'));
+        }
+        Alert::error('No se ha encontrado dicha Revision', 'Error en Revision');
+        return redirect()->back();
+    }
+    public function procesar_revision(Request $request)
+    {
+
+        if ($request->calificacion != null) {
+            $pedido = Pedido::find($request->pedido);
+            $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+            $pedido->save();
+            $reputacion = Reputacion::create();
+            $reputacion->pedido_id = $pedido->id;
+            $reputacion->calificacion_id = Calificacion::find($request->calificacion)->id;
+            $reputacion->save();
+            $historial = Historial::create();
+            $historial->pedido_id = $pedido->id;
+            $historial->estado_id = $pedido->estado_id;
+            $historial->save();
+            return redirect()->route('pedidos.index')->with('success', 'Pedido Guardado');
+        } else {
+            Alert::error('Por favor seleccione una valoracion para el usuario', 'Error en Valoracion')->persistent();
+            return redirect()->back();
+        }
+    }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -207,11 +260,11 @@ class PedidoController extends Controller
                 $fechaInicial->addHours(9);
                 $fechaFinal->addHours(8);
             }
-        //MANEJO DE HORAS PARA COMPLEJOS
+            //MANEJO DE HORAS PARA COMPLEJOS
         } else {
             // return $request->hora_inicial;
-            $fechaInicial = Carbon::createFromFormat('d/m/Y H:i A', $request->inicial.' '.$request->hora_inicial);
-            $fechaFinal = Carbon::createFromFormat('d/m/Y H:i A', $request->final.' '.$request->hora_final);
+            $fechaInicial = Carbon::createFromFormat('d/m/Y H:i A', $request->inicial . ' ' . $request->hora_inicial);
+            $fechaFinal = Carbon::createFromFormat('d/m/Y H:i A', $request->final . ' ' . $request->hora_final);
             $items = $tipoItem->items;
         }
         foreach ($items as $key => $item) { //Filtrar items por disponibilidad
@@ -247,9 +300,9 @@ class PedidoController extends Controller
         $item = Item::find($request->item_id);
         $fechaInicial = $request->fechaInicial;
         $fechaFinal = $request->fechaFinal;
-        if ($item->tipoItem->nombre == 'Albergues') {
+        if ($item->tipoItem->calculo == false) {
             $diferencia = Carbon::create($fechaInicial)->diffInDays(Carbon::create($fechaFinal)) + 1;
-        }else{
+        } else {
             $diferencia = Carbon::create($fechaInicial)->diffInHours(Carbon::create($fechaFinal));
         }
 
@@ -342,14 +395,56 @@ class PedidoController extends Controller
 
     function confirmar_pedido(Pedido $pedido)
     {
+
+        // return redirect()->back();
         $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
         $pedido->save();
         $historial = new Historial();
         $historial->estado_id = $pedido->estado_id;
         $historial->pedido_id = $pedido->id;
         $historial->save();
-        event(new PedidoSolicitado('Nuevo Pedido Solicitado para su Revision'));
-        return redirect()->route('pedidos.mis_pedidos');
+        event(new PedidoPendiente('Nuevo Pedido Pendiente!'));
+        return redirect()->route('pedidos.pendientes');
+        //VIEJO CONFIRMAR, AL SUBIR DOCUMENTACION HACER ESTO
+        // $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+        // $pedido->save();
+        // $historial = new Historial();
+        // $historial->estado_id = $pedido->estado_id;
+        // $historial->pedido_id = $pedido->id;
+        // $historial->save();
+        // event(new PedidoSolicitado('Nuevo Pedido Solicitado para su Revision'));
+        // return redirect()->route('pedidos.mis_pedidos');
+    }
+
+    function generar_pedido(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $pedido = Pedido::find($request->pedido);
+            $archivo = $request->file('file');
+            $nombre = time().'-'.$pedido->usuario->name.'.'. $archivo->getClientOriginalExtension();
+            $archivo->move(public_path('/documentacion/pedidos'), $nombre);
+            $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+            $pedido->documentacion = $nombre;
+            $pedido->save();
+            $historial = new Historial();
+            $historial->estado_id = $pedido->estado_id;
+            $historial->pedido_id = $pedido->id;
+            $historial->save();
+            event(new PedidoSolicitado('Nuevo Pedido Solicitado'));
+            return redirect()->route('pedidos.mis_pedidos');
+        }else{
+            return redirect()->back()->withErrors('Seleccione un Archivo antes de Enviar su Pedido');
+        }
+    }
+
+    public function generar_documentacion(Pedido $pedido)
+    {
+        $pdf = PDF::loadView('admin_panel.pdf.documentacion', compact('pedido'));
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $y = $canvas->get_height() - 35;
+        $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return $pdf->download();
     }
 
     function asignar_estado(Request $request)
@@ -362,6 +457,39 @@ class PedidoController extends Controller
         $pedido->estado_id = $request->estado;
         $pedido->save();
         return redirect()->route('pedidos.solicitudes')->with('success', 'Pedido Guardado');
+    }
+    function asignar_estado_seguimiento(Request $request)
+    {
+        $seguimiento = Seguimiento::find($request->seguimiento);
+        $historial = HistorialSeguimiento::create();
+        if ($request->revision != null) {
+            $historial->revision = $request->revision;
+        }
+        $historial->estado_id = $request->estado;
+        $historial->seguimiento_id = $seguimiento->id;
+        $historial->item_id = $seguimiento->item->id;
+        $historial->save();
+        $seguimiento->estado_id = $request->estado;
+        $seguimiento->save();
+        return redirect()->back()->withInput();
+    }
+    function asignar_estado_adicional(Request $request)
+    {
+        $adicional = Adicional::find($request->adicional);
+        $historial = HistorialAdicional::create();
+        if ($request->revision != null) {
+            $historial->revision = $request->revision;
+        }
+        if ($request->faltante > 0) {
+            $historial->faltante = $request->faltante;
+        }
+        $historial->estado_id = $request->estado;
+        $historial->adicional_id = $adicional->id;
+        $historial->item_id = $adicional->item->id;
+        $historial->save();
+        $adicional->estado_id = $request->estado;
+        $adicional->save();
+        return redirect()->back()->withInput();
     }
 
     /**
@@ -439,14 +567,24 @@ class PedidoController extends Controller
         return redirect()->route('pedidos.solicitudes');
     }
 
+    public function pendientes()
+    {
+        $estado = Estado::where('nombre', 'Pendiente')->firstOrFail();
+        $pedidos = auth()->user()->pedidos->where('estado_id', $estado->id)->sortBy('FechaInicial');
+        return view('admin_panel.pedidos.pendientes', compact('pedidos'));
+    }
     public function iniciados()
     {
-
         $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
         $pedidos = Pedido::all()->where('estado_id', $estado->id)->sortBy('FechaInicial');
-        // $pedidos;
-        // return $pedidos;
         return view('admin_panel.pedidos.iniciados', compact('pedidos'));
+    }
+
+    public function revision()
+    {
+        $estado = Estado::where('nombre', 'Revision')->firstOrFail();
+        $pedidos = Pedido::all()->where('estado_id', $estado->id)->sortBy('FechaInicial');
+        return view('admin_panel.pedidos.revision', compact('pedidos'));
     }
 
     public function actualizar_perfil(Request $request)
@@ -477,6 +615,18 @@ class PedidoController extends Controller
     {
         $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
         return sizeof(Pedido::all()->where('estado_id', $estado->id));
+    }
+
+    public function cantidad_revision()
+    {
+        $estado = Estado::where('nombre', 'Revision')->firstOrFail();
+        return sizeof(Pedido::all()->where('estado_id', $estado->id));
+    }
+
+    public function cantidad_pendientes()
+    {
+        $estado = Estado::where('nombre', 'Pendiente')->firstOrFail();
+        return sizeof(auth()->user()->pedidos->where('estado_id', $estado->id));
     }
 
     public function validar_pedido()

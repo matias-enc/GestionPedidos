@@ -33,6 +33,7 @@
             margin-bottom: 4%;
             margin-top: 4%;
         }
+
         footer {
             position: fixed;
             bottom: -50px;
@@ -48,35 +49,52 @@
         p:last-child {
             page-break-after: never;
         }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        td, .tend{
+            text-align: end;
+        }
     </style>
 </head>
 <header>
 
-        <div class="row" style="height: 100px">
-            <div class="img">
+    <div class="row" style="height: 100px">
+        <div class="img">
 
-                <img class="imagen" src="{{asset("imagenes/escudo-apostoles.png")}}" alt="">
-            </div>
-            <div class="justify-content-center">
-                <div class="text-center">
+            <img class="imagen" src="{{asset("imagenes/escudo-apostoles.png")}}" alt="">
+        </div>
+        <div class="justify-content-center">
+            <div class="text-center">
 
-                    <h5><strong>MUNICIPALIDAD DE APOSTOLES</strong></h5>
-                    <h6><strong>Juan de San Martín 70, N3350 Apóstoles, Misiones</strong></h6>
-                    <h6><strong>Telefono: (03758) 42-2194</strong></h6>
+                <h5><strong>MUNICIPALIDAD DE APOSTOLES</strong></h5>
+                <h6><strong>Juan de San Martín 70, N3350 Apóstoles, Misiones</strong></h6>
+                <h6><strong>Telefono: (03758) 42-2194</strong></h6>
 
-                </div>
-            </div>
-            <div class="float-right" style="font-size: 12px">
-                <h6><strong>Fecha:</strong> {{ Carbon\Carbon::now()->format('d/m/Y') }}</h6>
-                <h6><strong>Hora:</strong> {{ Carbon\Carbon::now()->format('H:i' ) }}</h6>
-                <h6><strong>Emisor:</strong> {{ auth()->user()->name }}</h6>
             </div>
         </div>
-    </header>
+        <div class="float-right" style="font-size: 12px">
+            <h6><strong>Fecha:</strong> {{ Carbon\Carbon::now()->format('d/m/Y') }}</h6>
+            <h6><strong>Hora:</strong> {{ Carbon\Carbon::now()->format('H:i' ) }}</h6>
+            <h6><strong>Emisor:</strong> {{ auth()->user()->name }}</h6>
+        </div>
+    </div>
+</header>
+
 <body>
 
     @yield('content')
 
 </body>
 <footer></footer>
+
 </html>

@@ -10,6 +10,10 @@ class HistorialSeguimiento extends Model
     {
         return $this->belongsTo(Estado::class);
     }
+    public function seguimiento()
+    {
+        return $this->belongsTo(Seguimiento::class);
+    }
     public function item()
     {
         return $this->belongsTo(Item::class);

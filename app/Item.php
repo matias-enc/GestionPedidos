@@ -24,4 +24,6 @@ class Item extends Model
     public function historial_seguimientos(){
         return $this->hasMany(HistorialSeguimiento::class);
     }
+
+
 }

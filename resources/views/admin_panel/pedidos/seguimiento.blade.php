@@ -38,7 +38,7 @@
                         </div>
                         @else
                         <div>
-                            <i class="fas fa-times bg-red"></i>
+                            <i class="fas fa-times bg-danger"></i>
 
                             <div class="timeline-item">
                                 <span class="time"><i class="fal fa-check"></i>

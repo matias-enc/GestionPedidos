@@ -11,6 +11,9 @@ class Adicional extends Model
     {
         return $this->belongsTo(Item::class);
     }
+    public function historiales(){
+        return $this->hasMany(HistorialAdicional::class);
+    }
     public function seguimiento()
     {
         return $this->belongsTo(Seguimiento::class);
@@ -18,5 +21,9 @@ class Adicional extends Model
     public function estado()
     {
         return $this->belongsTo(Estado::class);
+    }
+
+    public function getCalculoPrecio(){
+        return $this->item->precioUnitario*$this->cantidad;
     }
 }

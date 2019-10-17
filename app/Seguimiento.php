@@ -25,6 +25,9 @@ class Seguimiento extends Model
     public function adicionales(){
         return $this->hasMany(Adicional::class);
     }
+    public function historiales(){
+        return $this->hasMany(HistorialSeguimiento::class);
+    }
 
     public function getFechaLlegada(){
         $fecha = Carbon::create($this->fechaInicial);
@@ -33,7 +36,30 @@ class Seguimiento extends Model
     public function getFechaSalida(){
         $fecha = Carbon::create($this->fechaFinal);
         return $fecha;
-//         ->format('d/m/Y')
-// ->format('d/m/Y')
     }
+
+    public function getCalculoPrecio(){
+        if ($this->item->tipoItem->calculo == true) {
+            //calculo en horas
+            $horas = $this->getFechaLlegada()->diffInMinutes($this->getFechaSalida())/60;
+            $horas = ceil($horas);
+            return $this->item->precioUnitario * $horas;
+        }else{
+            $dias = $this->getFechaLlegada()->diffInHours($this->getFechaSalida())/24;
+            $dias = ceil($dias);
+            return $this->item->precioUnitario * $dias;
+        }
+    }
+
+    public function getCalculoAdicionales(){
+        $adicionales = $this->adicionales;
+        $resultado = 0;
+        if(sizeof($adicionales)>0){
+            foreach ($adicionales as $adicional) {
+                $resultado += $adicional->item->precioUnitario * $adicional->cantidad;
+            }
+        }
+        return $resultado;
+    }
+
 }

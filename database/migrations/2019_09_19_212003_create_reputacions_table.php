@@ -13,8 +13,12 @@ class CreateReputacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('reputacions', function (Blueprint $table) {
+        Schema::create('reputaciones', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('pedido_id')->nullable();
+            $table->foreign('pedido_id')->references('id')->on('pedidos');
+            $table->unsignedBigInteger('calificacion_id')->nullable();
+            $table->foreign('calificacion_id')->references('id')->on('calificaciones');
             $table->timestamps();
         });
     }

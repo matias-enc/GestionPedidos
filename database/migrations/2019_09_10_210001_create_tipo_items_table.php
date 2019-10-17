@@ -22,6 +22,7 @@ class CreateTipoItemsTable extends Migration
             $table->unsignedBigInteger('categoria_id')->nullable();
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->boolean('adicional')->nullable();
+            $table->boolean('calculo')->nullable();
             $table->timestamps();
         });
     }

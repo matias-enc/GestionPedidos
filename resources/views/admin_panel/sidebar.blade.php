@@ -18,6 +18,20 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
+                @if (sizeof(auth()->user()->pedidos->where('estado_id', 14))>0)
+
+
+                <li class="nav-item" id="divpendientes">
+                    <a href="{{ route("pedidos.pendientes") }}"
+                        class="nav-link {{ request()->is('pendientes')  ? 'active' : '' }}">
+                        @if (!(request()->is('pendientes')))
+                        <span id="span-pendientes" class=" badgem" >!</span>
+                        @endif
+                        <i class="fal fa-file-alt fa-align-center nav-icon "></i>
+                        <p><span>Documentacion</span></p>
+                    </a>
+                </li>
+                @endif
                 <li class="nav-item">
                     <a href="{{ route("pedidos.nuevo_pedido") }}"
                         class="nav-link {{ request()->is('nuevo_pedido') || request()->is('nuevo_pedido') || request()->is('consultar_disponibilidad')  || request()->is('detalle_pedido')  ? 'active' : '' }}">
@@ -33,7 +47,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item" id="divsolicitud">
+                <li class="nav-item" id="divsolicitud" style="display: none">
                     <a href="{{ route("pedidos.solicitudes") }}"
                         class="nav-link {{ request()->is('solicitudes')  ? 'active' : '' }}">
                         @if (!(request()->is('solicitudes')))
@@ -45,16 +59,30 @@
                             <span>Solicitudes</span></p>
                     </a>
                 </li>
-                <li class="nav-item" id="diviniciados">
+                <li class="nav-item" id="diviniciados" style="display: none">
                     <a href="{{ route("pedidos.iniciados") }}"
                         class="nav-link {{ request()->is('iniciados')  ? 'active' : '' }}">
                         @if (!(request()->is('iniciados')))
-                        <span id="span-iniciados" class=" badgem" style="visibility: hidden; background-color: #0fbe6c"></span>
+                        <span id="span-iniciados" class=" badgem"
+                            style="visibility: hidden; background-color: #0fbe6c"></span>
                         @endif
                         <i class="fal fa-calendar-exclamation nav-icon animated">
                         </i>
                         <p>
                             <span>Pedidos Iniciados</span></p>
+                    </a>
+                </li>
+                <li class="nav-item" id="divrevision" style="display: none">
+                    <a href="{{ route("pedidos.revision") }}"
+                        class="nav-link {{ request()->is('revision')  ? 'active' : '' }}">
+                        @if (!(request()->is('revision')))
+                        <span id="span-revision" class=" badgem"
+                            style="visibility: hidden; background-color: #0fbe6c"></span>
+                        @endif
+                        <i class="fal fa-history nav-icon animated">
+                        </i>
+                        <p>
+                            <span>Pedidos en Revision</span></p>
                     </a>
                 </li>
                 <li class="nav-item has-treeview {{ request()->is('pedidos/*')  ? 'menu-open' : ''}}">

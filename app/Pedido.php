@@ -19,6 +19,9 @@ class Pedido extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function reputacion(){
+        return $this->belongsTo(Reputacion::class);
+    }
     public function historiales(){
         return $this->hasMany(Historial::class);
     }
@@ -58,6 +61,25 @@ class Pedido extends Model
             }
         }
         return $fechaFinal;
+    }
+
+    public function getPrecioTotal(){
+        $total = 0;
+        foreach ($this->seguimientos as $seguimiento) {
+            $total += $seguimiento->getCalculoPrecio();
+            $total += $seguimiento->getCalculoAdicionales();
+        }
+        return $total;
+    }
+
+    public function cantidadAdicionales(){
+        $adicionales = 0;
+        foreach ($this->seguimientos as $seguimiento) {
+            if(sizeof($seguimiento->adicionales)>0){
+                $adicionales += sizeof($seguimiento->adicionales);
+            }
+        }
+        return $adicionales;
     }
 
 }

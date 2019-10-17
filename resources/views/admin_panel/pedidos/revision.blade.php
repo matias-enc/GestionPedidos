@@ -8,7 +8,7 @@
 
         <div class="card shadow-sm card-primary card-outline card-small">
             <div class="card-header pb-1">
-                <h3><strong>Solicitudes de Pedidos</strong></h3>
+                <h3><strong>Pedidos en Revision</strong></h3>
             </div>
             <div class="card-body">
                 @if (sizeof($pedidos)>0)
@@ -40,7 +40,7 @@
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-xs btn-primary"
-                                        href="{{route('pedidos.ver_solicitud', $pedido)}}">
+                                        href="{{route('pedidos.ver_revision', $pedido)}}">
                                         Ver
                                     </a>
                                 </td>
@@ -54,7 +54,7 @@
                 @else
                 <br>
                 <div class="row justify-content-center">
-                    <h4>No hay Solicitudes Pendientes!</h4>
+                    <h4>No hay Pedidos en Revision!</h4>
                 </div>
                 <br>
                 @endif

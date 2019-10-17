@@ -14,17 +14,19 @@ class TipoItemsTableSeeder extends Seeder
     {
         TipoItem::create([
             'nombre' => 'Salones de Eventos',
-            'flujoTrabajo_id' => '2',
+            'flujoTrabajo_id' => '4',
             'categoria_id' => '1',
             'descripcion' => '',
             'adicional' => true,
+            'calculo' => true,
         ]);
         TipoItem::create([
             'nombre' => 'Complejos',
-            'flujoTrabajo_id' => '2',
+            'flujoTrabajo_id' => '3',
             'categoria_id' => '1',
             'descripcion' => '',
             'adicional' => true,
+            'calculo' => true,
         ]);
         TipoItem::create([
             'nombre' => 'Albergues',
@@ -32,13 +34,15 @@ class TipoItemsTableSeeder extends Seeder
             'categoria_id' => '1',
             'descripcion' => '',
             'adicional' => false,
+            'calculo' => false,
         ]);
         TipoItem::create([
             'nombre' => 'Secundarios',
-            'flujoTrabajo_id' => '2',
+            'flujoTrabajo_id' => '5',
             'categoria_id' => '2',
             'descripcion' => '',
             'adicional' => false,
+            'calculo' => false,
         ]);
     }
 }

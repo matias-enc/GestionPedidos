@@ -111,7 +111,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('listar_carrito','PedidoController@listar_carrito')->name('pedidos.listar_carrito');
     Route::delete('listar_carrito/{seguimiento}' , 'PedidoController@eliminar_seguimiento')->name('pedidos.eliminar_seguimiento');
     Route::delete('listar_carrito/seguimiento/{adicional}' , 'PedidoController@eliminar_adicional')->name('pedidos.eliminar_adicional');
-
+    Route::post('generar_pedido', 'PedidoController@generar_pedido')->name('pedidos.generar_pedido');
 
     //Solicitudes
     Route::get('solicitudes','PedidoController@solicitudes')->name('pedidos.solicitudes');
@@ -120,10 +120,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('finalizar_pedido','PedidoController@finalizar_pedido')->name('pedidos.finalizar_pedido');
     Route::get('cantidad_solicitudes' , 'PedidoController@cantidad_solicitudes')->name('cantidad_solicitudes');
 
+    //Pedidos pendientes del Usuario
+    Route::get('cantidad_pendientes' , 'PedidoController@cantidad_pendientes')->name('cantidad_pendientes');
+    Route::get('pendientes','PedidoController@pendientes')->name('pedidos.pendientes');
+    Route::get('pendientes/{pedido}','PedidoController@ver_pendiente')->name('pedidos.ver_pendiente');
+    Route::get('pendientes/{pedido}/generar_pdf','PedidoController@generar_documentacion')->name('pedidos.generar_documentacion');
+
     //Pedidos Iniciados
     Route::get('iniciados','PedidoController@iniciados')->name('pedidos.iniciados');
     Route::get('cantidad_iniciados' , 'PedidoController@cantidad_iniciados')->name('cantidad_iniciados');
     Route::get('iniciados/{pedido}','PedidoController@ver_iniciado')->name('pedidos.ver_iniciado');
+    Route::post('asignar_seguimiento','PedidoController@asignar_estado_seguimiento')->name('pedidos.asignar_estado_seguimiento');
+    Route::post('asignar_adicional','PedidoController@asignar_estado_adicional')->name('pedidos.asignar_estado_adicional');
+
+
+    //Pedidos En Revision
+    Route::get('revision','PedidoController@revision')->name('pedidos.revision');
+    Route::get('revision/{pedido}','PedidoController@ver_revision')->name('pedidos.ver_revision');
+    Route::get('cantidad_revision' , 'PedidoController@cantidad_revision')->name('cantidad_revision');
+    Route::post('procesar_revision','PedidoController@procesar_revision')->name('pedidos.procesar_revision');
 
     //Rutas Configuracion Usuario
     Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');

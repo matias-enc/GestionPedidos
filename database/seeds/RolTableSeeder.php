@@ -29,5 +29,10 @@ class RolTableSeeder extends Seeder
             'slug' => 'usuario',
             'description' => 'Usuario que utiliza el sistema'
         ]);
+        Role::create([
+            'name' => 'Sin Validacionn',
+            'slug' => 'sin_validacion',
+            'description' => 'Usuario que no esta validado dentro del Sistema'
+        ]);
     }
 }

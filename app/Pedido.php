@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Pedido extends Model
-{
+class Pedido extends Model implements Auditable {
+
+    use \OwenIt\Auditing\Auditable;
+
     public function flujoTrabajo()
     {
         return $this->belongsTo(FlujoTrabajo::class, 'flujoTrabajo_id');

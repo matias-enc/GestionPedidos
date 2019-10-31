@@ -24,6 +24,11 @@ class User extends Authenticatable
         return $this->hasMany(Pedido::class, 'user_id');
     }
 
+
+    public function validacion()
+    {
+        return $this->hasOne(Validacion::class, 'user_id');
+    }
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -41,4 +46,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 }

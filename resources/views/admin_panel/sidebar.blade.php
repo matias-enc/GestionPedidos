@@ -1,48 +1,70 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar elevation-4 sidebar-light-primary" style="min-height: 917px;">
+<aside class="main-sidebar elevation-0 border-right sidebar-light-primary" style="min-height: 917px;">
     <!-- Brand Logo -->
-    <a href="/" class="brand-link">
+    <a href="/" class="brand-link border-bottom-0 border-right">
         <img src="{{ asset("imagenes/logo-apostoles.png") }}" alt="AdminLTE Logo" class="brand-image img-circle"
             style="opacity: .8">
 
-        <span class="brand-text font-weight-bold">Gestion Pedidos</span>
+
+        <span class="brand-text font-weight-bold ">Gestion Pedidos</span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
-
+        <br><br>
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <br>
-            <br>
+
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
-                @if (sizeof(auth()->user()->pedidos->where('estado_id', 14))>0)
+                {{-- @if (sizeof(auth()->user()->pedidos->where('estado_id', 14))>0) --}}
 
-
+                <li class="nav-item" >
+                    <a href=""
+                        class="nav-link {{ request()->is('validacion')  ? 'active' : '' }}">
+                        @if (!(request()->is('validacion')))
+                        <span id="span-validacion" class=" badgem">!</span>
+                        @endif
+                        <i class="fal fa-address-card nav-icon"></i>
+                        <p><span>Validacion</span></p>
+                    </a>
+                </li>
                 <li class="nav-item" id="divpendientes">
                     <a href="{{ route("pedidos.pendientes") }}"
                         class="nav-link {{ request()->is('pendientes')  ? 'active' : '' }}">
                         @if (!(request()->is('pendientes')))
-                        <span id="span-pendientes" class=" badgem" >!</span>
+                        <span id="span-pendientes" class=" badgem" style="visibility: hidden">!</span>
                         @endif
-                        <i class="fal fa-file-alt fa-align-center nav-icon "></i>
+                        <i class="fal fa-file-alt nav-icon "></i>
                         <p><span>Documentacion</span></p>
                     </a>
                 </li>
-                @endif
-                <li class="nav-item">
-                    <a href="{{ route("pedidos.nuevo_pedido") }}"
-                        class="nav-link {{ request()->is('nuevo_pedido') || request()->is('nuevo_pedido') || request()->is('consultar_disponibilidad')  || request()->is('detalle_pedido')  ? 'active' : '' }}">
-                        <i class="fal fa-box-open fa-align-center nav-icon "></i>
-                        <p><span>Nuevo Pedido</span></p>
+                {{-- @endif --}}
+                {{-- @if (sizeof(auth()->user()->pedidos->where('estado_id', 7))>0) --}}
+                <li class="nav-item" id="divpagopendiente">
+                    <a href="{{route("pedidos.pago_pendiente")}}"
+                        class="nav-link {{ request()->is('pago_pendiente') || request()->is('pago_pendiente/*')  ? 'active' : '' }}">
+                        @if (!(request()->is('pago_pendiente') || (request()->is('pago_pendiente/*'))))
+                        <span id="span-pagopendiente" class="badgem bg-success" style="visibility: hidden"></span>
+                        @endif
+                        <i class="fal fa-wallet nav-icon"></i>
+                        <p><span>Pagos Pendientes</span></p>
                     </a>
                 </li>
+                {{-- @endif --}}
+                {{-- <li class="nav-item">
+                    <a href="{{ route("pedidos.nuevo_pedido") }}"
+                class="nav-link
+                {{ request()->is('nuevo_pedido') || request()->is('nuevo_pedido') || request()->is('consultar_disponibilidad')  || request()->is('detalle_pedido')  ? 'active' : '' }}">
+                <i class="fal fa-box-open nav-icon "></i>
+                <p><span>Nuevo Pedido</span></p>
+                </a>
+                </li> --}}
                 <li class="nav-item">
                     <a href="{{ route("pedidos.mis_pedidos") }}"
                         class="nav-link {{ request()->is('mis_pedidos') || request()->is('mis_pedidos/*')   ? 'active' : '' }}">
-                        <i class="fal fa-boxes nav-icon"></i>
+                        <i class="fal fa-box-open nav-icon"></i>
                         <p><span>Mis Pedidos</span></p>
                     </a>
                 </li>
@@ -59,12 +81,11 @@
                             <span>Solicitudes</span></p>
                     </a>
                 </li>
-                <li class="nav-item" id="diviniciados" style="display: none">
+                <li class="nav-item " id="diviniciados" style="display: none">
                     <a href="{{ route("pedidos.iniciados") }}"
-                        class="nav-link {{ request()->is('iniciados')  ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('iniciados')  ? 'active ' : '' }}">
                         @if (!(request()->is('iniciados')))
-                        <span id="span-iniciados" class=" badgem"
-                            style="visibility: hidden; background-color: #0fbe6c"></span>
+                        <span id="span-iniciados bg-success" class=" badgem" style="visibility: hidden"></span>
                         @endif
                         <i class="fal fa-calendar-exclamation nav-icon animated">
                         </i>
@@ -76,8 +97,7 @@
                     <a href="{{ route("pedidos.revision") }}"
                         class="nav-link {{ request()->is('revision')  ? 'active' : '' }}">
                         @if (!(request()->is('revision')))
-                        <span id="span-revision" class=" badgem"
-                            style="visibility: hidden; background-color: #0fbe6c"></span>
+                        <span id="span-revision bg-warning" class=" badgem" style="visibility: hidden"></span>
                         @endif
                         <i class="fal fa-history nav-icon animated">
                         </i>
@@ -95,14 +115,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="{{route('pedidos.estadisticas')}}"
+                                class="nav-link {{ request()->is('pedidos/estadisticas') || request()->is('pedidos/estadisticas/*') ? 'active' : '' }}">
+                                <i class="fal fa-chart-pie nav-icon"></i>
+                                <p><span>Estadisticas</span></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route("pedidos.index") }}"
-                                class="nav-link {{ request()->is('pedidos/index') || request()->is('admin/users/*') ? 'active' : '' }}">
+                                class="nav-link {{ request()->is('pedidos/index') || request()->is('pedidos/index/*') ? 'active' : '' }}">
                                 <i class="fal fa-box-alt nav-icon"></i>
                                 <p><span>Pedidos</span></p>
                             </a>
                         </li>
-
                     </ul>
+
 
                 </li>
 
@@ -179,6 +206,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item" id="divpendientes">
+                    <a href="{{ route("auditoria.index") }}"
+                        class="nav-link {{ request()->is('auditoria')  ? 'active' : '' }}">
+                        <i class="fal fa-file-archive nav-icon "></i>
+                        <p><span>Auditorias</span></p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

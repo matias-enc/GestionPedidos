@@ -23,8 +23,7 @@ use App\HistorialAdicional;
 use App\HistorialSeguimiento;
 use App\Reputacion;
 use App\User;
-use Illuminate\Notifications\Notification;
-
+use App\Charts\PedidosChart;
 
 class PedidoController extends Controller
 {
@@ -35,6 +34,8 @@ class PedidoController extends Controller
      */
     public function index()
     {
+
+
         $estados = Estado::all();
         $usuarios = collect();
         foreach (User::all() as $usuario) {
@@ -51,6 +52,44 @@ class PedidoController extends Controller
         $pedidos = Pedido::all()->where('user_id', '!=', null);
         return view('admin_panel.pedidos.index', compact('pedidos', 'estados', 'usuarios', 'items'));
     }
+    public function estadisticas()
+    {
+        $colores = collect();
+        $colores->add('#1e4af7');
+        $colores->add('#0fbe6c');
+        $colores->add('#EC547A');
+        $colores->add('#FF790E');
+        // return $colores;
+
+        $iniciado = Estado::where('nombre', 'Iniciado')->firstOrFail();
+        $iniciados = sizeof(Pedido::all()->where('estado_id', $iniciado->id));
+        $solicitado = Estado::where('nombre', 'Solicitado')->firstOrFail();
+        $solicitados = sizeof(Pedido::all()->where('estado_id', $solicitado->id));
+        $pagopendiente = Estado::where('nombre', 'Pago Pendiente')->firstOrFail();
+        $pagospendientes = sizeof(Pedido::all()->where('estado_id', $pagopendiente->id));
+        $finalizado = Estado::where('nombre', 'Finalizado')->firstOrFail();
+        $finalizados = sizeof(Pedido::all()->where('estado_id', $finalizado->id));
+        $chart = new PedidosChart;
+
+        $tipoItem = TipoItem::where('nombre', 'Albergues')->firstOrFail();
+        $items = $tipoItem->items;
+        $habitaciones = array();
+        $ocurrencias = collect();
+        foreach ($items as $id => $item) {
+            $hab = $item->nombre;
+            $oc = sizeof(Seguimiento::all()->where('item_id', $item->id));
+            $ocurrencias->add($oc);
+            $dc = $colores->random();
+            $chart->dataset($hab, 'bar', $ocurrencias)->color($dc)->backgroundColor($dc);
+            $ocurrencias = collect();
+        }
+        $chart->labels = $habitaciones;
+        $chart->barWidth(0.25);
+        // return $iniciados;
+        return view('admin_panel.pedidos.estadisticas', compact('iniciados', 'solicitados', 'pagospendientes', 'finalizados', 'chart'));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -175,6 +214,22 @@ class PedidoController extends Controller
         Alert::error('No se ha encontrado el Pedido', 'Error en Faltante de Documentacion');
         return redirect()->back();
     }
+    public function ver_pago_pendiente(Pedido $pedido)
+    {
+        if ($pedido->estado->nombre == 'Pago Pendiente') {
+            \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
+            $preference = \MercadoPago\Preference::find_by_id($pedido->preference_id);
+            $filters = array(
+                "preference" => $pedido->preference_id
+            );
+
+            // $payment = \MercadoPago\Payment::find_by_id(22412143);
+            // dd($preference);
+            return view('admin_panel.pedidos.ver_pago_pendiente', compact('pedido', 'preference'));
+        }
+        Alert::error('No se ha encontrado el Pedido', 'Error en Pago Pendiente');
+        return redirect()->back();
+    }
 
     public function ver_revision(Pedido $pedido)
     {
@@ -206,7 +261,35 @@ class PedidoController extends Controller
         }
     }
 
+    public function procesar_pago($id, Request $request)
+    {
+        \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
+        $payment = \MercadoPago\Payment::find_by_id($request->collection_id);
+        dd($payment);
 
+
+        return $request;
+        if ($request != null) {
+            $pedido = Pedido::find($id);
+            if ($pedido->estado->nombre == 'Pago Pendiente') {
+                if ($request->collection_status == 'approved' && $request->external_reference == $id && $request->preference_id == $pedido->preference_id) {
+                    $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+                    $pedido->save();
+                    $historial = Historial::create();
+                    $historial->pedido_id = $pedido->id;
+                    $historial->estado_id = $pedido->estado_id;
+                    $historial->save();
+                } else {
+                    return redirect()->route('auto_gestion')->withErrors('Error al Asignar Pago');
+                }
+            }else{
+                return redirect()->route('auto_gestion')->withErrors('Error, Su pago ya se Encuentra Realizado');
+            }
+        } else {
+            return redirect()->route('auto_gestion')->withErrors('Error al Asignar Pago');
+        }
+        return redirect()->route('pedidos.mis_pedidos')->with('success', 'Su pago ha sido Efectuado Correctamente, Gracias.');
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -421,7 +504,7 @@ class PedidoController extends Controller
         if ($request->hasFile('file')) {
             $pedido = Pedido::find($request->pedido);
             $archivo = $request->file('file');
-            $nombre = time().'-'.$pedido->usuario->name.'.'. $archivo->getClientOriginalExtension();
+            $nombre = time() . '-' . $pedido->usuario->name . '.' . $archivo->getClientOriginalExtension();
             $archivo->move(public_path('/documentacion/pedidos'), $nombre);
             $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
             $pedido->documentacion = $nombre;
@@ -432,7 +515,7 @@ class PedidoController extends Controller
             $historial->save();
             event(new PedidoSolicitado('Nuevo Pedido Solicitado'));
             return redirect()->route('pedidos.mis_pedidos');
-        }else{
+        } else {
             return redirect()->back()->withErrors('Seleccione un Archivo antes de Enviar su Pedido');
         }
     }
@@ -449,7 +532,34 @@ class PedidoController extends Controller
 
     function asignar_estado(Request $request)
     {
+        if ($request->estado == null) {
+            return redirect()->back()->withErrors('Asigne un Estado antes de Enviar');
+        }
         $pedido = Pedido::find($request->pedido);
+        if (Estado::find($request->estado)->nombre == 'Pago Pendiente') {
+            $nombre = null;
+            foreach ($pedido->seguimientos as $seguimiento) {
+                $nombre .= $seguimiento->item->nombre . ' ';
+            }
+            \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
+            $preference = new \MercadoPago\Preference();
+            $item = new \MercadoPago\Item();
+            $item->title = $nombre;
+            $item->description = $nombre;
+            $item->quantity = 1;
+            $item->unit_price = $pedido->getPrecioTotal();
+            $preference->back_urls = array(
+                "success" => route('pedidos.procesar_pago', $pedido->id),
+                "failure" => "skere/failure",
+                "pending" => "skere/pending"
+            );
+            $preference->auto_return = "approved";
+            $preference->external_reference = $pedido->id;
+            $preference->items = array($item);
+            $preference->save();
+            $pedido->preference_id = $preference->id;
+        }
+
         $historial = Historial::create();
         $historial->estado_id = $request->estado;
         $historial->pedido_id = $pedido->id;
@@ -587,6 +697,13 @@ class PedidoController extends Controller
         return view('admin_panel.pedidos.revision', compact('pedidos'));
     }
 
+    public function pago_pendiente()
+    {
+        $estado = Estado::where('nombre', 'Pago Pendiente')->firstOrFail();
+        $pedidos = auth()->user()->pedidos->where('estado_id', $estado->id)->sortBy('FechaInicial');
+        return view('admin_panel.pedidos.pago_pendiente', compact('pedidos'));
+    }
+
     public function actualizar_perfil(Request $request)
     {
         $user = auth()->user();
@@ -626,6 +743,21 @@ class PedidoController extends Controller
     public function cantidad_pendientes()
     {
         $estado = Estado::where('nombre', 'Pendiente')->firstOrFail();
+        return sizeof(auth()->user()->pedidos->where('estado_id', $estado->id));
+    }
+
+    public function cantidad_carrito()
+    {
+        foreach (auth()->user()->pedidos as $pedido) {
+            if ($pedido->estado->nombre == 'Carrito') {
+                return sizeof($pedido->seguimientos);
+            }
+        }
+        return 0;
+    }
+    public function cantidad_pagopendiente()
+    {
+        $estado = Estado::where('nombre', 'Pago Pendiente')->firstOrFail();
         return sizeof(auth()->user()->pedidos->where('estado_id', $estado->id));
     }
 

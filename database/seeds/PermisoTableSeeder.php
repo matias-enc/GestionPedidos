@@ -102,6 +102,11 @@ class PermisoTableSeeder extends Seeder
             'slug' => 'permisos_edit',
             'description' => 'Capacidad de Editar los Permisos'
         ]);
+        Permission::create([
+            'name' => 'Usuario sin Validacion',
+            'slug' => 'sin_validacion',
+            'description' => 'Unicamente un usuario sin validacion puede realizar estas acciones'
+        ]);
 
     }
 }

@@ -12,7 +12,7 @@
                     <h3 class="my-auto"><strong>Listado de Flujos de Trabajo</strong></h3>
                     <div>
                         <div class="">
-                            <a class="btn btn-success btn-pill btn-lg" href="{{ route("workflow.flujos.create") }}">
+                            <a class="btn btn-primary btn-pill btn-lg" href="{{ route("workflow.flujos.create") }}">
                                 Crear Flujo
                                 <i class="fal fa-plus"></i>
                             </a>

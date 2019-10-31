@@ -7,17 +7,6 @@ $font-family-sans-serif: 'Montserrat', sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
-// // Colors
-// $blue: #3490dc;
-// $indigo: #6574cd;
-// $purple: #9561e2;
-// $pink: #f66D9b;
-// $red: #e3342f;
-// $orange: #f6993f;
-// $yellow: #ffed4a;
-// $green: #38c172;
-// $teal: #4dc0b5;
-// $cyan: #6cb2eb;
 
 
 
@@ -30,31 +19,58 @@ $line-height-base: 1.6;
 // $warning:#ffb400;
 // $light:#FBFBFB;
 // $dark:#212529;
-//COLOR PRUEBA
-$primary:#188a66;
-$secondary:#007bff;
+
+
+//COLORES PRINCIPALES
+// $primary:#188a66;
+// $secondary:#007bff;
+// $success:#0fbe6c;
+// $danger:#c4183c;
+// $info:#69779b;
+// $warning:#ffb400;
+// $light:#FBFBFB;
+// $dark:#212529;
+// $spacer:1rem;
+//FIN COLORES PRINCIPALES
+
+//COLORES DE PRUEBA
+
+// $primary:#1e4af7;
+// $primary:#2C50EF;
+// $primary:#4385F5;
+// $primary:#3796F6;
+// $primary:#086972;
+$primary:#42929d;
+$secondary:#364E65;
 $success:#0fbe6c;
-$danger:#c4183c;
+$danger:#EC547A;
 $info:#69779b;
-$warning:#ffb400;
-$light:#FBFBFB;
+$warning:#FF790E;
+$light:#F7FAFC;
 $dark:#212529;
 $spacer:1rem;
+$main-bg: $light;
+//FIN COLORES DE PRUEBA
+
+
 
 $card-border-radius: 0.75rem;
-
-// $card-box-shadows: 0 .125rem .25rem rgba($black, .075);
 
 $input-btn-focus-width: 0.1em;
 
 $white : #ffffff;
+
+
+
+
 // Light sidebar
-$sidebar-light-hover-bg: #c7c5c5;
-$sidebar-light-hover-color: #000000 ;
-$sidebar-light-submenu-hover-bg: #e6e7e9;
-$sidebar-light-submenu-active-color: #000000;
+$sidebar-light-hover-bg: $light;
+$sidebar-light-hover-color: $primary ;
+$sidebar-light-submenu-hover-bg: $light;
+$sidebar-light-submenu-active-color: $secondary;
+$sidebar-light-submenu-active-bg: $white;
 
-
+$card-shadow: 0 0 1px rgba(0, 0, 0, 0.144), 0 1px 3px rgba(0, 0, 0, .2);
 // --blue: #007bff;
 //     --indigo: #674eec;
 //     --purple: #8445f7;
@@ -76,3 +92,5 @@ $sidebar-light-submenu-active-color: #000000;
 //     --danger: #c4183c;
 //     --light: #FBFBFB;
 //     --dark: #212529;
+
+

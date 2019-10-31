@@ -59,9 +59,9 @@
                     </div>
                     <div class="d-flex justify-content-center">
 
-                        <button class=" btn btn-pill btn-success" type="submit">
-                            <i class="fal fa-map-marker mr-2"></i>
-                            Ver Más
+                        <button class=" btn btn-pill btn-primary" type="submit">
+                            Saber Más
+                            <i class="fal fa-plus mr-2"></i>
                         </button>
 
                     </div>

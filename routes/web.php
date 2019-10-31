@@ -96,8 +96,8 @@ Route::group(['middleware' => ['auth']], function () {
     //Rutas de Administracion de Pedidos
 
     Route::get('pedidos/index', 'PedidoController@index')->name('pedidos.index');
+    Route::get('pedidos/estadisticas', 'PedidoController@estadisticas')->name('pedidos.estadisticas');
     Route::get('pedidos/{pedido}','PedidoController@show')->name('pedidos.show');
-
 
     //Rutas de Pedidos de un usuario y funcionalidades
     Route::get('mis_pedidos', 'PedidoController@pedidos_usuario')->name('pedidos.mis_pedidos');
@@ -140,9 +140,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('cantidad_revision' , 'PedidoController@cantidad_revision')->name('cantidad_revision');
     Route::post('procesar_revision','PedidoController@procesar_revision')->name('pedidos.procesar_revision');
 
+    //Pedidos en espera de Pago
+    Route::get('cantidad_pagopendiente' , 'PedidoController@cantidad_pagopendiente')->name('cantidad_pagopendiente');
+    Route::get('pago_pendiente','PedidoController@pago_pendiente')->name('pedidos.pago_pendiente');
+    Route::get('pago_pendiente/{pedido}','PedidoController@ver_pago_pendiente')->name('pedidos.ver_pago_pendiente');
+    Route::get('procesar_pago/{id}/','PedidoController@procesar_pago')->name('pedidos.procesar_pago');
+
     //Rutas Configuracion Usuario
     Route::get('mi_perfil' , 'PedidoController@mi_perfil')->name('mi_perfil');
     Route::post('actualizar_perfil' , 'PedidoController@actualizar_perfil')->name('actualizar_perfil');
+
+
+    //Auditorias
+    Route::get('auditoria', 'AuditoriaController@index')->name('auditoria.index');
+    Route::get('auditoria/{auditoria}-{id}', 'AuditoriaController@show')->name('auditoria.show');
+
+    //get jquery para index
+    Route::get('cantidad_carrito' , 'PedidoController@cantidad_carrito')->name('cantidad_carrito');
+
+
 
 });
 

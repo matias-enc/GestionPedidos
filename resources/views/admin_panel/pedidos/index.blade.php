@@ -7,7 +7,7 @@
     <div class="col-10">
 
 
-        <div class="card card-small card-outline card-primary">
+        <div class="card card-small card-outline card-primary shadow-sm">
             <div class="card-header">
                 <div class="row justify-content-between ml-1 mr-1">
                     <h3><strong>Pedidos</strong></h3>
@@ -151,7 +151,6 @@
 </div>
 @endsection
 @push('scripts')
-
 <script>
     $(function () {
           $('#pedidos').DataTable({

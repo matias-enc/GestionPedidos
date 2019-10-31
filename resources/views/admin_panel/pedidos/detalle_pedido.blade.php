@@ -76,8 +76,8 @@
                     <br>
                     <div class="d-flex justify-content-center">
                         <button class="btn btn-primary btn-pill">
-                            <i class="fal fa-plus"></i>
-                            Agregar al Carrito
+                            Agregar
+                            <i class="fal fa-shopping-cart"></i>
                         </button>
                     </div>
                 </div>

@@ -15,6 +15,7 @@ class CreatePedidosTable extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('preference_id')->nullable();
             $table->unsignedBigInteger('flujoTrabajo_id')->nullable();
             $table->foreign('flujoTrabajo_id')->references('id')->on('flujo_trabajos');
             $table->unsignedBigInteger('user_id')->nullable();

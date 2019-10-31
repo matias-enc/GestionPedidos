@@ -16,12 +16,12 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Generar Pedido',
             'flujoTrabajo_id' => 1,
             'estadoInicial_id' => 1,
-            'estadoFinal_id' => 14,
+            'estadoFinal_id' => 13,
         ]);
         Transicion::create([
             'nombre' => 'Solicitar Pedido',
             'flujoTrabajo_id' => 1,
-            'estadoInicial_id' => 14,
+            'estadoInicial_id' => 13,
             'estadoFinal_id' => 6,
         ]);
         Transicion::create([
@@ -52,12 +52,12 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Periodo de Revision',
             'flujoTrabajo_id' => 1,
             'estadoInicial_id' => 2,
-            'estadoFinal_id' => 10,
+            'estadoFinal_id' => 9,
         ]);
         Transicion::create([
             'nombre' => 'Terminar Revision',
             'flujoTrabajo_id' => 1,
-            'estadoInicial_id' => 10,
+            'estadoInicial_id' => 9,
             'estadoFinal_id' => 3,
         ]);
         Transicion::create([
@@ -73,13 +73,13 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Entrega de Complejo a Usuario Solicitante',
             'flujoTrabajo_id' => 3,
             'estadoInicial_id' => 2,
-            'estadoFinal_id' => 11,
+            'estadoFinal_id' => 10,
         ]);
         Transicion::create([
             'nombre' => 'En espera por devolucion de Complejo',
             'flujoTrabajo_id' => 3,
-            'estadoInicial_id' => 11,
-            'estadoFinal_id' => 13,
+            'estadoInicial_id' => 10,
+            'estadoFinal_id' => 12,
         ]);
 
         //WORKFLOW Albergues
@@ -87,26 +87,26 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Entrega de Habitacion a Usuario Solicitante',
             'flujoTrabajo_id' => 2,
             'estadoInicial_id' => 2,
-            'estadoFinal_id' => 11,
+            'estadoFinal_id' => 10,
         ]);
         Transicion::create([
             'nombre' => 'En espera por devolucion de Habitacion',
             'flujoTrabajo_id' => 2,
-            'estadoInicial_id' => 11,
-            'estadoFinal_id' => 13,
+            'estadoInicial_id' => 10,
+            'estadoFinal_id' => 12,
         ]);
         //WORKFLOW Salon de Eventos
         Transicion::create([
             'nombre' => 'Entrega de Salon a Usuario Solicitante',
             'flujoTrabajo_id' => 4,
             'estadoInicial_id' => 2,
-            'estadoFinal_id' => 11,
+            'estadoFinal_id' => 10,
         ]);
         Transicion::create([
             'nombre' => 'En espera por devolucion del Salon',
             'flujoTrabajo_id' => 4,
-            'estadoInicial_id' => 11,
-            'estadoFinal_id' => 13,
+            'estadoInicial_id' => 10,
+            'estadoFinal_id' => 12,
         ]);
 
         //WORKFLOW SECUNDARIOS
@@ -114,13 +114,13 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Entrega del Adicional Solicitado',
             'flujoTrabajo_id' => 5,
             'estadoInicial_id' => 2,
-            'estadoFinal_id' => 11,
+            'estadoFinal_id' => 10,
         ]);
         Transicion::create([
             'nombre' => 'Devolución del Adicional Solicitado',
             'flujoTrabajo_id' => 5,
-            'estadoInicial_id' => 11,
-            'estadoFinal_id' => 13,
+            'estadoInicial_id' => 10,
+            'estadoFinal_id' => 12,
         ]);
     }
 }

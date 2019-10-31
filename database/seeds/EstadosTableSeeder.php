@@ -31,13 +31,10 @@ class EstadosTableSeeder extends Seeder
             'nombre' => 'Solicitado'
         ]);
         Estado::create([
-            'nombre' => 'Espera de Pago'
+            'nombre' => 'Pago Pendiente'
         ]);
         Estado::create([
             'nombre' => 'Pagado'
-        ]);
-        Estado::create([
-            'nombre' => 'Pago Rechazado'
         ]);
         Estado::create([
             'nombre' => 'Revision'

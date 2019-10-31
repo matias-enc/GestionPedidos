@@ -7,7 +7,7 @@
 
         <div class="row justify-content-center">
             <div class="col-10">
-                <div class="card card-small card-outline card-primary">
+                <div class="card card-small card-outline card-secondary">
                     <div class="card-header pb-0 pt-2">
 
                         <div class="d-flex justify-content-between">
@@ -174,8 +174,8 @@
 
 
                                         </div>
-                                        <div class="modal-footer justify-content-between">
-                                            <button class="btn btn-pill btn-success" type="submit">Consultar!</button>
+                                        <div class="modal-footer justify-content-end">
+                                            <button class="btn btn-pill btn-primary" type="submit">Asignar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -195,10 +195,10 @@
     </div>
 
     <div class="col-4">
-        <div class="card card-small shadow-sm">
+        <div class="card card-outline card-primary card-small shadow-sm">
 
             <div class="card-header pb-0 pt-2">
-                <h4 class="text-center"><strong>Detalle de Pedido</strong></h4>
+                <h3 class="text-center"><strong>Detalle de Pedido</strong></h3>
             </div>
             <div class="card-body ">
                 <table class="table">
@@ -258,10 +258,10 @@
                 </div>
                 <br>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-secondary btn-lg btn-pill"
+                    <button class="btn btn-primary btn-lg btn-pill"
                         onclick="location.href = '{{ route('pedidos.confirmar_pedido' , $pedido) }}'">
-                        Generar Pedido
-                        <i class="fal fa-file-alt"></i>
+                        Confirmar Pedido
+                        <i class="fal fa-check"></i>
 
                     </button>
                 </div>

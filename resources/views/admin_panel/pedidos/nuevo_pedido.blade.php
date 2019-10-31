@@ -7,7 +7,7 @@
         <div class="row justify-content-center animated fadeIn">
 
 
-            <div class="card card-outline card-primary shadow-sm">
+            <div class="card card-outline card-primary">
                 <div class="card-header text-center">
                     <div class="card-title">
                         <h3><strong>Realizar un Nuevo Pedido</strong></h3>
@@ -102,7 +102,7 @@
 
             <br>
             <div class="d-flex justify-content-end">
-                <input class="btn btn-pill btn-success" type="submit" value="Buscar">
+                <input class="btn btn-pill btn-primary" type="submit" value="Buscar">
             </div>
         </div>
 </div>

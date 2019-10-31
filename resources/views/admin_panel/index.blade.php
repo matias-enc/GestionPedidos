@@ -27,26 +27,40 @@
     @stack('styles')
 
     <style>
+        .card {
+            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        .card-hover:hover {
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
         .nav-item .nav-link .badgem {
             position: absolute;
             font-size: .65rem;
             text-align: center;
             color: white;
-            top: 0px;
-            right: 7px;
+            top: -0.15em;
+            right: 0.85em;
             width: 1.3rem;
             z-index: 3333;
             border-radius: 50%;
-            background-color: #c4183c;
+            background-color: #EC547A;
             border: solid 2px white;
 
         }
+        .sidebar-light-primary .nav-sidebar .nav-item .nav-link.active {
+            box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .085);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+            /* border-radius: 1.30rem; */
+        }
 
-        .sidebar:hover .badgem {
+        .main-sidebar:hover .badgem {
             border: none;
             width: 1rem;
             /* border-color: #c7c5c5; */
-            top: 9px;
+            top: 0.95em;
         }
 
         .nav-item .nav-link .badgeh {
@@ -86,6 +100,11 @@
         .inputfile:focus+label,
         .inputfile+label:hover {
             background-color: red;
+        }
+
+        .gradient-primary {
+            background: rgb(67, 133, 245);
+            background: linear-gradient(300deg, rgba(67, 133, 245, 1) 0%, rgba(69, 235, 157, 1) 100%);
         }
     </style>
 </head>
@@ -174,7 +193,38 @@
 
     {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
     {{-- {{-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> --}}
+<script>
+    $(document).ready(function(){
+        var carrito = "{{ url('/cantidad_carrito') }}";
+        var pendientes = "{{ url('/cantidad_pendientes') }}";
+        var pagopendiente = "{{ url('/cantidad_pagopendiente') }}";
 
+        $.get(carrito, function(data){
+            console.log(data);
+            if(data > 0){
+                $("#divcarrito").removeAttr("style").show()
+                $("span#span-carrito").css('visibility','visible');
+                $('#span-carrito').text(data);
+            }
+        });
+        $.get(pagopendiente, function(data){
+            console.log(data);
+            if(data > 0){
+                $("#divpagopendiente").removeAttr("style").show()
+                $("span#span-pagopendiente").css('visibility','visible');
+                $('#span-pagopendiente').text('!');
+            }
+        });
+        $.get(pendientes, function(data){
+            console.log(data);
+            if(data > 0){
+                $("#divpendientes").removeAttr("style").show()
+                $("span#span-pendientes").css('visibility','visible');
+                $('#span-pendientes').text('!');
+            }
+        });
+    });
+</script>
     @foreach (auth()->user()->roles as $rol)
     @if ($rol->name == 'Admin')
     <script>
@@ -183,6 +233,8 @@
         var solicitudes = "{{ url('/cantidad_solicitudes') }}";
         var iniciados = "{{ url('/cantidad_iniciados') }}";
         var revision = "{{ url('/cantidad_revision') }}";
+
+
         $.get(solicitudes, function(data){
             if(data > 0){
                 $("#divsolicitud").removeAttr("style").show()
@@ -207,6 +259,7 @@
                 $('#span-revision').text(data);
             }
         });
+
 });
     </script>
     <script>
@@ -221,6 +274,7 @@
         var solicitudes = "{{ url('/cantidad_solicitudes') }}";
         var iniciados = "{{ url('/cantidad_iniciados') }}";
         var revision = "{{ url('/cantidad_revision') }}";
+        var carrito = "{{ url('/cantidad_carrito') }}";
 
         Echo.channel('gestionpedidos').listen('PedidoSolicitado', (e) => {
             $(function() {

@@ -178,7 +178,7 @@
     e.preventDefault();
     var id = $(this).attr('data-type');
     var min = 0;
-    var max = 8;
+    var max = 34;
     var input = document.getElementById('personas');
     currentVal = parseInt(document.getElementById('personas').textContent);
         if(id == 'minus') {

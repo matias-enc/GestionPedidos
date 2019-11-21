@@ -41,6 +41,20 @@
             font-size: .65rem;
             text-align: center;
             color: white;
+            top: 0.95em;
+            right: 0.85em;
+            width: 1rem;
+            z-index: 3333;
+            border-radius: 50%;
+            background-color: #EC547A;
+
+        }
+
+        /* .nav-item .nav-link .badgem {
+            position: absolute;
+            font-size: .65rem;
+            text-align: center;
+            color: white;
             top: -0.15em;
             right: 0.85em;
             width: 1.3rem;
@@ -49,7 +63,23 @@
             background-color: #EC547A;
             border: solid 2px white;
 
+        } */
+
+        .nav-item .nav-link .badgex {
+            position: absolute;
+            font-size: .65rem;
+            text-align: center;
+            color: white;
+            top: 0.95em;
+            right: 2.5em;
+            width: 1rem;
+            z-index: 3333;
+            border-radius: 50%;
+            background-color: #EC547A;
+            /* border: solid 2px white;  */
+
         }
+
         .sidebar-light-primary .nav-sidebar .nav-item .nav-link.active {
             box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .085);
             transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
@@ -61,7 +91,28 @@
             width: 1rem;
             /* border-color: #c7c5c5; */
             top: 0.95em;
+
         }
+
+        /* .main-sidebar:hover .badgex {
+            border: none;
+            width: 1rem;
+            /* border-color: #c7c5c5; */
+        /* top: 0.95em;
+            right: 2.5em;
+        } */
+        /* .menu-open .badgex   {
+            border: none;
+            width: 3rem;
+            border-color: #c7c5c5;
+            top: 0.95em;
+            right: 2.5em;
+            border: solid 2px #F7FAFC;
+        } */
+
+        /* .nav-sidebar > .nav-item.menu-open .badgex{
+            border: solid 2px #F7FAFC;
+        } */
 
         .nav-item .nav-link .badgeh {
             position: absolute;
@@ -106,11 +157,15 @@
             background: rgb(67, 133, 245);
             background: linear-gradient(300deg, rgba(67, 133, 245, 1) 0%, rgba(69, 235, 157, 1) 100%);
         }
+
+        .nav-sidebar .nav-item>.nav-link {
+            margin-bottom: 0.65rem;
+        }
     </style>
 </head>
 
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed sidebar-collapse">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <div class="wrapper">
         <!-- Inicio Header -->
         @include('admin_panel/header')
@@ -193,14 +248,23 @@
 
     {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
     {{-- {{-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> --}}
-<script>
-    $(document).ready(function(){
+
+
+    <script>
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 5000
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
         var carrito = "{{ url('/cantidad_carrito') }}";
         var pendientes = "{{ url('/cantidad_pendientes') }}";
         var pagopendiente = "{{ url('/cantidad_pagopendiente') }}";
 
         $.get(carrito, function(data){
-            console.log(data);
             if(data > 0){
                 $("#divcarrito").removeAttr("style").show()
                 $("span#span-carrito").css('visibility','visible');
@@ -208,7 +272,6 @@
             }
         });
         $.get(pagopendiente, function(data){
-            console.log(data);
             if(data > 0){
                 $("#divpagopendiente").removeAttr("style").show()
                 $("span#span-pagopendiente").css('visibility','visible');
@@ -216,7 +279,6 @@
             }
         });
         $.get(pendientes, function(data){
-            console.log(data);
             if(data > 0){
                 $("#divpendientes").removeAttr("style").show()
                 $("span#span-pendientes").css('visibility','visible');
@@ -224,17 +286,49 @@
             }
         });
     });
-</script>
-    @foreach (auth()->user()->roles as $rol)
-    @if ($rol->name == 'Admin')
+
+    </script>
+    @can('usuarios_validate')
     <script>
         $(document).ready(function(){
-        //SOLICITUDES, NOTIFICACION AL CARGAR
+        var validaciones = "{{ url('/cantidad_validaciones') }}";
+        $.get(validaciones, function(data){
+            if(data > 0){
+                $("#divvalidaciones").removeAttr("style").show()
+                $("span#span-validaciones").css('visibility','visible');
+                $("span#span-gestionUsuarios").css('visibility','visible');
+                $('#span-validaciones').text(data);
+                $('#span-gestionUsuarios').text('!');
+            }
+        });
+    });
+    </script>
+    <script>
+        var validaciones = "{{ url('/cantidad_validaciones') }}";
+
+        Echo.channel('gestionpedidos').listen('ValidacionSolicitada', (e) => {
+            $(function() {
+                Toast.fire({
+                type: 'info',
+                title: e.message
+            }),
+            $.get(validaciones, function(data){
+                $("span#span-validaciones").css('visibility','visible');
+                if(data>0){
+                    $("#divvalidaciones").removeAttr("style").show()
+                    $("span#span-validaciones").css('visibility','visible');
+                    $("#span-validaciones").text(data);
+                }
+            });
+        });
+    });
+    </script>
+    @endcan
+
+    @can('empleado_solicitudes')
+    <script>
+        $(document).ready(function(){
         var solicitudes = "{{ url('/cantidad_solicitudes') }}";
-        var iniciados = "{{ url('/cantidad_iniciados') }}";
-        var revision = "{{ url('/cantidad_revision') }}";
-
-
         $.get(solicitudes, function(data){
             if(data > 0){
                 $("#divsolicitud").removeAttr("style").show()
@@ -242,40 +336,7 @@
                 $('#span-solicitudes').text(data);
 
             }
-        }),
-        $.get(iniciados, function(data){
-            console.log(data);
-            if(data > 0){
-                $("#diviniciados").removeAttr("style").show()
-                $("span#span-iniciados").css('visibility','visible');
-                $('#span-iniciados').text(data);
-            }
         });
-        $.get(revision, function(data){
-            console.log(data);
-            if(data > 0){
-                $("#divrevision").removeAttr("style").show()
-                $("span#span-revision").css('visibility','visible');
-                $('#span-revision').text(data);
-            }
-        });
-
-});
-    </script>
-    <script>
-        const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 5000
-    });
-    </script>
-    <script>
-        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
-        var iniciados = "{{ url('/cantidad_iniciados') }}";
-        var revision = "{{ url('/cantidad_revision') }}";
-        var carrito = "{{ url('/cantidad_carrito') }}";
-
         Echo.channel('gestionpedidos').listen('PedidoSolicitado', (e) => {
             $(function() {
                 Toast.fire({
@@ -293,6 +354,22 @@
             });
         });
     });
+    });
+    </script>
+    @endcan
+
+    @can('empleado_pedidosIniciados')
+    <script>
+        $(document).ready(function(){
+        var iniciados = "{{ url('/cantidad_iniciados') }}";
+        $.get(iniciados, function(data){
+            if(data > 0){
+                $("#diviniciado").removeAttr("style").show()
+                $("span#span-iniciados").css('visibility','visible');
+                $('#span-iniciados').text(data);
+
+            }
+        });
         Echo.channel('gestionpedidos').listen('PedidoIniciado', (e) => {
             $(function() {
             Toast.fire({
@@ -309,6 +386,20 @@
         });
         });
     });
+    });
+    </script>
+    @endcan
+    @can('empleado_pedidosRevision')
+    <script>
+        $(document).ready(function(){
+        var revision = "{{ url('/cantidad_revision') }}";
+        $.get(revision, function(data){
+            if(data > 0){
+                $("#divrevision").removeAttr("style").show()
+                $("span#span-revision").css('visibility','visible');
+                $('#span-revision').text(data);
+            }
+        });
         Echo.channel('gestionpedidos').listen('PedidoRevision', (e) => {
             console.log(e);
             $(function() {
@@ -326,11 +417,19 @@
         });
         });
     });
-
+    });
     </script>
+    @endcan
 
-    @endif
-    @endforeach
+
+
+
+    {{-- <script>
+        var solicitudes = "{{ url('/cantidad_solicitudes') }}";
+        var iniciados = "{{ url('/cantidad_iniciados') }}";
+        var revision = "{{ url('/cantidad_revision') }}";
+        var carrito = "{{ url('/cantidad_carrito') }}";
+    </script> --}}
 
 
     @include('sweet::alert')

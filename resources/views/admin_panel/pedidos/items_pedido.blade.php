@@ -1,13 +1,13 @@
 @extends('admin_panel.index')
 @section('content')
-<div class="row">
+<div class="row animated fadeIn">
 
     <div class="col-7">
 
 
         <div class="row justify-content-center">
             <div class="col-10">
-                <div class="card card-small card-outline card-secondary">
+                <div class="card card-small card-outline">
                     <div class="card-header pb-0 pt-2">
 
                         <div class="d-flex justify-content-between">
@@ -121,72 +121,19 @@
 
                         </div>
 
-
+                        @endforeach
                         <!-- Button trigger modal -->
 
 
                         <!-- Modal -->
 
-                        <form action="{{ route("pedidos.disponibilidad_secundarios") }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <div class="modal fade" id="exampleModalScrollable{{$seguimiento->id}}" tabindex="-1"
-                                role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-                                    <div class="modal-content">
 
 
-                                        <input type="hidden" name="seguimiento" value="{{$seguimiento->id}}">
-                                        <div class="modal-header">
-
-                                            <h4 class="modal-title" id="exampleModalScrollableTitle"><strong>Agregar un
-                                                    Item
-                                                    Adicional a
-                                                    {{ $seguimiento->item->nombre }}</strong></h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="d-flex">
-                                                <div class="col-lg-6">
-                                                    <strong><Label>Tipo de Item Adicional</Label></strong>
-                                                    <select id="item_id"
-                                                        class="estados-js form-control {{ $errors->has('item_id') ? 'is-invalid' : '' }}"
-                                                        name="item_id">
-                                                        <option value="" disabled selected style="">Seleccione un Item
-                                                        </option>
-                                                        @foreach ($secundarios as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->nombre }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <strong><Label>Cantidad</Label></strong>
-                                                    <div
-                                                        class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
-                                                        <input class="input-sm form-control " type="number"
-                                                            name="cantidad">
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-
-                                        </div>
-                                        <div class="modal-footer justify-content-end">
-                                            <button class="btn btn-pill btn-primary" type="submit">Asignar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-                        @endforeach
 
 
 
                     </div>
+
                 </div>
             </div>
         </div>
@@ -194,7 +141,7 @@
 
     </div>
 
-    <div class="col-4">
+    <div class="col-4 animated fadeInDown">
         <div class="card card-outline card-primary card-small shadow-sm">
 
             <div class="card-header pb-0 pt-2">
@@ -270,27 +217,85 @@
     </div>
 
 </div>
+@foreach ($pedido->seguimientos as $seguimiento)
+    <form action="{{ route("pedidos.disponibilidad_secundarios") }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal fade" id="exampleModalScrollable{{$seguimiento->id}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                <div class="modal-content">
+
+
+                    <input type="hidden" name="seguimiento" value="{{$seguimiento->id}}">
+                    <div class="modal-header">
+
+                        <h4 class="modal-title" id="exampleModalScrollableTitle"><strong>Agregar un
+                                Item
+                                Adicional a
+                                {{ $seguimiento->item->nombre }}</strong></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex">
+                            <div class="col-lg-6">
+                                <strong><Label>Tipo de Item Adicional</Label></strong>
+                                <select id="item_id"
+                                    class="estados-js form-control {{ $errors->has('item_id') ? 'is-invalid' : '' }}"
+                                    name="item_id">
+                                    <option value="" disabled selected style="">Seleccione un Item
+                                    </option>
+                                    @foreach ($secundarios as $item)
+                                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                <strong><Label>Cantidad</Label></strong>
+                                <div class="form-group {{ $errors->has('itemSecundario') ? 'has-error' : '' }}">
+                                    <input class="input-sm form-control " type="number" name="cantidad">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer justify-content-end">
+                        <button class="btn btn-pill btn-primary" type="submit">Asignar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    @endforeach
 @endsection
 @push('scripts')
+<script>
+    const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-pill btn-success pl-4 pr-4 btn-lg ml-4 mr-4',
+    cancelButton: 'btn btn-pill btn-danger pl-4 pr-4 btn-lg ml-4 mr-4'
+  },
+  buttonsStyling: false
+})
+</script>
 <script>
     $('.btn-adicional').on('click', function(e){
         var id = $(this).attr('id');
     e.preventDefault();
-
-swal({
+    swalWithBootstrapButtons.fire({
         title: "Cuidado!",
         text: "Esta seguro que desea eliminar?",
-        icon: "warning",
-        dangerMode: true,
-
-        buttons: {
-
-        confirm: "Aceptar",
-        cancel: "Cancelar",
-        },
+        type: "warning",
+        showCancelButton:true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
     })
     .then ((willDelete) => {
-        if (willDelete) {
+        if (willDelete.value) {
         $("#form-adicional"+id).submit();
         }
     });
@@ -301,13 +306,7 @@ swal({
         var id = $(this).attr('id');
     e.preventDefault();
 
-    const swalWithBootstrapButtons = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-pill btn-success pl-4 pr-4 btn-lg ml-4 mr-4',
-    cancelButton: 'btn btn-pill btn-danger pl-4 pr-4 btn-lg ml-4 mr-4'
-  },
-  buttonsStyling: false
-})
+
 
 
 swalWithBootstrapButtons.fire({
@@ -315,8 +314,8 @@ swalWithBootstrapButtons.fire({
         text: "Esta seguro que desea eliminar?",
         type: "warning",
         showCancelButton:true,
-        confirmButtonText: '  Si  ',
-        cancelButtonText: ' No ',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
     })
     .then ((willDelete) => {
         if (willDelete.value) {

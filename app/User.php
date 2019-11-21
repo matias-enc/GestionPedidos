@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Caffeinated\Shinobi\Concerns\HasRolesAndPermissions;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -47,5 +48,44 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getReputacion()
+    {
 
+        $pedidos = $this->pedidos;
+        $reputaciones = collect();
+        if(sizeof($pedidos)>0){
+            foreach ($pedidos as $pedido) {
+                if($pedido->reputacion !=null){
+                    $reputaciones->push($pedido->reputacion);
+                }
+            }
+
+        }
+        return $reputaciones->sortByDesc('created_at')->first();
+    }
+    public function getCalificacion()
+    {
+        $reputacion = $this->getReputacion();
+        if($reputacion==null){
+            return Calificacion::where('nombre', 'Buena')->firstOrFail();
+        }
+        return $this->getReputacion()->calificacion;
+    }
+
+    public function getPenalizacion()
+    {
+        if($this->getReputacion()!=null){
+            $reputacion = $this->getReputacion();
+            $calificacion = $reputacion->calificacion;
+            $fechaExpiracion = $reputacion->created_at->addDays($calificacion->penalizacion);
+            if($fechaExpiracion->lessThanOrEqualTo(Carbon::now())){
+                return 0;
+            }else{
+                return $fechaExpiracion->diffInDays(Carbon::now());
+            }
+        }else{
+            return 0;
+        }
+
+    }
 }

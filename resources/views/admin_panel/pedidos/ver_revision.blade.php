@@ -1,10 +1,10 @@
 @extends('admin_panel.index')
 @section('content')
 <div class="row justify-content-start">
-    <div class="col-6">
+    <div class="col-7">
         <div class="row justify-content-center">
 
-            <div class="col-8">
+            <div class="col-10">
                 <div class="card card-outline card-primary card-small shadow-sm">
                     <div class="card-header pb-0">
                         <h3><strong>Historial de Observaciones</strong></h3>
@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <div class="col-6">
+    <div class="col-5">
         <div class="row justify-content-center">
             <div class="col-10">
                 <div class="card card-outline card-primary card-small shadow-sm ">

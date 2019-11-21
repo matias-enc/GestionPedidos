@@ -203,7 +203,7 @@ class PedidoController extends Controller
         if ($pedido->estado->nombre == 'Iniciado') {
             return view('admin_panel.pedidos.ver_iniciado', compact('pedido'));
         }
-        Alert::error('No se ha encontrado la Revision', 'Error en Revision');
+        Alert::error('No se ha encontrado el pedido solicitado', 'Error en Pedido Iniciado');
         return redirect()->back();
     }
     public function ver_pendiente(Pedido $pedido)
@@ -216,19 +216,21 @@ class PedidoController extends Controller
     }
     public function ver_pago_pendiente(Pedido $pedido)
     {
-        if ($pedido->estado->nombre == 'Pago Pendiente') {
-            \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
-            $preference = \MercadoPago\Preference::find_by_id($pedido->preference_id);
-            $filters = array(
-                "preference" => $pedido->preference_id
-            );
+        if ($pedido->usuario == auth()->user()) {
+            if ($pedido->estado->nombre == 'Pago Pendiente') {
+                \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
+                $preference = \MercadoPago\Preference::find_by_id($pedido->preference_id);
+                $filters = array(
+                    "preference" => $pedido->preference_id
+                );
 
-            // $payment = \MercadoPago\Payment::find_by_id(22412143);
-            // dd($preference);
-            return view('admin_panel.pedidos.ver_pago_pendiente', compact('pedido', 'preference'));
+                // $payment = \MercadoPago\Payment::find_by_id(22412143);
+                // dd($preference);
+                return view('admin_panel.pedidos.ver_pago_pendiente', compact('pedido', 'preference'));
+            }
         }
         Alert::error('No se ha encontrado el Pedido', 'Error en Pago Pendiente');
-        return redirect()->back();
+        return redirect()->back()->withErrors('Pedido no encontrado.');
     }
 
     public function ver_revision(Pedido $pedido)
@@ -263,17 +265,18 @@ class PedidoController extends Controller
 
     public function procesar_pago($id, Request $request)
     {
-        \MercadoPago\SDK::setAccessToken('APP_USR-6383013220139122-101719-44919d629df14faf10fd98f59182400f-185315944');
-        $payment = \MercadoPago\Payment::find_by_id($request->collection_id);
-        dd($payment);
+        \MercadoPago\SDK::setAccessToken('TEST-6383013220139122-101719-df7b89f30973eab560bd383cd9ddbfd2-185315944');
+        // $payment = \MercadoPago\Payment::find_by_id(22527395);
+        // dd($payment);
 
 
-        return $request;
+        // return $payment;
         if ($request != null) {
             $pedido = Pedido::find($id);
             if ($pedido->estado->nombre == 'Pago Pendiente') {
                 if ($request->collection_status == 'approved' && $request->external_reference == $id && $request->preference_id == $pedido->preference_id) {
                     $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+                    $pedido->pago_id = $request->collection_id;
                     $pedido->save();
                     $historial = Historial::create();
                     $historial->pedido_id = $pedido->id;
@@ -282,7 +285,7 @@ class PedidoController extends Controller
                 } else {
                     return redirect()->route('auto_gestion')->withErrors('Error al Asignar Pago');
                 }
-            }else{
+            } else {
                 return redirect()->route('auto_gestion')->withErrors('Error, Su pago ya se Encuentra Realizado');
             }
         } else {
@@ -301,9 +304,12 @@ class PedidoController extends Controller
     { }
     public function nuevo_pedido()
     {
-
-        $tipoItems = TipoItem::all()->where('categoria_id', 1);
-        return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
+        if (auth()->user()->getPenalizacion() <= 0) {
+            $tipoItems = TipoItem::all()->where('categoria_id', 1);
+            return view('admin_panel.pedidos.nuevo_pedido', compact('tipoItems'));
+        } else {
+            return redirect()->route('mi_perfil');
+        }
     }
 
     public function consultar_disponibilidad(Request $request)
@@ -345,10 +351,18 @@ class PedidoController extends Controller
             }
             //MANEJO DE HORAS PARA COMPLEJOS
         } else {
-            // return $request->hora_inicial;
             $fechaInicial = Carbon::createFromFormat('d/m/Y H:i A', $request->inicial . ' ' . $request->hora_inicial);
             $fechaFinal = Carbon::createFromFormat('d/m/Y H:i A', $request->final . ' ' . $request->hora_final);
             $items = $tipoItem->items;
+            //Reserva minima de 1 hora complejos y salones
+            if ($fechaInicial->diffInMinutes($fechaFinal) < 60) {
+                Alert::error('El tiempo minimo para realizar una reserva es de 1 hora.', 'Error en Fechas')->persistent();
+                return redirect()->back()->withInput();
+            }
+        }
+        if ($fechaFinal->lessThan($fechaInicial)) {
+            Alert::error('Las Fecha de Salida no puede ser menor a la Fecha de Llegada', 'Error en Fechas')->persistent();
+            return redirect()->back()->withInput();
         }
         foreach ($items as $key => $item) { //Filtrar items por disponibilidad
 
@@ -372,22 +386,88 @@ class PedidoController extends Controller
             $disponible = true;
         }
         if (sizeof($items) <= 0) {
-            Alert::error('No hay disponibilidad', 'En esta fecha no se encontro el item solicitado');
-            return redirect()->back()->withInput();
+            $items = TipoItem::find($request->tipoItem)->items;
+            // return $items;
+            $disponible = true;
+            $capacidadNecesaria = $request->capacidad;
+            $capacidadActual = 0;
+            $itemsRecomendados = collect();
+            foreach ($items as $key => $item) {
+                foreach ($item->seguimientos as $seguimiento) {
+                    $fechaInicialSeg = Carbon::create($seguimiento->fechaInicial);
+                    $fechaFinalSeg = Carbon::create($seguimiento->fechaFinal);
+                    if (($fechaInicial->greaterThan($fechaInicialSeg) && $fechaInicial->greaterThanOrEqualTo($fechaFinalSeg)) || ($fechaInicial->lessThan($fechaInicialSeg) && $fechaFinal->lessThanOrEqualTo($fechaInicialSeg))) {
+                        $disponible = true;
+                    } elseif ($fechaInicial->equalTo($fechaInicialSeg)) {
+                        $disponible = false;
+                    } else {
+                        $disponible = false;
+                    }
+                }
+                if ($capacidadActual >= $capacidadNecesaria) {
+                    $disponible = false;
+                } else {
+                    $disponible = true;
+                }
+                if ($disponible == true) {
+                    $itemsRecomendados->push($item);
+                    $capacidadActual += $item->capacidad;
+                }
+                $disponible = true;
+            }
+            // return $itemsRecomendados;
+            if (sizeof($itemsRecomendados) > 0) {
+                return view('admin_panel.pedidos.recomendacion', compact('itemsRecomendados', 'fechaInicial', 'fechaFinal', 'tipoItem', 'capacidadNecesaria'));
+                // return $itemsRecomendados->pluck('nombre', 'id') . '' . $capacidadActual . ' ' . $capacidadNecesaria;
+            } else {
+                Alert::error('No hay disponibilidad', 'En esta fecha no se encontro el item solicitado');
+                return redirect()->back()->withInput();
+            }
         }
         $items->pluck('nombre', 'id');
         return view('admin_panel.pedidos.asignacion', compact('items', 'fechaInicial', 'fechaFinal', 'tipoItem'));
     }
+
+
+
     function detalle_pedido(Request $request)
     {
-        $item = Item::find($request->item_id);
+        // return $request;
         $fechaInicial = $request->fechaInicial;
         $fechaFinal = $request->fechaFinal;
-        if ($item->tipoItem->calculo == false) {
-            $diferencia = Carbon::create($fechaInicial)->diffInDays(Carbon::create($fechaFinal)) + 1;
+        $tipoItem = null;
+        $item = null;
+        $items = collect();
+        $precioTotal = null;
+        if (is_array($request->item_id)) {
+            foreach ($request->item_id as $item) {
+                $item = Item::find($item);
+                $items->push($item);
+            }
+            if ($item->tipoItem->calculo == false) {
+                $diferencia = Carbon::create($fechaInicial)->diffInDays(Carbon::create($fechaFinal)) + 1;
+            } else {
+                $diferencia = Carbon::create($fechaInicial)->diffInHours(Carbon::create($fechaFinal));
+            }
+            $tipoItem = $item->tipoItem;
+            $item = null;
+            foreach ($items as $item) {
+                $precioTotal += $item->precioUnitario;
+            }
+            // return 'muchos items';
+            return view('admin_panel.pedidos.detalle_pedido', compact('items', 'precioTotal', 'item', 'tipoItem', 'fechaInicial', 'fechaFinal', 'diferencia'));
         } else {
-            $diferencia = Carbon::create($fechaInicial)->diffInHours(Carbon::create($fechaFinal));
+            $item = Item::find($request->item_id);
+            if ($item->tipoItem->calculo == false) {
+                $diferencia = Carbon::create($fechaInicial)->diffInDays(Carbon::create($fechaFinal)) + 1;
+            } else {
+                $diferencia = Carbon::create($fechaInicial)->diffInHours(Carbon::create($fechaFinal));
+            }
+            // return 'un item';
+            $tipoItem = $item->tipoItem;
+            return view('admin_panel.pedidos.detalle_pedido', compact('item', 'precioTotal', 'items', 'tipoItem', 'fechaInicial', 'fechaFinal', 'diferencia'));
         }
+
 
         // return $fechaInicial . $fechaFinal;
         return view('admin_panel.pedidos.detalle_pedido', compact('item', 'fechaInicial', 'fechaFinal', 'diferencia'));
@@ -437,32 +517,80 @@ class PedidoController extends Controller
 
     function agregar_carrito(Request $request)
     {
-        // return $request->fechaInicial . $request->fechaFinal;
+        // return $request->fechaInicial;
         foreach (auth()->user()->pedidos as $pedido) {
             if ($pedido->estado->nombre == 'Carrito') {
-                $seguimiento = new Seguimiento();
-                $seguimiento->pedido_id = $pedido->id;
-                $seguimiento->fechaInicial = $request->fechaInicial;
-                $seguimiento->fechaFinal = $request->fechaFinal;
-                $seguimiento->item_id = $request->item_id;
-                $seguimiento->save();
-                return redirect()->route('pedidos.listar_carrito');
+                foreach ($pedido->seguimientos as $seguimiento) {
+                    if (($request->item_id == $seguimiento->item->id || $request->items_id[0] == $seguimiento->item->id) && $request->fechaInicial == $seguimiento->fechaInicial && $request->fechaFinal == $seguimiento->fechaFinal) {
+                        return redirect()->route('pedidos.listar_carrito')->withErrors('El item solicitado ya se encuentra agregado');
+                    }
+                }
+                //ARMADO DE SEGUIMIENTOS POR PAQUETE DE ITEMS
+                if ($request->items_id != null) {
+                    $items = collect();
+                    foreach ($request->items_id as $i) {
+                        $item1 = Item::find($i);
+                        $items->push($item1);
+                    }
+                    foreach ($items as $item) {
+                        $seguimiento = new Seguimiento();
+                        $seguimiento->pedido_id = $pedido->id;
+                        $seguimiento->fechaInicial = $request->fechaInicial;
+                        $seguimiento->fechaFinal = $request->fechaFinal;
+                        $seguimiento->item_id = $item->id;
+                        $seguimiento->precio = $item->precioUnitario;
+                        $seguimiento->save();
+                    }
+                    return redirect()->route('pedidos.listar_carrito');
+                    //ARMADO NORMAL DE UN SEGUIMIENTO
+                } else {
+                    $seguimiento = new Seguimiento();
+                    $seguimiento->pedido_id = $pedido->id;
+                    $seguimiento->fechaInicial = $request->fechaInicial;
+                    $seguimiento->fechaFinal = $request->fechaFinal;
+                    $seguimiento->item_id = $request->item_id;
+                    $item = Item::find($request->item_id);
+                    $seguimiento->precio = $item->precioUnitario;
+                    $seguimiento->save();
+                    return redirect()->route('pedidos.listar_carrito');
+                }
             }
         }
 
         $pedido = new Pedido();
         $pedido->user_id = auth()->user()->id;
         $workflow = FlujoTrabajo::where('nombre', 'Pedidos')->firstOrFail();
-        // $workflow = Pedido::first()->flujoTrabajo;
         $pedido->flujoTrabajo_id = $workflow->id;
         $pedido->estado_id = $workflow->estado_inicial()->id;
         $pedido->save();
-        $seguimiento = new Seguimiento();
-        $seguimiento->pedido_id = $pedido->id;
-        $seguimiento->fechaInicial = $request->fechaInicial;
-        $seguimiento->fechaFinal = $request->fechaFinal;
-        $seguimiento->item_id = $request->item_id;
-        $seguimiento->save();
+        if ($request->items_id != null) {
+            $items = collect();
+            foreach ($request->items_id as $i) {
+                $item1 = Item::find($i);
+                $items->push($item1);
+            }
+            foreach ($items as $item) {
+                // return 'entre';
+                $seguimiento = new Seguimiento();
+                $seguimiento->pedido_id = $pedido->id;
+                $seguimiento->fechaInicial = $request->fechaInicial;
+                $seguimiento->fechaFinal = $request->fechaFinal;
+                $seguimiento->item_id = $item->id;
+                $seguimiento->precio = $item->precioUnitario;
+                $seguimiento->save();
+            }
+            return redirect()->route('pedidos.listar_carrito');
+        } else {
+            $seguimiento = new Seguimiento();
+            $seguimiento->pedido_id = $pedido->id;
+            $seguimiento->fechaInicial = $request->fechaInicial;
+            $seguimiento->fechaFinal = $request->fechaFinal;
+            $seguimiento->item_id = $request->item_id;
+            $item = Item::find($request->item_id);
+            $seguimiento->precio = $item->precioUnitario;
+            $seguimiento->save();
+        }
+
         return redirect()->route('pedidos.listar_carrito');
     }
 
@@ -583,6 +711,85 @@ class PedidoController extends Controller
         $seguimiento->save();
         return redirect()->back()->withInput();
     }
+
+    public function asignar_estado_general(Request $request)
+    {
+        $seguimiento = Seguimiento::find($request->seguimiento);
+        $historial = HistorialSeguimiento::create();
+        if ($request->revision != null) {
+            $historial->revision = $request->revision;
+        }
+        $historial->estado_id = $request->estado;
+        $historial->seguimiento_id = $seguimiento->id;
+        $historial->item_id = $seguimiento->item->id;
+        $historial->save();
+        $seguimiento->estado_id = $request->estado;
+        $seguimiento->save();
+        $adicionales = collect();
+        if ($request->adicionales != null) {
+            foreach ($request->adicionales as $id) {
+                $adicionales->push(Adicional::find($id));
+            }
+            $historiales = collect();
+            foreach ($adicionales as $id => $adicional) {
+                $adicional->estado_id = $adicional->item->tipoItem->flujoTrabajo->estado_siguiente($adicional->estado)->id;
+                $adicional->save();
+                $hist = HistorialAdicional::create();
+                $hist->adicional_id = $adicional->id;
+                if ($request->revision_adicional[$id] != null) {
+                    $hist->revision = $request->revision_adicional[$id];
+                }
+                if ($request->faltantes[$id] != null) {
+                    $hist->faltante = $request->faltantes[$id];
+                }
+                $hist->estado_id = $adicional->item->tipoItem->flujoTrabajo->estado_siguiente($adicional->estado)->id;
+                $hist->item_id = $adicional->item->id;
+                $hist->save();
+                $historiales->push($hist);
+            }
+        }
+        // return $this->generar_documentacion_historial($historial);
+        return redirect()->back();
+        // return $pdf->download('comprobante_'.$seguimiento->item->nombre.'_'. $seguimiento->estado->nombre.'.pdf');
+    }
+
+    public function generar_documentacion_historial(HistorialSeguimiento $historial)
+    {
+        $seguimiento = $historial->seguimiento;
+        if ($historial->estado->nombre == 'Entregado') {
+            $pdf = PDF::loadView('admin_panel.pdf.entrega', compact('seguimiento'));
+        } elseif ($historial->estado->nombre == 'Terminado') {
+            $pdf = PDF::loadView('admin_panel.pdf.devolucion', compact('seguimiento'));
+        }
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $y = $canvas->get_height() - 35;
+        $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return $pdf->download('comprobante_' . $seguimiento->item->nombre . '_' . $seguimiento->estado->nombre . '.pdf');
+    }
+
+    public function asignar_documentacion_historial(Request $request, HistorialSeguimiento $historial)
+    {
+        if ($historial->documentacion == null) {
+            $documento = $request->file('documento');
+            if ($historial->estado->nombre == 'Entregado') {
+                $nomDoc = 'Entrega ' . $historial->item->nombre . '.' . $documento->getClientOriginalExtension();
+                $documento->move(public_path('/documentacion/historiales/' . $historial->id), $nomDoc);
+                $historial->documentacion = '/documentacion/historiales/' . $historial->id . '/' . $nomDoc;
+                $historial->save();
+            } elseif ($historial->estado->nombre == 'Terminado') {
+                $nomDoc = 'Devolucion ' . $historial->item->nombre . '.' . $documento->getClientOriginalExtension();
+                $documento->move(public_path('/documentacion/historiales/' . $historial->id), $nomDoc);
+                $historial->documentacion = '/documentacion/historiales/' . $historial->id . '/' . $nomDoc;
+                $historial->save();
+            }
+            Alert::success('Se ha asignado la documentacion correctamente', 'Historial Guardado');
+            return redirect()->back();
+        } else {
+            return redirect()->back()->withErrors('La documentacion ya se encuentra asignada');
+        }
+    }
+
     function asignar_estado_adicional(Request $request)
     {
         $adicional = Adicional::find($request->adicional);
@@ -707,20 +914,23 @@ class PedidoController extends Controller
     public function actualizar_perfil(Request $request)
     {
         $user = auth()->user();
+        $pedidos = auth()->user()->pedidos;
+
         $user->name = $request->name;
         $user->apellido = $request->apellido;
         $user->dni = $request->dni;
         $user->telefono = $request->telefono;
         $user->email = $request->email;
-        // $user->password = Hash::make($request->password);
         $user->save();
         return redirect()->back()->with('success', 'Cuenta Actualizada');
     }
 
     public function mi_perfil()
     {
+        $reputacion = auth()->user()->getCalificacion();
         $user = auth()->user();
-        return view('admin_panel.usuarios.perfil', compact('user'));
+        // return auth()->user()->getPenalizacion();
+        return view('admin_panel.usuarios.perfil', compact('user', 'reputacion'));
     }
 
     public function cantidad_solicitudes()

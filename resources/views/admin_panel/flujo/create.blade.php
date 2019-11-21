@@ -1,7 +1,7 @@
 @extends('admin_panel.index')
 
 @section('content')
-<div class="card card-outline card-success col-6 offset-3">
+<div class="card card-outline card-primary col-6 offset-3">
     <div class="card-header">
         <div class="card-title">
             <strong>Crear Nuevo Flujo de Trabajo</strong>
@@ -20,7 +20,7 @@
                 @endif
             </div>
                 <div>
-                    <input class="btn btn-success" type="submit" value="Guardar">
+                    <input class="btn btn-primary" type="submit" value="Guardar">
                 </div>
 
             </form>

@@ -23,7 +23,7 @@ class Pedido extends Model implements Auditable {
         return $this->belongsTo(User::class, 'user_id');
     }
     public function reputacion(){
-        return $this->belongsTo(Reputacion::class);
+        return $this->hasOne(Reputacion::class);
     }
     public function historiales(){
         return $this->hasMany(Historial::class);

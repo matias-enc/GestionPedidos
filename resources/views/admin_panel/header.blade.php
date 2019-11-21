@@ -23,12 +23,14 @@
                 <span class="badgeh bg-warning" id="span-carrito"></span>
             </a>
         </li>
+        @if(auth()->user()->validacion->aprobado == true)
         <li class="nav-item pl-2">
             <a href="{{ route("pedidos.nuevo_pedido") }}" class="btn btn-pill btn-primary" style="color: white">
                 <i class="fal fa-plus"></i>
                 Nuevo Pedido
             </a>
         </li>
+        @endif
         <li class="nav-item dropdown d-flex justify-content-center">
             <div>
                 <a href="#" class="nav-link navbar-brand" data-toggle="dropdown">
@@ -37,9 +39,13 @@
                     <i class="right far fa-angle-down fa-xs"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-small dropdown-menu-right">
+                    <h6 class="text-center pb-0"><strong class="">{{auth()->user()->name}} {{ucfirst(auth()->user()->apellido)}}</strong></h6>
+                    <hr class="p-0 m-0">
+                    @if(auth()->user()->validacion->aprobado == true)
                     <a class="dropdown-item text-center" href="{{ route('mi_perfil') }}"><i class="fal fa-user-cog"></i>
-                        Perfil</a>
-                    <div class="dropdown-divider"></div>
+                        Configuración</a>
+                        <div class="dropdown-divider"></div>
+                        @endif
                     <a class="dropdown-item text-center text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
                         <i class="fal fa-sign-out text-danger"></i> Cerrar Sesion </a>

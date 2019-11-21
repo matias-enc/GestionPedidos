@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return redirect('auto_gestion');
 });
+Route::get('/home', function () {
+    return redirect('auto_gestion');
+});
 Route::get('/pdf', function () {
     $pdf = PDF::loadView('admin_panel.pdf.pedidos');
     return $pdf->stream();
@@ -72,6 +75,7 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
     Route::delete('transiciones/{transicion}' , 'TransicionController@destroy')->name('transiciones.destroy');
 
     Route::get('estados', 'EstadoController@index')->name('estados.index');
+    Route::get('estados/{estado}', 'EstadoController@show')->name('estados.show');
     Route::get('estados/create','EstadoController@create')->name('estados.create');
     Route::post('estados','EstadoController@store')->name('estados.store');
     Route::delete('estados/{estado}' , 'EstadoController@destroy')->name('estados.destroy');
@@ -130,7 +134,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('iniciados','PedidoController@iniciados')->name('pedidos.iniciados');
     Route::get('cantidad_iniciados' , 'PedidoController@cantidad_iniciados')->name('cantidad_iniciados');
     Route::get('iniciados/{pedido}','PedidoController@ver_iniciado')->name('pedidos.ver_iniciado');
+    Route::get('iniciados/generar_documentacion_historial/{historial}','PedidoController@generar_documentacion_historial')->name('pedidos.generar_documentacion_historial');
+    Route::post('iniciados/asignar_documentacion_historial/{historial}','PedidoController@asignar_documentacion_historial')->name('pedidos.asignar_documentacion_historial');
     Route::post('asignar_seguimiento','PedidoController@asignar_estado_seguimiento')->name('pedidos.asignar_estado_seguimiento');
+    Route::post('asignar_estado_general','PedidoController@asignar_estado_general')->name('pedidos.asignar_estado_general');
     Route::post('asignar_adicional','PedidoController@asignar_estado_adicional')->name('pedidos.asignar_estado_adicional');
 
 
@@ -151,6 +158,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('actualizar_perfil' , 'PedidoController@actualizar_perfil')->name('actualizar_perfil');
 
 
+    //Validacion de Usuario
+    Route::get('validacion_datos' , 'ValidacionController@validacion_datos')->name('validacion_datos');
+    Route::post('cargar_datos' , 'ValidacionController@cargar_datos')->name('cargar_datos');
+    Route::post('enviar_datos' , 'ValidacionController@enviar_datos')->name('enviar_datos');
+    Route::post('aceptar_validacion/{validacion}' , 'ValidacionController@aceptar_validacion')->name('aceptar_validacion');
+    Route::post('cancelar_validacion/{validacion}' , 'ValidacionController@cancelar_validacion')->name('cancelar_validacion');
+    Route::get('cantidad_validaciones' , 'ValidacionController@cantidad_validaciones')->name('cantidad_validaciones');
+    Route::get('validacion_pendiente','ValidacionController@validacion_pendiente')->name('validacion_pendiente');
+    Route::get('validacion_pendiente/{validacion}','ValidacionController@ver_validacion_pendiente')->name('ver_validacion_pendiente');
+
     //Auditorias
     Route::get('auditoria', 'AuditoriaController@index')->name('auditoria.index');
     Route::get('auditoria/{auditoria}-{id}', 'AuditoriaController@show')->name('auditoria.show');
@@ -158,10 +175,18 @@ Route::group(['middleware' => ['auth']], function () {
     //get jquery para index
     Route::get('cantidad_carrito' , 'PedidoController@cantidad_carrito')->name('cantidad_carrito');
 
-
+    //CONFIGURACIONES DEL SISTEMA
+    Route::get('configuraciones_sistema' , 'ConfiguracionController@configuraciones_sistema')->name('configuraciones_sistema');
+    Route::post('actualizar_informacion' , 'ConfiguracionController@actualizar_informacion')->name('actualizar_informacion');
+    Route::post('actualizar_penalizacion' , 'ConfiguracionController@actualizar_penalizacion')->name('actualizar_penalizacion');
 
 });
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('item', 'ItemController');
+
+
+});
+Route::fallback(function(){
+    return view('errors.404');
 });

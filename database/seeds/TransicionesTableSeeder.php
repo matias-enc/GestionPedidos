@@ -49,6 +49,12 @@ class TransicionesTableSeeder extends Seeder
             'estadoFinal_id' => 8,
         ]);
         Transicion::create([
+            'nombre' => 'Iniciar Pagado',
+            'flujoTrabajo_id' => 1,
+            'estadoInicial_id' => 8,
+            'estadoFinal_id' => 2,
+        ]);
+        Transicion::create([
             'nombre' => 'Periodo de Revision',
             'flujoTrabajo_id' => 1,
             'estadoInicial_id' => 2,
@@ -58,12 +64,6 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Terminar Revision',
             'flujoTrabajo_id' => 1,
             'estadoInicial_id' => 9,
-            'estadoFinal_id' => 3,
-        ]);
-        Transicion::create([
-            'nombre' => 'Pedido Finalizado Correctamente',
-            'flujoTrabajo_id' => 1,
-            'estadoInicial_id' => 3,
             'estadoFinal_id' => 5,
         ]);
 
@@ -120,7 +120,7 @@ class TransicionesTableSeeder extends Seeder
             'nombre' => 'Devolución del Adicional Solicitado',
             'flujoTrabajo_id' => 5,
             'estadoInicial_id' => 10,
-            'estadoFinal_id' => 12,
+            'estadoFinal_id' => 11,
         ]);
     }
 }

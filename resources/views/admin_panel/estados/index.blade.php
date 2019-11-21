@@ -3,20 +3,20 @@
 
 
 @section('content')
-<div class="col-lg-12">
-    <a class="btn btn-success btn-pill" href="{{ route("workflow.estados.create") }}">
-        <i class="fal fa-plus"></i> Nuevo Estado
-    </a>
-</div>
+
 <div class="d-flex justify-content-center">
 
 
     <div class="col-8">
-
-
         <div class="card shadow-sm card-primary card-outline card-small">
-            <div class="card-header pb-1">
-                <h3><strong>Estados</strong></h3>
+            <div class="card-header ">
+                <div class="d-flex justify-content-between">
+                    <h3 class="my-auto"><strong>Estados</strong></h3>
+                    <a class="btn btn-primary btn-pill btn-lg" href="{{ route("workflow.estados.create") }}">
+                        Crear Estado
+                        <i class="fal fa-plus"></i>
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -25,6 +25,7 @@
                             <tr>
                                 <th>Id Estado</th>
                                 <th>Nombre de Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,6 +34,11 @@
                                 <td>{{$estado->id}}</td>
 
                                 <td>{{$estado->nombre}}</td>
+
+                                <td><a class="btn btn-xs btn-primary"
+                                        href="{{route('workflow.estados.show', $estado)}}">
+                                        Ver
+                                    </a></td>
                             </tr>
 
 

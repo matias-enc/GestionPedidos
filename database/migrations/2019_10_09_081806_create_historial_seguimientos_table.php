@@ -22,6 +22,7 @@ class CreateHistorialSeguimientosTable extends Migration
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->unsignedBigInteger('item_id')->nullable();
             $table->foreign('item_id')->references('id')->on('items');
+            $table->string('documentacion')->nullable();
             $table->timestamps();
         });
     }

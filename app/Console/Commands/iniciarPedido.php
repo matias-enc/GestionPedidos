@@ -45,8 +45,13 @@ class iniciarPedido extends Command
      */
     public function handle()
     {
-        $estado = Estado::where('nombre', 'Aprobado')->firstOrFail();
+        $estado = Estado::where('nombre', 'Pagado')->firstOrFail();
         $pedidos = Pedido::all()->where('estado_id', $estado->id);
+        // $pagado = Estado::where('nombre', 'Pagado')->firstOrFail();
+        // $pedidosPagados = Pedido::all()->where('estado_id', $pagado->id);
+        // foreach ($pedidosPagados as $p) {
+        //     $pedidos->push($p);
+        // }
         //INICIAR UN PEDIDO
         if (sizeof($pedidos) > 0) {
             foreach ($pedidos as $pedido) {
@@ -89,7 +94,7 @@ class iniciarPedido extends Command
         //INICIAR SEGUIMIENTOS DE UN PEDIDO YA INICIADO
         $estado = Estado::where('nombre', 'Iniciado')->firstOrFail();
         $pedidos = Pedido::all()->where('estado_id', $estado->id);
-        $terminado = false;
+        $terminado = true;
         if (sizeof($pedidos) > 0) {
             foreach ($pedidos as  $pedido) {
                 foreach ($pedido->seguimientos as $seguimiento) {
@@ -116,17 +121,31 @@ class iniciarPedido extends Command
                             }
                         }
                     }
-                    if ($seguimiento->estado->nombre == 'Terminado') {
-                        foreach ($seguimiento->adicionales as $adicional)
-                            if ($adicional->estado->nombre == 'Terminado') {
-                                $terminado = true;
-                            } else {
-                                $terminado = false;
+                    if ($seguimiento->estado != null) {
+                        if ($seguimiento->estado->nombre == 'Terminado') {
+                            if ($seguimiento->adicionales != null) {
+                                foreach ($seguimiento->adicionales as $adicional)
+                                    if ($adicional->estado->nombre != 'Devuelto') {
+                                        $terminado = false;
+                                    }
+                                foreach ($seguimiento->historiales as $historial) {
+                                    if ($historial->estado->nombre == 'Entregado') {
+                                        if ($historial->documentacion == null) {
+                                            $terminado = false;
+                                        }
+                                    }
+                                    if ($historial->estado->nombre == 'Terminado') {
+                                        if ($historial->documentacion == null) {
+                                            $terminado = false;
+                                        }
+                                    }
+                                }
                             }
+                        }
+                    }else{
+                        $terminado = false;
                     }
                 }
-
-
             }
             //FINALIZACION DE UN PEDIDO TERMINADO COMPLETAMENTE
             if ($terminado == true) {

@@ -48,9 +48,9 @@ class EstadoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Estado $estado)
     {
-        //
+        return view('admin_panel.estados.show', compact('estado'));
     }
 
     /**

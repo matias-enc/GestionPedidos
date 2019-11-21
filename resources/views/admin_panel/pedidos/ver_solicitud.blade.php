@@ -69,7 +69,7 @@
                 <div class="col-12 border-bottom"></div>
                 <br>
                 <div class="offset-2 col-8 justify-content-center">
-                    <div class="d-flex justify-content-between row  ">
+                    <div class="d-flex justify-content-between ">
                         <button type="button" class="btn btn-pill btn-success" data-toggle="modal"
                             data-target="#exampleModalScrollable">
                             Aceptar Solicitud
@@ -125,8 +125,4 @@
     </div>
 
 </form>
-
-
-
-
 @endsection

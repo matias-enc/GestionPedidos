@@ -24,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin_panel.home');
+        if(auth()->user()->validacion->aprobado==true){
+
+            return view('admin_panel.home');
+        }
+        return redirect()->route('validacion_datos');
     }
 }

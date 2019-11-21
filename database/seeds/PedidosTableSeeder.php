@@ -12,9 +12,6 @@ class PedidosTableSeeder extends Seeder
      */
     public function run()
     {
-        Pedido::create([
-            'flujoTrabajo_id' => 1,
-            'estado_id' => 5
-        ]);
+
     }
 }

@@ -1,5 +1,5 @@
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar elevation-0 border-right sidebar-light-primary" style="min-height: 917px;">
+<aside class="main-sidebar elevation-0 border-right sidebar-light-primary " >
     <!-- Brand Logo -->
     <a href="/" class="brand-link border-bottom-0 border-right">
         <img src="{{ asset("imagenes/logo-apostoles.png") }}" alt="AdminLTE Logo" class="brand-image img-circle"
@@ -8,20 +8,16 @@
 
         <span class="brand-text font-weight-bold ">Gestion Pedidos</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
-        <br><br>
+
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-                   with font-awesome or any other icon font library -->
-                {{-- @if (sizeof(auth()->user()->pedidos->where('estado_id', 14))>0) --}}
-
-                <li class="nav-item" >
-                    <a href=""
+                @if(auth()->user()->validacion->aprobado != true)
+                <li class="nav-header">VALIDACION DE USUARIO</li>
+                <li class="nav-item">
+                    <a href="{{route('validacion_datos')}}"
                         class="nav-link {{ request()->is('validacion')  ? 'active' : '' }}">
                         @if (!(request()->is('validacion')))
                         <span id="span-validacion" class=" badgem">!</span>
@@ -30,18 +26,47 @@
                         <p><span>Validacion</span></p>
                     </a>
                 </li>
+                @endif
+
+                {{-- @can('sin_validacion')
+                <li class="nav-item">
+                    <a href="{{route('validacion_datos')}}"
+                class="nav-link {{ request()->is('validacion')  ? 'active' : '' }}">
+                @if (!(request()->is('validacion')))
+                <span id="span-validacion" class=" badgem">!</span>
+                @endif
+                <i class="fal fa-address-card nav-icon"></i>
+                <p><span>Validacion</span></p>
+                </a>
+                </li>
+                @endcan --}}
+                @can('usuario_pedido')
+                <li class="nav-header pl-3">PEDIDOS</li>
+                <li class="nav-item">
+                    <a href="{{ route("pedidos.nuevo_pedido") }}"
+                        class="nav-link align-items-center {{ request()->is('nuevo_pedido')  ? 'active' : '' }}">
+                        @if (!(request()->is('nuevo_pedido')))
+                        <span id="span-nuevo_pedido" class=" badgem" style="visibility: hidden">!</span>
+                        @endif
+                        <i class="fal fa-dolly-flatbed-alt nav-icon "></i>
+                        <p class="align-self-center"><span>Nuevo Pedido</span></p>
+                    </a>
+                </li>
+                @endcan
+                @can('usuario_documentacion')
                 <li class="nav-item" id="divpendientes">
                     <a href="{{ route("pedidos.pendientes") }}"
-                        class="nav-link {{ request()->is('pendientes')  ? 'active' : '' }}">
+                        class="nav-link align-items-center {{ request()->is('pendientes')  ? 'active' : '' }}">
                         @if (!(request()->is('pendientes')))
                         <span id="span-pendientes" class=" badgem" style="visibility: hidden">!</span>
                         @endif
                         <i class="fal fa-file-alt nav-icon "></i>
-                        <p><span>Documentacion</span></p>
+                        <p class="align-self-center"><span>Documentacion</span></p>
                     </a>
                 </li>
-                {{-- @endif --}}
-                {{-- @if (sizeof(auth()->user()->pedidos->where('estado_id', 7))>0) --}}
+                @endcan
+
+                @can('usuario_pagos')
                 <li class="nav-item" id="divpagopendiente">
                     <a href="{{route("pedidos.pago_pendiente")}}"
                         class="nav-link {{ request()->is('pago_pendiente') || request()->is('pago_pendiente/*')  ? 'active' : '' }}">
@@ -52,15 +77,8 @@
                         <p><span>Pagos Pendientes</span></p>
                     </a>
                 </li>
-                {{-- @endif --}}
-                {{-- <li class="nav-item">
-                    <a href="{{ route("pedidos.nuevo_pedido") }}"
-                class="nav-link
-                {{ request()->is('nuevo_pedido') || request()->is('nuevo_pedido') || request()->is('consultar_disponibilidad')  || request()->is('detalle_pedido')  ? 'active' : '' }}">
-                <i class="fal fa-box-open nav-icon "></i>
-                <p><span>Nuevo Pedido</span></p>
-                </a>
-                </li> --}}
+                @endcan
+                @can('usuario_mispedidos')
                 <li class="nav-item">
                     <a href="{{ route("pedidos.mis_pedidos") }}"
                         class="nav-link {{ request()->is('mis_pedidos') || request()->is('mis_pedidos/*')   ? 'active' : '' }}">
@@ -68,8 +86,10 @@
                         <p><span>Mis Pedidos</span></p>
                     </a>
                 </li>
-
-                <li class="nav-item" id="divsolicitud" style="display: none">
+                @endcan
+                @can('empleado_solicitudes')
+                <li class="nav-header">GESTION PEDIDOS</li>
+                <li class="nav-item" id="divsolicitud">
                     <a href="{{ route("pedidos.solicitudes") }}"
                         class="nav-link {{ request()->is('solicitudes')  ? 'active' : '' }}">
                         @if (!(request()->is('solicitudes')))
@@ -81,11 +101,14 @@
                             <span>Solicitudes</span></p>
                     </a>
                 </li>
-                <li class="nav-item " id="diviniciados" style="display: none">
+                @endcan
+                @can('empleado_pedidosIniciados')
+
+                <li class="nav-item " id="diviniciados">
                     <a href="{{ route("pedidos.iniciados") }}"
                         class="nav-link {{ request()->is('iniciados')  ? 'active ' : '' }}">
                         @if (!(request()->is('iniciados')))
-                        <span id="span-iniciados bg-success" class=" badgem" style="visibility: hidden"></span>
+                        <span id="span-iniciados" class=" badgem bg-success" style="visibility: hidden"></span>
                         @endif
                         <i class="fal fa-calendar-exclamation nav-icon animated">
                         </i>
@@ -93,11 +116,13 @@
                             <span>Pedidos Iniciados</span></p>
                     </a>
                 </li>
-                <li class="nav-item" id="divrevision" style="display: none">
+                @endcan
+                @can('empleado_pedidosRevision')
+                <li class="nav-item" id="divrevision">
                     <a href="{{ route("pedidos.revision") }}"
                         class="nav-link {{ request()->is('revision')  ? 'active' : '' }}">
                         @if (!(request()->is('revision')))
-                        <span id="span-revision bg-warning" class=" badgem" style="visibility: hidden"></span>
+                        <span id="span-revision" class=" badgem bg-warning" style="visibility: hidden"></span>
                         @endif
                         <i class="fal fa-history nav-icon animated">
                         </i>
@@ -105,15 +130,24 @@
                             <span>Pedidos en Revision</span></p>
                     </a>
                 </li>
+                @endcan
+                @can('empleado_gestionpedidos')
                 <li class="nav-item has-treeview {{ request()->is('pedidos/*')  ? 'menu-open' : ''}}">
                     <a class="nav-link nav-dropdown-toggle {{ request()->is('pedidos/*')  ? 'active' : ''}}">
                         <i class="nav-icon fal fa-dolly-flatbed"></i>
                         <p>
-                            Gestion Pedidos
+                            Pedidos
                             <i class="right far fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route("pedidos.index") }}"
+                                class="nav-link {{ request()->is('pedidos/index') || request()->is('pedidos/index/*') ? 'active' : '' }}">
+                                <i class="fal fa-list nav-icon"></i>
+                                <p><span>Listado</span></p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{route('pedidos.estadisticas')}}"
                                 class="nav-link {{ request()->is('pedidos/estadisticas') || request()->is('pedidos/estadisticas/*') ? 'active' : '' }}">
@@ -121,24 +155,24 @@
                                 <p><span>Estadisticas</span></p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route("pedidos.index") }}"
-                                class="nav-link {{ request()->is('pedidos/index') || request()->is('pedidos/index/*') ? 'active' : '' }}">
-                                <i class="fal fa-box-alt nav-icon"></i>
-                                <p><span>Pedidos</span></p>
-                            </a>
-                        </li>
+
                     </ul>
 
 
                 </li>
+                @endcan
+                @can('empleado_gestionusuarios')
+                <li
+                    class="nav-item has-treeview {{ request()->is('admin/*')||request()->is('validacion_pendiente')||request()->is('validacion_pendiente/*') ? 'menu-open' : ''}}">
+                    <a
+                        class="nav-link nav-dropdown-toggle {{ request()->is('admin/*')||request()->is('validacion_pendiente')||request()->is('validacion_pendiente/*') ? 'active' : ''}}">
 
-
-                <li class="nav-item has-treeview {{ request()->is('admin/*') ? 'menu-open' : ''}}">
-                    <a class="nav-link nav-dropdown-toggle {{ request()->is('admin/*') ? 'active' : ''}}">
+                        @if(!(request()->is('admin/users')||request()->is('validacion_pendiente')||request()->is('validacion_pendiente/*')))
+                        <span id="span-gestionUsuarios" class="bg-warning badgex" style="visibility: hidden">!</span>
+                        @endif
                         <i class="nav-icon fal fa-users-cog  "></i>
                         <p>
-                            Gestion Usuarios
+                            Usuarios
                             <i class="right far fa-angle-left"></i>
                         </p>
                     </a>
@@ -147,8 +181,8 @@
                         <li class="nav-item">
                             <a href="{{ route("admin.users.index") }}"
                                 class="nav-link {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active' : '' }}">
-                                <i class="fal fa-user nav-icon"></i>
-                                <p><span>Usuarios</span></p>
+                                <i class="fal fa-list nav-icon"></i>
+                                <p><span>Listado</span></p>
                             </a>
                         </li>
                         @endcan
@@ -170,14 +204,27 @@
                             </a>
                         </li>
                         @endcan
+
+                        <li class="nav-item" id="divvalidaciones" style="visibility: hidden; display: none">
+                            <a href="{{route("validacion_pendiente")}}"
+                                class="nav-link {{ request()->is('validacion_pendiente') || request()->is('validacion_pendiente/*') ? 'active' : '' }}">
+                                @if (!(request()->is('validacion_pendiente')))
+                                <span id="span-validaciones" class="badgem bg-warning"
+                                    style="visibility: hidden"></span>
+                                @endif
+                                <i class="fal fa-user-check nav-icon"></i>
+                                <p>Validacion</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-
+                @endcan
+                @can('empleado_gestionworkflow')
                 <li class="nav-item has-treeview {{ request()->is('workflow/*') ? 'menu-open' : ''}}">
                     <a class="nav-link nav-dropdown-toggle {{ request()->is('workflow/*') ? 'active' : ''}}">
                         <i class="nav-icon fal fa-sitemap "></i>
                         <p>
-                            Gestion Workflow
+                            Flujo de Trabajo
                             <i class="right far fa-angle-left"></i>
                         </p>
                     </a>
@@ -185,8 +232,8 @@
                         <li class="nav-item">
                             <a href="{{ route("workflow.flujos.index") }}"
                                 class="nav-link {{ request()->is('workflow/flujos') || request()->is('workflow/flujos/*') ? 'active' : '' }}">
-                                <i class="fal fa-cog nav-icon"></i>
-                                <p><span>Flujos de Trabajo</span></p>
+                                <i class="fal fa-list nav-icon"></i>
+                                <p><span>Listado</span></p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -198,14 +245,18 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                @can('empleado_gestionInventario')
                 <li class="nav-item">
                     <a href="{{ route("item.index") }}"
                         class="nav-link {{ request()->is('item') || request()->is('item/*')  ? 'active' : '' }}">
                         <i class="fal fa-inventory nav-icon"></i>
-                        <p><span>Gestion Inventario</span></p>
+                        <p><span>Inventario</span></p>
                     </a>
                 </li>
-
+                @endcan
+                @can('auditor')
+                <li class="nav-header">AUDITORIA</li>
                 <li class="nav-item" id="divpendientes">
                     <a href="{{ route("auditoria.index") }}"
                         class="nav-link {{ request()->is('auditoria')  ? 'active' : '' }}">
@@ -213,6 +264,27 @@
                         <p><span>Auditorias</span></p>
                     </a>
                 </li>
+                @endcan
+                @if(auth()->user()->validacion->aprobado == true)
+                <li class="nav-header pl-3">PANEL DE USUARIO</li>
+                <li class="nav-item">
+                    <a href="{{ route("mi_perfil") }}"
+                        class="nav-link {{ request()->is('mi_perfil') || request()->is('item/*')  ? 'active' : '' }}">
+                        <i class="fal fa-user nav-icon"></i>
+                        <p><span>Mi Perfil</span></p>
+                    </a>
+                </li>
+                @endif
+                {{-- @if(auth()->user()->validacion->aprobado == true) --}}
+                <li class="nav-header pl-3">CONFIGURACIONES</li>
+                <li class="nav-item">
+                    <a href="{{ route("configuraciones_sistema") }}"
+                        class="nav-link {{ request()->is('configuraciones_sistema')  ? 'active' : '' }}">
+                        <i class="fal fa-cog nav-icon"></i>
+                        <p><span>Sistema</span></p>
+                    </a>
+                </li>
+                {{-- @endif --}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

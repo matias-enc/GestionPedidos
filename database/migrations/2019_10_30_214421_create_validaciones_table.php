@@ -17,7 +17,8 @@ class CreateValidacionesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->boolean('aprobado')->default(true);
+            $table->boolean('aprobado')->default(false);
+            $table->string('estado')->nullable();
             $table->timestamps();
         });
     }

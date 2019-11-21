@@ -21,6 +21,7 @@ class CreateSeguimientosTable extends Migration
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->unsignedBigInteger('item_id')->nullable();
             $table->foreign('item_id')->references('id')->on('items');
+            $table->double('precio')->nullable();
             $table->integer('cantidad')->nullable();
             $table->timestamp('fechaInicial');
             $table->timestamp('fechaFinal');

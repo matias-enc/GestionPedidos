@@ -64,6 +64,9 @@
 </div>
 @endsection
 @push('scripts')
+<script>
+
+</script>
 {{-- <script>
     $(function () {
           $('#pedidos').DataTable({

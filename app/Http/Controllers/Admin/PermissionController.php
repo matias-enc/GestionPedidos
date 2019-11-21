@@ -42,7 +42,7 @@ class PermissionController extends Controller
 
          $permiso = Permission::create($request->all());
 
-         return redirect()->route('permisos.index');
+         return redirect()->route('admin.permisos.index');
      }
 
      /**

@@ -43,6 +43,11 @@ class PermisoTableSeeder extends Seeder
             'description' => 'Capacidad de Editar los usuarios'
         ]);
         Permission::create([
+            'name' => 'Validar usuarios',
+            'slug' => 'usuarios_validate',
+            'description' => 'Capacidad de Validar los usuarios dentro del sistema'
+        ]);
+        Permission::create([
             'name' => 'Listar roles',
             'slug' => 'roles_index',
             'description' => 'Capacidad de Listar los roles'
@@ -101,6 +106,11 @@ class PermisoTableSeeder extends Seeder
             'name' => 'Editar Permisos',
             'slug' => 'permisos_edit',
             'description' => 'Capacidad de Editar los Permisos'
+        ]);
+        Permission::create([
+            'name' => 'Usuario sin Validacion',
+            'slug' => 'sin_validacion',
+            'description' => 'Unicamente un usuario sin validacion puede realizar estas acciones'
         ]);
         Permission::create([
             'name' => 'Usuario sin Validacion',

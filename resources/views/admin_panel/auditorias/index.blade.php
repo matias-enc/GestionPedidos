@@ -22,51 +22,67 @@
 
             <div class="card-body">
                 <div class="collapse" id="collapseExample">
-                    <div class="card border-primary shadow-sm">
-                        <div class="card-body ">
+                    <form action="{{ route("auditoria.reporte") }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card border-primary shadow-sm">
+                            <div class="card-body ">
+                                <div class="row justify-content-start mr-2 ml-2">
+                                    <div class="col mr-2 ml-2">
+                                        <strong><label for="">Usuario</label></strong>
+                                        <select id="filtroUsuario" class="estados-js form-control" name="usuario_id">
+                                            <option value="" disabled selected style="">Seleccione un Usuario</option>
+                                            @foreach ($usuarios as $usuario)
+                                            <option value="{{ $usuario->id }}">{{ strtoupper($usuario->name) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col mr-2 ml-2">
+                                        <strong><label for="">Operacion</label></strong>
+                                        <select id="filtroOperacion"
+                                            class="estados-js form-control {{ $errors->has('filtro1') ? 'is-invalid' : '' }}"
+                                            name="operacion">
+                                            <option value="" disabled selected style="">Seleccione una Operacion
+                                            </option>
+                                            <option value="created">CREATED</option>
+                                            <option value="deleted">DELETED</option>
+                                            <option value="updated">UPDATED</option>
 
-                            <div class="row justify-content-start mr-2 ml-2">
-                                <div class="col mr-2 ml-2">
-                                    <strong><label for="">Usuario</label></strong>
-                                    <select id="filtroUsuario"
-                                        class="estados-js form-control"
-                                        name="usuario_id">
-                                        <option value="" disabled selected style="">Seleccione un Usuario</option>
-                                        @foreach ($usuarios as $usuario)
-                                        <option value="{{ $usuario->id }}">{{ strtoupper($usuario->name) }}</option>
-                                        @endforeach
-                                    </select>
+                                        </select>
+                                    </div>
+                                    <div class="col mr-2 ml-2">
+                                        <strong><label for="">Fechas</label></strong>
+                                        <div class="input-group input-daterange" id="datepicker"
+                                            data-date-format="dd/mm/yyyy" data-date-container='#datepicker'>
+                                            <input type="text"
+                                                class="input-sm form-control {{ $errors->has('llegada') ? 'is-invalid' : ''}}"
+                                                name="llegada" id="filtroLlegada" placeholder="Inicio"
+                                                value="{{old('llegada')}}" }} />
+                                            <input type="text"
+                                                class="input-sm form-control {{ $errors->has('salida') ? 'is-invalid' : '' }}"
+                                                name="salida" id="filtroSalida" placeholder="Final"
+                                                value="{{ old('salida') }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row justify-content-end  mr-2 ml-2">
+                                    <button class="btn btn-info shadow-sm mr-1 ml-1" type="button" id="limpiar">
+                                        <i class="fal fa-recycle "></i>
+                                        Limpiar
+                                    </button>
+                                    <button class="btn btn-success shadow-sm mr-1 ml-1" type="button" id="filtrar">
+                                        <i class="fal fa-check "></i>
+                                        Aplicar
+                                    </button>
+                                    <button class="btn btn-danger shadow-sm mr-1 ml-1" type="submit" id="generar">
+                                        <i class="fal fa-file-pdf "></i>
+                                        Generar PDF
+                                    </button>
                                 </div>
 
-
-                                <div class="col mr-2 ml-2">
-                                    <strong><label for="">Operacion</label></strong>
-                                    <select id="filtroOperacion"
-                                        class="estados-js form-control {{ $errors->has('filtro1') ? 'is-invalid' : '' }}"
-                                        name="item_id">
-                                        <option value="" disabled selected style="">Seleccione una Operacion</option>
-                                        <option value="1">CREATED</option>
-                                        <option value="2">DELETED</option>
-                                        <option value="3">UPDATED</option>
-
-                                    </select>
-                                </div>
                             </div>
-                            <br>
-                            <div class="row justify-content-end  mr-2 ml-2">
-                                <button class="btn btn-info shadow-sm mr-1 ml-1" type="button" id="limpiar">
-                                    <i class="fal fa-recycle "></i>
-                                    Limpiar
-                                </button>
-                                <button class="btn btn-success shadow-sm mr-1 ml-1" type="button" id="filtrar">
-                                    <i class="fal fa-check "></i>
-                                    Aplicar
-                                </button>
-                            </div>
-
                         </div>
-                    </div>
-
+                    </form>
                 </div>
 
                 <div class="table-responsive table-sm">
@@ -142,32 +158,40 @@
             });
 </script>
 <script>
-        $(document).ready(function() {
+    $('#datepicker').datepicker({
+                weekStart: 1,
+                orientation: "bottom",
+                endDate: "1/1/2021",
+                language: "es",
+                todayHighlight: true,
+            });
+</script>
+<script>
+    $(document).ready(function() {
 
         var table = $('#auditorias').DataTable();
         var contador = 0;
 
         $('#limpiar').click(function(){
-            // $("#filtroEstado ").prop("selectedIndex", 0) ;
             $("#filtroUsuario ").prop("selectedIndex", 0) ;
             $("#filtroOperacion ").prop("selectedIndex", 0) ;
-            // $("#filtroLlegada ").val('') ;
-            // $("#filtroSalida ").val('') ;
+            $("#filtroLlegada ").val('') ;
+            $("#filtroSalida ").val('') ;
             for(var i = 0; i < contador; i++){
                 $.fn.dataTable.ext.search.pop();
             }
             contador = 0;
             table.draw() ;
-        }) ;
+        });
 
         $('#filtrar').click(function(){
             var filtroUsuario = $('#filtroUsuario').val();
             // filtroUsuario = filtroUsuario.toUpperCase();
             console.log(filtroUsuario);
             var filtroOperacion = $('#filtroOperacion').val();
-            // var filtroLlegada = $('#filtroLlegada').val();
+            var filtroLlegada = $('#filtroLlegada').val();
             // console.log(filtroLlegada)
-            // var filtroSalida = $('#filtroSalida').val();
+            var filtroSalida = $('#filtroSalida').val();
 
 
             if(filtroUsuario != null){
@@ -201,50 +225,32 @@
 
                 table.draw()
             }
-            // if(filtroEstado != null){
-            //     var estadoSeleccionado = $('#filtroEstado option:selected').text()
-            //     var filtradoTabla1 = function FuncionFiltrado(settings, data, dataIndex){
-            //         if(data[4]==estadoSeleccionado){
-            //             return true;
-            //         }else{
-            //             return false;
-            //         }
-            //     }
-            //     contador++;
-            //     $.fn.dataTable.ext.search.push( filtradoTabla1 )
+            if(filtroLlegada != '' ){
+                var llegada = $('#filtroLlegada').val()
+                var datearray = llegada.split("/");
+                var newdate =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                var llegada = $('#filtroLlegada').val()
+                var datearray = llegada.split("/");
+                llegada =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                var salida = $('#filtroSalida').val()
+                datearray = salida.split("/");
+                salida =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                var filtradoTablaFecha = function FuncionFiltrado(settings, data, dataIndex){
+                    var llegadaTable = data[3]
+                    datearray = llegadaTable.split("/");
+                    llegadaTable =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
+                    if(moment(llegadaTable).isSameOrAfter(llegada) && moment(llegadaTable).isSameOrBefore(salida)){
+                        return true;
+                    }else{
+                        return false;
+                    }
 
-
-            //     table.draw()
-            // }
-            // if(filtroLlegada != '' ){
-            //     var llegada = $('#filtroLlegada').val()
-            //     var datearray = llegada.split("/");
-            //     var newdate =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
-            //     var llegada = $('#filtroLlegada').val()
-            //     var datearray = llegada.split("/");
-            //     llegada =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
-            //     var salida = $('#filtroSalida').val()
-            //     datearray = salida.split("/");
-            //     salida =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
-            //     var filtradoTablaFecha = function FuncionFiltrado(settings, data, dataIndex){
-            //         var llegadaTable = data[1]
-            //         datearray = llegadaTable.split("/");
-            //         llegadaTable =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
-            //         var salidaTable = data[2]
-            //         datearray = salidaTable.split("/");
-            //         salidaTable =   datearray[2] + '/'+ datearray[1] + '/' + datearray[0] ;
-            //         if((moment(llegadaTable).isSameOrAfter(llegada) && moment(llegadaTable).isSameOrBefore(salida))&&(moment(salidaTable).isSameOrAfter(llegada) && moment(salidaTable).isSameOrBefore(salida))){
-            //             return true;
-            //         }else{
-            //             return false;
-            //         }
-
-            //     };
-            //     $.fn.dataTable.ext.search.push( filtradoTablaFecha )
-            //     contador++;
-            //     table.draw();
-            // }
+                };
+                $.fn.dataTable.ext.search.push( filtradoTablaFecha )
+                contador++;
+                table.draw();
+            }
         });
     });
-    </script>
+</script>
 @endpush

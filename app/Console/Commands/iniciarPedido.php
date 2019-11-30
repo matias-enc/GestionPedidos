@@ -123,24 +123,26 @@ class iniciarPedido extends Command
                     }
                     if ($seguimiento->estado != null) {
                         if ($seguimiento->estado->nombre == 'Terminado') {
-                            if ($seguimiento->adicionales != null) {
+                            if (sizeof($seguimiento->adicionales)>0) {
                                 foreach ($seguimiento->adicionales as $adicional)
                                     if ($adicional->estado->nombre != 'Devuelto') {
                                         $terminado = false;
                                     }
-                                foreach ($seguimiento->historiales as $historial) {
-                                    if ($historial->estado->nombre == 'Entregado') {
-                                        if ($historial->documentacion == null) {
-                                            $terminado = false;
-                                        }
+                            }
+                            foreach ($seguimiento->historiales as $historial) {
+                                if ($historial->estado->nombre == 'Entregado') {
+                                    if ($historial->documentacion == null) {
+                                        $terminado = false;
                                     }
-                                    if ($historial->estado->nombre == 'Terminado') {
-                                        if ($historial->documentacion == null) {
-                                            $terminado = false;
-                                        }
+                                }
+                                if ($historial->estado->nombre == 'Terminado') {
+                                    if ($historial->documentacion == null) {
+                                        $terminado = false;
                                     }
                                 }
                             }
+                        }else{
+                            $terminado = false;
                         }
                     }else{
                         $terminado = false;

@@ -253,6 +253,7 @@ class PedidoController extends Controller
             $reputacion->calificacion_id = Calificacion::find($request->calificacion)->id;
             $reputacion->save();
             $historial = Historial::create();
+            $historial->user_id = auth()->user()->id;
             $historial->pedido_id = $pedido->id;
             $historial->estado_id = $pedido->estado_id;
             $historial->save();
@@ -266,11 +267,6 @@ class PedidoController extends Controller
     public function procesar_pago($id, Request $request)
     {
         \MercadoPago\SDK::setAccessToken('TEST-6383013220139122-101719-df7b89f30973eab560bd383cd9ddbfd2-185315944');
-        // $payment = \MercadoPago\Payment::find_by_id(22527395);
-        // dd($payment);
-
-
-        // return $payment;
         if ($request != null) {
             $pedido = Pedido::find($id);
             if ($pedido->estado->nombre == 'Pago Pendiente') {
@@ -279,6 +275,7 @@ class PedidoController extends Controller
                     $pedido->pago_id = $request->collection_id;
                     $pedido->save();
                     $historial = Historial::create();
+                    $historial->user_id = auth()->user()->id;
                     $historial->pedido_id = $pedido->id;
                     $historial->estado_id = $pedido->estado_id;
                     $historial->save();
@@ -475,6 +472,13 @@ class PedidoController extends Controller
 
     function disponibilidad_secundarios(Request $request)
     {
+        if ($request->item_id == null) {
+            Alert::error('Error al Asignar', 'Ingrese un Item Secundario')->persistent();
+            return redirect()->back();
+        } elseif ($request->cantidad < 0 || $request->cantidad == null) {
+            Alert::error('Error al Asignar', 'Seleccione una cantidad del Item Secundario')->persistent();
+            return redirect()->back();
+        }
         $seguimiento = Seguimiento::find($request->seguimiento);
         $item = Item::find($request->item_id);
         $fechaInicial = Carbon::create($seguimiento->fechaInicial);
@@ -611,20 +615,12 @@ class PedidoController extends Controller
         $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
         $pedido->save();
         $historial = new Historial();
+        $historial->user_id = auth()->user()->id;
         $historial->estado_id = $pedido->estado_id;
         $historial->pedido_id = $pedido->id;
         $historial->save();
         event(new PedidoPendiente('Nuevo Pedido Pendiente!'));
         return redirect()->route('pedidos.pendientes');
-        //VIEJO CONFIRMAR, AL SUBIR DOCUMENTACION HACER ESTO
-        // $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
-        // $pedido->save();
-        // $historial = new Historial();
-        // $historial->estado_id = $pedido->estado_id;
-        // $historial->pedido_id = $pedido->id;
-        // $historial->save();
-        // event(new PedidoSolicitado('Nuevo Pedido Solicitado para su Revision'));
-        // return redirect()->route('pedidos.mis_pedidos');
     }
 
     function generar_pedido(Request $request)
@@ -638,6 +634,7 @@ class PedidoController extends Controller
             $pedido->documentacion = $nombre;
             $pedido->save();
             $historial = new Historial();
+            $historial->user_id = auth()->user()->id;
             $historial->estado_id = $pedido->estado_id;
             $historial->pedido_id = $pedido->id;
             $historial->save();
@@ -689,6 +686,7 @@ class PedidoController extends Controller
         }
 
         $historial = Historial::create();
+        $historial->user_id = auth()->user()->id;
         $historial->estado_id = $request->estado;
         $historial->pedido_id = $pedido->id;
         $historial->save();
@@ -722,35 +720,44 @@ class PedidoController extends Controller
         $historial->estado_id = $request->estado;
         $historial->seguimiento_id = $seguimiento->id;
         $historial->item_id = $seguimiento->item->id;
-        $historial->save();
+
         $seguimiento->estado_id = $request->estado;
-        $seguimiento->save();
+
         $adicionales = collect();
         if ($request->adicionales != null) {
             foreach ($request->adicionales as $id) {
                 $adicionales->push(Adicional::find($id));
             }
-            $historiales = collect();
             foreach ($adicionales as $id => $adicional) {
                 $adicional->estado_id = $adicional->item->tipoItem->flujoTrabajo->estado_siguiente($adicional->estado)->id;
-                $adicional->save();
                 $hist = HistorialAdicional::create();
                 $hist->adicional_id = $adicional->id;
                 if ($request->revision_adicional[$id] != null) {
                     $hist->revision = $request->revision_adicional[$id];
                 }
                 if ($request->faltantes[$id] != null) {
-                    $hist->faltante = $request->faltantes[$id];
+                    $faltante = $request->faltantes[$id];
+                    // return $faltante;
+                    $item = $adicional->item;
+                    if ($faltante > 0 && $faltante <= $item->cantidad) {
+                        $item->cantidad -= $request->faltantes[$id];
+                        $hist->faltante = $request->faltantes[$id];
+                        // return $item->cantidad;
+                        $item->save();
+                    } else {
+                        Alert::error('Error', 'El valor ingresado para el faltante es incorrecto')->persistent();
+                        return redirect()->back();
+                    }
                 }
                 $hist->estado_id = $adicional->item->tipoItem->flujoTrabajo->estado_siguiente($adicional->estado)->id;
                 $hist->item_id = $adicional->item->id;
+                $adicional->save();
                 $hist->save();
-                $historiales->push($hist);
             }
         }
-        // return $this->generar_documentacion_historial($historial);
+        $historial->save();
+        $seguimiento->save();
         return redirect()->back();
-        // return $pdf->download('comprobante_'.$seguimiento->item->nombre.'_'. $seguimiento->estado->nombre.'.pdf');
     }
 
     public function generar_documentacion_historial(HistorialSeguimiento $historial)
@@ -876,6 +883,7 @@ class PedidoController extends Controller
         $pedido = Pedido::find($request->pedido_id);
         $historial = Historial::create();
         $pedido->estado_id = $pedido->flujoTrabajo->estado_final()->id;
+        $historial->user_id = auth()->user()->id;
         $historial->pedido_id = $pedido->id;
         $historial->estado_id = $pedido->estado_id;
         $historial->save();

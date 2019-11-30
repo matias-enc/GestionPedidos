@@ -92,7 +92,7 @@
                 <div class="input-group date " id="hora">
                     <input type="text"
                         class=" text-center form-control datetimepicker-input {{ $errors->has('hora_inicial') ? 'is-invalid' : ''}}"
-                        name="hora_inicial" id="timepicker" data-toggle="datetimepicker" data-target="#timepicker" />
+                        name="hora_inicial" id="timepicker" data-toggle="datetimepicker" data-target="#timepicker" style="z-index: 9000" />
                     <input type="text"
                         class=" text-center form-control datetimepicker-input {{ $errors->has('hora_final') ? 'is-invalid' : ''}}"
                         name="hora_final" id="timepicker_final" data-toggle="datetimepicker"
@@ -168,10 +168,17 @@
     $(function () {
     $('#timepicker').datetimepicker({
           format: 'LT'
+
         });
+
     $('#timepicker_final').datetimepicker({
           format: 'LT'
         })});
+    //     $('#timepicker').on('click',function(){
+    //         console.log('xd');
+    //         $('#timepicker').css('position', 'absolute');
+    //         $('#timepicker').css('z-index', 3001);
+    //     });
 </script>
 <script>
     $('.btn-number').on('click', function(e){

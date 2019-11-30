@@ -269,13 +269,14 @@
                 <li class="nav-header pl-3">PANEL DE USUARIO</li>
                 <li class="nav-item">
                     <a href="{{ route("mi_perfil") }}"
-                        class="nav-link {{ request()->is('mi_perfil') || request()->is('item/*')  ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('mi_perfil') ? 'active' : '' }}">
                         <i class="fal fa-user nav-icon"></i>
                         <p><span>Mi Perfil</span></p>
                     </a>
                 </li>
                 @endif
                 {{-- @if(auth()->user()->validacion->aprobado == true) --}}
+                @can('empleado_gestionworkflow')
                 <li class="nav-header pl-3">CONFIGURACIONES</li>
                 <li class="nav-item">
                     <a href="{{ route("configuraciones_sistema") }}"
@@ -284,6 +285,7 @@
                         <p><span>Sistema</span></p>
                     </a>
                 </li>
+                @endcan
                 {{-- @endif --}}
             </ul>
         </nav>

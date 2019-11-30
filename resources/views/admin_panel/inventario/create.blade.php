@@ -22,6 +22,7 @@
                     </p>
                     @endif
                 </div>
+
                 <div class="form-group {{ $errors->has('descripcion') ? 'has-error' : '' }}">
                     <strong><Label>Categoria</Label></strong>
                     <select id="categorias" class="estados-js form-control" onchange="d1(this)">
@@ -74,7 +75,7 @@
                     </p>
                     @endif
                 </div>
-                <div>
+                <div class="d-flex justify-content-between">
                     <input class="btn btn-danger" type="submit" value="Guardar">
                 </div>
             </form>

@@ -61,7 +61,7 @@
                     </label>
                 </div>
             </div>
-            {{-- <div class="collapse {{sizeof($pedido->seguimientos)==1 ? 'show' : ''}}" --}}
+
             <div class="collapse show" id="collapseExample{{$seguimiento->id}}">
                 <hr>
                 <div class="card-body">
@@ -120,7 +120,9 @@
 
                         </div>
                         @endforeach
-                        @if ($seguimiento->estado->nombre!='Terminado')
+                        @if ($seguimiento->estado->nombre=='Terminado')
+                    </div></div></div>
+                        @else
                         <div>
                             <i class="fas fa-clock bg-info"></i>
                             <div class="timeline-item">
@@ -246,8 +248,7 @@
                                                     {{-- {{$adicional->item->tipoItem->flujoTrabajo->transicion_siguiente($adicional->estado)}}
                                                     --}}
                                                     @if($adicional->item->tipoItem->flujoTrabajo->transicion_siguiente($adicional->estado)!=null)
-                                                    @if($adicional->item->tipoItem->flujoTrabajo->transicion_siguiente($adicional->estado)->devolucion
-                                                    == true)
+                                                    @if($adicional->item->tipoItem->flujoTrabajo->transicion_actual($adicional->estado)->devolucion==true)
 
                                                     <hr>
                                                     <div class="d-flex justify-content-between">
@@ -296,18 +297,15 @@
                             </div>
                         </div>
                         {{-- FIN MODAL --}}
-
                     </div>
-                    @else
                 </div>
             </div>
             @endif
 
         </div>
+        @endif
+        @endforeach
     </div>
-    @endif
-    @endforeach
-</div>
 </div>
 </div>
 

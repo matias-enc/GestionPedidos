@@ -24,10 +24,11 @@
 
 //*TAREAS A PARTE*
 - [ ] Agregar el editar sobre el inventario de un item en su cantidad por un valor que no sobrepase a lo ocupado.
-- [ ] Agregar tratamiento de faltantes en iniciados
-- [ ] Descripcion para cada historial
-- [ ] Generar tabla de configuraciones
+- [x] Agregar tratamiento de faltantes en iniciados
+- [x] Descripcion para cada historial
+- [x] Generar tabla de configuraciones
 
 
 -------VALIDACION DE USUARIO
 - [ ] Generar Vistas para la validacion de Usuario
+- [ ] 

@@ -23,10 +23,13 @@
                             class="text-success">{{$pedido->estado->nombre}}</span></h3>
 
                 </div>
-
-                <div class="card-body ">
-                    <h4 class="mb-3 text-center"><strong class="border-bottom border-dark">Detalle del Pedido:</strong>
+                <div class="card-body p-0 pt-2">
+                    <h4 class="text-center"><strong>Detalle del Pedido</strong>
                     </h4>
+                </div>
+                <hr class="p-0 m-0">
+                <div class="card-body ">
+
                     <p class="text-center"><strong> Solicitud Efectuada:</strong>
                         {{ $pedido->getFechaSolicitud()->format('d/m/Y H:i')}}hs</p>
                     <p class="text-center"><strong> Fecha Final Aproximada:</strong>
@@ -79,6 +82,7 @@
                             <tr>
                                 <th>Estado</th>
                                 <th>Fecha</th>
+                                <th>Asignado Por:</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,6 +90,11 @@
                             <tr>
                                 <td>{{$historial->estado->nombre}}</td>
                                 <td>{{$historial->getCreado()->diffForHumans()}}</td>
+                                @if ($historial->user_id!=null)
+                                <td>{{$historial->usuario->name}}</td>
+                                @else
+                                <td>Sistema</td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

@@ -19,4 +19,8 @@ class Historial extends Model
     {
         return $this->created_at;
     }
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

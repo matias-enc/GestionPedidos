@@ -22,7 +22,7 @@ class ValidacionController extends Controller
                 return view('admin_panel.validacion.documentacion', compact('user'));
             }
         } else {
-            return redirect()->back()->withErrors('Usted ya se Encuentra Validado');
+            return redirect()->route('auto_gestion')->withErrors('Usted ya se Encuentra Validado');
         }
     }
     public function cargar_datos(Request $request)

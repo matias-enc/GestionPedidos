@@ -108,8 +108,7 @@
 <!-- End Default Light Table -->
 @endsection
 @push('scripts')
-<script type='text/javascript'
-    src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<script src="{{asset('admin_panel/plugins/inputmask/jquery.inputmask.bundle.js')}}"></script>
 <script>
     $(":input").inputmask();
 </script>

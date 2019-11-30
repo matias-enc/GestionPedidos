@@ -25,6 +25,10 @@ class User extends Authenticatable
         return $this->hasMany(Pedido::class, 'user_id');
     }
 
+    public function historiales(){
+        return $this->hasMany(Historial::class, 'user_id');
+    }
+
 
     public function validacion()
     {

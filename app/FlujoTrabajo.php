@@ -82,4 +82,14 @@ class FlujoTrabajo extends Model
             }
         }
     }
+    public function transicion_actual(Estado $estado)
+    {
+        $transiciones = $this->transiciones;
+        foreach ($transiciones as $transicion) {
+            if($transicion->estadoInicial == $estado){
+                return $transicion;
+            }
+        }
+        return null;
+    }
 }

@@ -23,14 +23,14 @@
                 <span class="badgeh bg-warning" id="span-carrito"></span>
             </a>
         </li>
-        @if(auth()->user()->validacion->aprobado == true)
+        @can('usuario_pedido')
         <li class="nav-item pl-2">
             <a href="{{ route("pedidos.nuevo_pedido") }}" class="btn btn-pill btn-primary" style="color: white">
                 <i class="fal fa-plus"></i>
                 Nuevo Pedido
             </a>
         </li>
-        @endif
+        @endcan
         <li class="nav-item dropdown d-flex justify-content-center">
             <div>
                 <a href="#" class="nav-link navbar-brand" data-toggle="dropdown">

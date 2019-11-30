@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //Rutas de conversion de Reportes
     Route::post('pedidos/reporte', 'PedidoController@reporte')->name('pedidos.reporte');
+    Route::post('auditoria/reporte', 'AuditoriaController@reporte')->name('auditoria.reporte');
 
 
     //Rutas de Administracion de Pedidos
@@ -184,7 +185,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('item', 'ItemController');
-
+    Route::post('fileUpload/{item}', 'ItemController@fileUpload')->name('fileUpload');
+    Route::get('borrar_imagen/{imagen}' , 'ItemController@borrar_imagen')->name('borrar_imagen');
 
 });
 Route::fallback(function(){

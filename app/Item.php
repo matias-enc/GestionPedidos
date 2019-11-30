@@ -24,6 +24,10 @@ class Item extends Model
     public function historial_seguimientos(){
         return $this->hasMany(HistorialSeguimiento::class);
     }
+    public function imagenes()
+    {
+        return $this->hasMany(Imagenes::class);
+    }
 
 
 }

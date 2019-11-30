@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/dropzone/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/jqvmap/jqvmap.min.css') }}">
@@ -242,7 +243,7 @@
     <script src="{{asset('admin_panel/plugins/datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datepicker/locales/bootstrap-datepicker.es.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/daterangepicker/daterangepicker.js')}}"></script>
-
+    <script src="{{asset('admin_panel/plugins/dropzone/dropzone.js')}}"></script>
     <script src="{{asset('js/sweetalert.min.js')}}"></script>
     {{-- <script src="{{asset('admin_panel/plugins/sweetalert2/sweetalert2.all.min.js')}}"></script> --}}
 
@@ -317,7 +318,9 @@
                 if(data>0){
                     $("#divvalidaciones").removeAttr("style").show()
                     $("span#span-validaciones").css('visibility','visible');
-                    $("#span-validaciones").text(data);
+                    $("span#span-gestionUsuarios").css('visibility','visible');
+                    $('#span-validaciones').text(data);
+                    $('#span-gestionUsuarios').text('!');
                 }
             });
         });
@@ -426,9 +429,9 @@
 
     {{-- <script>
         var solicitudes = "{{ url('/cantidad_solicitudes') }}";
-        var iniciados = "{{ url('/cantidad_iniciados') }}";
-        var revision = "{{ url('/cantidad_revision') }}";
-        var carrito = "{{ url('/cantidad_carrito') }}";
+    var iniciados = "{{ url('/cantidad_iniciados') }}";
+    var revision = "{{ url('/cantidad_revision') }}";
+    var carrito = "{{ url('/cantidad_carrito') }}";
     </script> --}}
 
 

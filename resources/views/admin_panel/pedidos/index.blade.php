@@ -35,7 +35,7 @@
                                             name="usuario_id">
                                             <option value="" disabled selected style="">Seleccione un Usuario</option>
                                             @foreach ($usuarios as $usuario)
-                                            <option value="{{ $usuario->id }}">{{ strtoupper($usuario->name) }}</option>
+                                    <option value="{{ $usuario->id }}">{{ mb_strtoupper($usuario->name) }} {{mb_strtoupper($usuario->apellido)}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -116,7 +116,7 @@
                             @if ($pedido->usuario!=null)
                             <tr>
                                 <td class="text-center">
-                                    <span class="badge badge-warning">{{strtoupper($pedido->usuario->name) }}</span>
+                                    <span class="badge badge-warning">{{mb_strtoupper($pedido->usuario->name) }} {{mb_strtoupper($pedido->usuario->apellido)}}</span>
                                 </td>
                                 <td class="text-center"> {{$pedido->getFechaInicial()->format('d/m/Y')}}</td>
                                 <td class="text-center"> {{$pedido->getFechaFinal()->format('d/m/Y')}}</td>
@@ -182,15 +182,14 @@
         });
 </script>
 <script>
-        $('#datepicker').datepicker({
+    $('#datepicker').datepicker({
                 weekStart: 1,
-                orientation: "bottom    ",
-                startDate: "today",
+                orientation: "bottom",
                 endDate: "1/1/2021",
                 language: "es",
                 todayHighlight: true,
             });
-    </script>
+</script>
 <script>
     $(document).ready(function() {
 
@@ -214,7 +213,9 @@
         var filtroEstado = $('#filtroEstado').val();
         console.log(filtroEstado)
         var filtroUsuario = $('#filtroUsuario').val();
+        if(filtroUsuario!=null){
         filtroUsuario = filtroUsuario.toUpperCase();
+        }
         console.log(filtroUsuario);
         var filtroItem = $('#filtroItem').val();
         var filtroLlegada = $('#filtroLlegada').val();

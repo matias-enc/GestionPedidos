@@ -6,7 +6,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-stream"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('auto_gestion') }}" class="nav-link">Home</a>
+            <a href="{{ route('auto_gestion') }}" class="nav-link">Inicio</a>
         </li>
     </ul>
 

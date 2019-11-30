@@ -119,6 +119,7 @@ class TransicionesTableSeeder extends Seeder
         Transicion::create([
             'nombre' => 'Devolución del Adicional Solicitado',
             'flujoTrabajo_id' => 5,
+            'devolucion' => 1,
             'estadoInicial_id' => 10,
             'estadoFinal_id' => 11,
         ]);

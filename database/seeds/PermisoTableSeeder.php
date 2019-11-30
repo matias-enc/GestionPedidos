@@ -113,9 +113,64 @@ class PermisoTableSeeder extends Seeder
             'description' => 'Unicamente un usuario sin validacion puede realizar estas acciones'
         ]);
         Permission::create([
-            'name' => 'Usuario sin Validacion',
-            'slug' => 'sin_validacion',
-            'description' => 'Unicamente un usuario sin validacion puede realizar estas acciones'
+            'name' => 'Validar Usuario',
+            'slug' => 'usuarios_validate',
+            'description' => 'Se encarga de la validacion de los usuarios dentro del sistema'
+        ]);
+        Permission::create([
+            'name' => 'Documentacion',
+            'slug' => 'usuarios_documentacion',
+            'description' => 'Permiso para enviar la documentacion de los usuarios'
+        ]);
+        Permission::create([
+            'name' => 'Ver Pagos Pendientes',
+            'slug' => 'usuarios_pagos',
+            'description' => 'Permiso para ver y pagar los pedidos'
+        ]);
+        Permission::create([
+            'name' => 'Ver Mis Pedidos',
+            'slug' => 'usuarios_mispedidos',
+            'description' => 'Permiso para ver Mis Pedidos'
+        ]);
+        Permission::create([
+            'name' => 'Solicitudes de Empleados',
+            'slug' => 'empleado_solicitudes',
+            'description' => 'Permiso para solicitudes de empleados'
+        ]);
+        Permission::create([
+            'name' => 'Gestion de Pedidos',
+            'slug' => 'empleado_gestionpedidos',
+            'description' => 'Permiso para toda la gestion de pedidos'
+        ]);
+        Permission::create([
+            'name' => 'Gestion de Workflow',
+            'slug' => 'empleado_gestionworkflow',
+            'description' => 'Permiso gestion de los flujos de trabajo'
+        ]);
+        Permission::create([
+            'name' => 'Gestion de Inventario',
+            'slug' => 'empleado_gestionInventario',
+            'description' => 'Permiso gestion del inventario'
+        ]);
+        Permission::create([
+            'name' => 'Auditor',
+            'slug' => 'auditor',
+            'description' => 'Permisos de Auditor'
+        ]);
+        Permission::create([
+            'name' => 'Pedidos Iniciados del Sistema',
+            'slug' => 'empleado_pedidosIniciados',
+            'description' => 'Permisos para ver los pedidos iniciados'
+        ]);
+        Permission::create([
+            'name' => 'Pedidos en Revision del Sistema',
+            'slug' => 'empleado_pedidosRevision',
+            'description' => 'Permisos para ver los pedidos en revision'
+        ]);
+        Permission::create([
+            'name' => 'Nuevo Pedido',
+            'slug' => 'usuario_pedido',
+            'description' => 'Permiso para realizar pedidos en el sistema'
         ]);
 
     }

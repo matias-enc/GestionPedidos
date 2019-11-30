@@ -19,6 +19,31 @@
                         <div class="form-group ">
                             <label class="control-label "><strong>Nombre:</strong> {{ $pedido->usuario->name }} </label>
                         </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Apellido:</strong> {{ $pedido->usuario->apellido }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Direccion:</strong> {{ $pedido->usuario->direccion }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Dni:</strong> {{ $pedido->usuario->dni }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Telefono:</strong> {{ $pedido->usuario->telefono }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Celular:</strong> {{ $pedido->usuario->celular }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Pais:</strong> {{ $pedido->usuario->pais }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Provincia:</strong> {{ $pedido->usuario->provincia }} </label>
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label "><strong>Localidad:</strong> {{ $pedido->usuario->localidad }} </label>
+                        </div>
+
                     </div>
                     <div class="col-6">
                         <div class="form-group border-bottom">

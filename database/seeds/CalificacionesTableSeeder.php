@@ -13,19 +13,26 @@ class CalificacionesTableSeeder extends Seeder
     public function run()
     {
         Calificacion::create([
-            'nombre' => 'Muy Mala'
+            'nombre' => 'Muy Mala',
+            'penalizacion' => '250',
+            'color' => 'bg-danger'
         ]);
         Calificacion::create([
-            'nombre' => 'Mala'
+            'nombre' => 'Mala',
+            'penalizacion' => '90',
+            'color' => 'bg-warning'
         ]);
         Calificacion::create([
-            'nombre' => 'Regular'
+            'nombre' => 'Regular',
+            'color' => 'bg-danger'
         ]);
         Calificacion::create([
-            'nombre' => 'Buena'
+            'nombre' => 'Buena',
+            'color' => 'bg-danger'
         ]);
         Calificacion::create([
-            'nombre' => 'Muy Buena'
+            'nombre' => 'Muy Buena',
+            'color' => 'bg-danger'
         ]);
 
     }

@@ -24,6 +24,7 @@ class CreatePedidosTable extends Migration
             $table->unsignedBigInteger('estado_id')->nullable();
             $table->foreign('estado_id')->references('id')->on('estados');
             $table->string('documentacion')->nullable();
+            $table->string('aviso')->nullable();
             $table->timestamps();
         });
     }

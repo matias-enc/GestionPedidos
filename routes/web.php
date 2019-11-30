@@ -86,6 +86,7 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
     Route::post('flujos/asignacion', 'FlujoTrabajoController@asignacion')->name('flujos.asignacion');
     Route::post('flujos','FlujoTrabajoController@store')->name('flujos.store');
     Route::get('flujos/{flujo}','FlujoTrabajoController@show')->name('flujos.show');
+    Route::delete('flujos/{flujo}' , 'FlujoTrabajoController@destroy')->name('flujos.destroy');
 });
 
 

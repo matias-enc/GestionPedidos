@@ -35,17 +35,25 @@
                         <tbody>
                             @foreach ($flujos as $flujo)
                             <tr>
-                                <td>{{$flujo->nombre}}</td>
+                                <td>{{$flujo[0]->nombre}}</td>
                                 <td>
-                                    @foreach($flujo->transiciones as $tr)
+                                    @foreach($flujo[0]->transiciones as $tr)
                                     <span class="badge badge-pill badge-info">{{ $tr->nombre }}</span>
                                     @endforeach
                                 </td>
-                                <td>
-                                    <a class="btn btn-xs btn-primary" href="{{route('workflow.flujos.show', $flujo)}}">
+                                <td class="text-center">
+                                    <a class="btn btn-xs btn-primary" href="{{route('workflow.flujos.show', $flujo[0])}}">
                                         Ver
                                     </a>
+                                    @if ($flujo[1])
 
+                                    @else
+                                    <form action="{{ route('workflow.flujos.destroy', $flujo[0]) }}" method="POST" onsubmit="return confirm('Esta seguro que desea borrar el flujo {{$flujo[0]->nombre}}?');" style="display: inline-block;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input type="submit" class="btn btn-xs btn-danger" value="Borrar">
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -90,7 +98,7 @@
             "columns": [
     { "width": "25%" },
     null,
-    { "width": "10%" }
+    { "width": "15%" }
   ],
           });
         });

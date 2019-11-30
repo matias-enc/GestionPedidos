@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "283dac0e9c3319023712873bbed5d3f9",
+    "content-hash": "4f98f03027d20855fd27b925ddcfcc2e",
     "packages": [
         {
             "name": "balping/json-raw-encoder",
@@ -241,6 +241,50 @@
                 "shinobi"
             ],
             "time": "2019-08-30T20:09:14+00:00"
+        },
+        {
+            "name": "cardumen/argentina-provincias-localidades",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/desarrollo-cooperativo/laravel-argentina-provincias-localidades.git",
+                "reference": "e71c06af81b0de6cbe2c5ee17d134255decd6677"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/desarrollo-cooperativo/laravel-argentina-provincias-localidades/zipball/e71c06af81b0de6cbe2c5ee17d134255decd6677",
+                "reference": "e71c06af81b0de6cbe2c5ee17d134255decd6677",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cardumen\\ArgentinaProvinciasLocalidades\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrés Teszkiewikcz @ Cardumen",
+                    "email": "ateszki@gmail.com",
+                    "homepage": "http://cardumen.com.ar",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Provincias y Localidades de Argentina para Laravel",
+            "homepage": "https://github.com/desarrollo-cooperativo/laravel-argentina-provincias-localidades",
+            "keywords": [
+                "Localidades",
+                "Provincias",
+                "argentina"
+            ],
+            "time": "2018-03-02T20:43:11+00:00"
         },
         {
             "name": "cboden/ratchet",

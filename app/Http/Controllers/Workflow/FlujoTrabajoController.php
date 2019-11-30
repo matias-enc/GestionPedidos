@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Workflow;
 
 use Alert;
+use App\Adicional;
 use App\Http\Controllers\Controller;
 use App\FlujoTrabajo;
 use App\Transicion;
 use App\Estado;
+use App\Pedido;
+use App\Seguimiento;
 use Illuminate\Http\Request;
 
 class FlujoTrabajoController extends Controller
@@ -18,7 +21,38 @@ class FlujoTrabajoController extends Controller
      */
     public function index()
     {
-        $flujos = FlujoTrabajo::all();
+        $flus = FlujoTrabajo::all();
+        $flujos = collect();
+        foreach ($flus as $flu) {
+            $uso = false;
+            $pedidos = Pedido::all();
+            foreach ($pedidos as $pedido) {
+                if ($pedido->flujoTrabajo == $flu) {
+                    $uso = true;
+                    break;
+                }
+            }
+            if ($uso == false) {
+                $seguimientos = Seguimiento::all();
+                foreach ($seguimientos as $seguimiento) {
+                    if ($seguimiento->item->tipoItem->flujoTrabajo == $flu) {
+                        $uso = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($uso == false) {
+                $adicionales = Adicional::all();
+                foreach ($adicionales as $adicional) {
+                    if ($adicional->item->tipoItem->flujoTrabajo == $flu) {
+                        $uso = true;
+                    }
+                }
+            }
+            $nuevoFlujo = [$flu, $uso];
+            $flujos->push($nuevoFlujo);
+        }
         return view('admin_panel.flujo.index', compact('flujos'));
     }
 
@@ -42,10 +76,12 @@ class FlujoTrabajoController extends Controller
     {
         $flujo = FlujoTrabajo::create($this->validarFlujo());
         $estados = Estado::all()->pluck('nombre', 'id');
-        return redirect()->route('workflow.flujos.show', $flujo);
+        $uso = false;
+        return redirect()->route('workflow.flujos.show', compact('flujo', 'uso'));
     }
 
-    public function asignarTransiciones(FlujoTrabajo $flujo){
+    public function asignarTransiciones(FlujoTrabajo $flujo)
+    {
         $estados = Estado::all()->pluck('nombre', 'id');
         return view('admin_panel.flujo.asignacion', compact('estados', 'flujo'));
     }
@@ -58,18 +94,42 @@ class FlujoTrabajoController extends Controller
      */
     public function show(FlujoTrabajo $flujo)
     {
-        return view('admin_panel.flujo.show', compact('flujo'));
+        $pedidos = Pedido::all();
+        $uso = false;
+        if (!$pedidos->isEmpty()) {
+            foreach ($pedidos as $pedido) {
+                if ($pedido->flujoTrabajo == $flujo) {
+                    $uso = true;
+                    return view('admin_panel.flujo.show', compact('flujo', 'uso'));
+                }
+            }
+        }
+        $seguimientos = Seguimiento::all();
+        foreach ($seguimientos as $seguimiento) {
+            if ($seguimiento->item->tipoItem->flujoTrabajo == $flujo) {
+                $uso = true;
+                return view('admin_panel.flujo.show', compact('flujo', 'uso'));
+            }
+        }
+        $adicionales = Adicional::all();
+        foreach ($adicionales as $adicional) {
+            if ($adicional->item->tipoItem->flujoTrabajo == $flujo) {
+                $uso = true;
+                return view('admin_panel.flujo.show', compact('flujo', 'uso'));
+            }
+        }
+        return view('admin_panel.flujo.show', compact('flujo', 'uso'));
     }
 
     public function asignacion(Request $request)
     {
         $flujo = FlujoTrabajo::find($request->flujoTrabajo_id);
         $transiciones = $flujo->transiciones;
-        foreach ($transiciones as $tr){
-            if($tr->nombre == $request->nombre){
+        foreach ($transiciones as $tr) {
+            if ($tr->nombre == $request->nombre) {
                 Alert::error('Error al Asignar Transicion', 'Ya existe una Transicion con ese Nombre');
-                return redirect()->back()->with('error' , 'Existe una transicion con el mismo nombre')->withInput();
-            }elseif($tr->estadoInicial->id == $request->estadoInicial_id && $tr->estadoFinal->id == $request->estadoFinal_id){
+                return redirect()->back()->with('error', 'Existe una transicion con el mismo nombre')->withInput();
+            } elseif ($tr->estadoInicial->id == $request->estadoInicial_id && $tr->estadoFinal->id == $request->estadoFinal_id) {
                 Alert::error('Error al Asignar Transicion', 'No pueden existir Transiciones identicas');
                 return redirect()->back()->withInput();
             }
@@ -110,23 +170,27 @@ class FlujoTrabajoController extends Controller
      * @param  \App\FlujoTrabajo  $flujoTrabajo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FlujoTrabajo $flujoTrabajo)
+    public function destroy(FlujoTrabajo $flujo)
     {
-        //
+        $flujo->delete();
+        Alert::success('Flujo Eliminado correctamente','Flujo Eliminado');
+        return redirect()->back();
     }
 
-    public function validarFlujo(){
+    public function validarFlujo()
+    {
         return request()->validate([
             'nombre' => 'unique:flujo_trabajos',
         ]);
     }
-    public function validarTransicion(){
+    public function validarTransicion()
+    {
         return request()->validate([
             'nombre' => 'required',
             'flujoTrabajo_id' => 'required',
             'estadoInicial_id' => 'required',
             'estadoFinal_id' => 'different:estadoInicial_id',
-        ],[
+        ], [
             'estadoFinal_id.different' => 'El Estado Final tiene que ser distinto al Inicial'
         ]);
     }

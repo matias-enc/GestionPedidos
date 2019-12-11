@@ -24,24 +24,24 @@ class RolTableSeeder extends Seeder
             'slug' => 'empleado',
             'description' => 'Empleado del sistema'
         ]);
-        $empleado->permissions()->sync([26,27,29,31,28,32,33,1,2,3,4,5,6,20]);
+        $empleado->permissions()->sync([1,2,3,4,5,6,21,25,26,27,28,30,31,33]);
         $usuario = Role::create([
             'name' => 'Usuario',
             'slug' => 'usuario',
             'description' => 'Usuario que utiliza el sistema'
         ]);
-        $usuario->permissions()->sync([23,24,25,34]);
+        $usuario->permissions()->sync([22,23,24,32]);
         $sin_val = Role::create([
             'name' => 'Sin Validacionn',
             'slug' => 'sin_validacion',
             'description' => 'Usuario que no esta validado dentro del Sistema'
         ]);
-        $sin_val->permissions()->sync([19]);
+        $sin_val->permissions()->sync([20]);
         $auditor = Role::create([
             'name' => 'Auditor del Sistema',
             'slug' => 'auditor',
             'description' => 'Usuario con el rol de Auditor dentro del Sistema'
         ]);
-        $auditor->permissions()->sync([30]);
+        $auditor->permissions()->sync([29]);
     }
 }

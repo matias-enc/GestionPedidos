@@ -5,7 +5,7 @@
 
         <div class="card-header">
                 <div class="card-title">
-                    Nueva Transicion
+                    Nueva Asignacion de Estado
                 </div>
             </div>
     <div class="card-body ">
@@ -14,9 +14,9 @@
             <table id="roles" class="table table-bordered ">
                     <thead>
                     <tr>
-                      <th>Nombre Transicion</th>
-                      <th>Estado Inicial</th>
-                      <th>Estado Final</th>
+                      <th>Nombre del Estado</th>
+                      <th>Paso Inicial</th>
+                      <th>Paso Final</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,16 +72,16 @@
 <div class="card card-primary card-outline col-md-8 offset-2">
     <div class="card-header">
         <div class="card-title">
-            Transiciones Asignadas
+            Estados Asignados
         </div>
     </div>
         <div class="card-body box-profile">
           <table id="transiciones" class="table table-bordered table-striped table-hover datatable">
                 <thead>
                 <tr>
-                  <th>Nombre</th>
-                  <th>Estado Inicial</th>
-                  <th>Estado Final</th>
+                  <th>Nombre Estado</th>
+                  <th>Paso Inicial</th>
+                  <th>Paso Final</th>
                   <th>Accion</th>
 
                 </tr>

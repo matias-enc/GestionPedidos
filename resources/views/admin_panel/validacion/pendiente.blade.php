@@ -7,8 +7,13 @@
     <div class="col-xs-12 col-lg-4 ">
         <div class="card card-outline card-primary" style="border-radius: 0.25em"">
             <div class=" card-body ">
+                    @if(auth()->user()->validacion->estado !='Desaprobado')
                 <h4 class=" text-center mb-3"><strong>Documentacion Enviada</strong></h4>
             <label style="font-size: 16px">Su documentacion ha sido enviada para que un administrativo la evalue. Se le notificara una vez realizada la validacion.</label>
+            @else
+            <h4 class=" text-center mb-3"><strong>Validacion Rechazada</strong></h4>
+            <label style="font-size: 16px">Su validacion ha sido rechazada, por lo que no podrá realizar pedidos.</label>
+            @endif
             <hr>
             <div class="pl-3">
 
@@ -25,8 +30,13 @@
                 </div>
                 <br>
                 <div class="d-flex ">
+                    @if(auth()->user()->validacion->estado !='Desaprobado')
                     <label class="btn btn-primary btn-pill my-auto" style="width: 38px"><strong><i class="fal fa-clock"></i></strong></label>
                     <h5 class="ml-3 my-auto"><strong>Pendiente</strong></h5>
+                    @else
+                    <label class="btn btn-danger btn-pill my-auto" style="width: 38px"><strong><i class="fal fa-times"></i></strong></label>
+                    <h5 class="ml-3 my-auto"><strong>Rechazado</strong></h5>
+                    @endif
                 </div>
             </div>
         </div>

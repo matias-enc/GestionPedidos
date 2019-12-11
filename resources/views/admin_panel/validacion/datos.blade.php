@@ -52,22 +52,35 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
+                            {{-- <div class="form-group col-md-6">
                                 <h5><strong>País</strong></h5>
                                 <input type="text" class="form-control" name="pais" placeholder="Ej. Argentina" value=""
                                     required>
-                            </div>
+                            </div> --}}
                             <div class="form-group col-md-6">
-                                <h5><strong>Provincia</strong></h5>
-                                <input type="text" class="form-control" name="provincia" placeholder="Ej. Misiones">
+                                    <h5><strong>Pais</strong></h5>
+                                <select name="seleccionPais" id="seleccionPais" class="selection form-control ">
+                                    <option value="" disabled selected>Seleccione un Pais</option>
+                                    @foreach ($paises as $pais)
+                                    <option value="{{$pais->id}}">{{$pais->pais}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                    <h5><strong>Provincia</strong></h5>
+                                <select name="seleccionProvincia" id="seleccionProvincia" class="selection form-control ">
+                                        <option value="" disabled selected>Seleccione una Provincia</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <h5><strong>Localidad</strong></h5>
-                                <input type="text" class="form-control" name="localidad" placeholder="Ej. Apostoles"
-                                    value="" required>
-                            </div>
+                                <div class="form-group col-md-6">
+                                        <h5><strong>Localidad</strong></h5>
+                                    <select name="seleccionLocalidad" id="seleccionLocalidad" class="selection form-control ">
+                                            <option value="" disabled selected>Seleccione una Localidad</option>
+                                    </select>
+                                </div>
                             <div class="form-group col-md-6">
                                 <h5><strong>Código Postal</strong></h5>
                                 <input type="text" class="form-control" name="postal" placeholder="Ej. 3350"
@@ -75,7 +88,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary btn-pill btn-lg">Enviar Datos</button>
+                            <button type="submit" class="btn btn-primary btn-pill btn-lg">Enviar Datos</button>
                         </div>
                     </form>
                 </div>
@@ -111,5 +124,60 @@
 <script src="{{asset('admin_panel/plugins/inputmask/jquery.inputmask.bundle.js')}}"></script>
 <script>
     $(":input").inputmask();
+</script>
+<script>
+    $('.selection').select2();
+</script>
+<script>
+$(document).ready(function(){
+        $('#seleccionPais').change(function(){
+            var Pais = $(this).val();
+            if(Pais != null){
+                var url = "{{ route('validacion.provincias', "pais") }}" ;
+                url = url.replace('pais' , Pais) ;
+                // alert(tip_rec_id) ;
+                //AJAX
+
+                $.get(url, function(data){
+
+                    // $('#medida').val(data) ;
+                    console.log(data);
+                    $('#seleccionProvincia').children('option:not(:first)').remove() ;
+                    for (var i = 0; i < data.length; i++) {
+
+                        $('#seleccionProvincia').append('<option value='+data[i].id+'>'+data[i].provincia+'</option>') ;
+
+                    }
+                });
+            } else {
+                // $('#medida').val('') ;
+            }
+        });
+        $('#seleccionProvincia').change(function(){
+            var Provincia = $(this).val();
+            if(Provincia != null){
+                var url = "{{ route('validacion.localidad', "provincia") }}" ;
+                url = url.replace('provincia' , Provincia) ;
+                // alert(tip_rec_id) ;
+                //AJAX
+
+                $.get(url, function(data){
+
+                    // $('#medida').val(data) ;
+                    console.log(data);
+                    console.log(data.length);
+                    $('#seleccionLocalidad').children('option:not(:first)').remove() ;
+                    for (var i = 0; i < data.length; i++) {
+
+                        $('#seleccionLocalidad').append('<option value='+data[i].id+'>'+data[i].localidad+'</option>') ;
+
+                    }
+                });
+            } else {
+                // $('#medida').val('') ;
+            }
+        });
+    });
+
 </script>
 @endpush

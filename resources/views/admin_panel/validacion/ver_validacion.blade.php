@@ -30,9 +30,9 @@
                                     <div class="col border-left pt-2">
                                         <label><strong>Telefono Fijo:</strong> {{$usuario->telefono}}</label><br>
                                         <label><strong>Nro. Celular:</strong> {{$usuario->celular}}</label><br>
-                                        <label><strong>Pais:</strong> {{$usuario->pais}}</label><br>
-                                        <label><strong>Provincia:</strong> {{$usuario->provincia}}</label><br>
-                                        <label><strong>Localidad:</strong> {{$usuario->localidad}}</label><br>
+                                        <label><strong>Pais:</strong> {{$usuario->pais->pais}}</label><br>
+                                        <label><strong>Provincia:</strong> {{$usuario->provincia->provincia}}</label><br>
+                                        <label><strong>Localidad:</strong> {{$usuario->localidad->localidad}}</label><br>
                                     </div>
                                 </div>
                             </div>
@@ -42,17 +42,17 @@
                             <form id="form-cancelar" action="{{ route("cancelar_validacion", $validacion) }}"
                                 method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <button class="btn btn-pill btn-danger btn-cancelar">
-                                    Cancelar Validacion
-                                    <i class="fal fa-times"></i>
+                                <button class="btn btn-pill btn-danger btn-cancelar px-4">
+                                    Rechazar
+                                    <i class="pl-1 fal fa-times"></i>
                                 </button>
                             </form>
                             <form id="form-aceptar" action="{{ route("aceptar_validacion", $validacion) }}"
                                 method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <button class="btn btn-pill btn-success btn-aceptar">
-                                    Aceptar Validacion
-                                    <i class="fal fa-check"></i>
+                                <button class="btn btn-pill btn-success btn-aceptar px-4">
+                                    Validar
+                                    <i class="pl-1 fal fa-check"></i>
                                 </button>
                             </form>
                         </div>

@@ -75,8 +75,8 @@ Route::group(['prefix' => 'workflow', 'as' => 'workflow.', 'namespace' => 'Workf
     Route::delete('transiciones/{transicion}' , 'TransicionController@destroy')->name('transiciones.destroy');
 
     Route::get('estados', 'EstadoController@index')->name('estados.index');
-    Route::get('estados/{estado}', 'EstadoController@show')->name('estados.show');
     Route::get('estados/create','EstadoController@create')->name('estados.create');
+    Route::get('estados/{estado}', 'EstadoController@show')->name('estados.show');
     Route::post('estados','EstadoController@store')->name('estados.store');
     Route::delete('estados/{estado}' , 'EstadoController@destroy')->name('estados.destroy');
 
@@ -169,6 +169,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('cantidad_validaciones' , 'ValidacionController@cantidad_validaciones')->name('cantidad_validaciones');
     Route::get('validacion_pendiente','ValidacionController@validacion_pendiente')->name('validacion_pendiente');
     Route::get('validacion_pendiente/{validacion}','ValidacionController@ver_validacion_pendiente')->name('ver_validacion_pendiente');
+    Route::get('validacion_provincias/{pais}' , 'ValidacionController@validacion_provincias')->name('validacion.provincias');
+    Route::get('validacion_localidad/{provincia}' , 'ValidacionController@validacion_localidad')->name('validacion.localidad');
+
 
     //Auditorias
     Route::get('auditoria', 'AuditoriaController@index')->name('auditoria.index');

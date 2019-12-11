@@ -7,6 +7,7 @@ use App\User;
 use Carbon\Carbon;
 use PDF;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Models\Audit;
 
 class AuditoriaController extends Controller
 {
@@ -14,14 +15,14 @@ class AuditoriaController extends Controller
     {
         $pedidos = Pedido::all()->sortBy('updated_at');
         $usuarios = User::all();
-        $auditorias = collect();
-        foreach ($pedidos as $pedido) {
-            if (!$pedido->audits->isEmpty()) {
-                foreach ($pedido->audits as $a) {
-                    $auditorias->add($a);
-                }
-            }
-        }
+        $auditorias = Audit::latest()->get();
+        // foreach ($pedidos as $pedido) {
+        //     if (!$pedido->audits->isEmpty()) {
+        //         foreach ($pedido->audits as $a) {
+        //             $auditorias->add($a);
+        //         }
+        //     }
+        // }
         return view('admin_panel.auditorias.index', compact('auditorias', 'usuarios'));
     }
 
@@ -81,12 +82,15 @@ class AuditoriaController extends Controller
             $llegada = $llegada->format('d/m/Y');
             $salida = $salida->format('d/m/Y');
         }
+        $nombre = 'Reporte-Auditoria-'.Carbon::now()->format('d/m/Y G:i'). '.pdf';
+        // return $nombre;
         $auditorias->sortByDesc('created_at');
         $pdf = PDF::loadView('admin_panel.pdf.auditorias', compact('auditorias', 'operacion', 'usuario', 'llegada', 'salida'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
+        return $pdf->download($nombre);
+        // return $pdf->stream();
     }
 }

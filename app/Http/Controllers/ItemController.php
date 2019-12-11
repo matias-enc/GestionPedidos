@@ -92,8 +92,23 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        $item->update($request->all());
+        $seguimientos = Seguimiento::all()->where('item_id', $item->id);
+        $adicionales = Adicional::all()->where('item_id', $item->id);
+        $cantidadMaxima = 0;
+        if(sizeof($adicionales)>0){
+            foreach ($adicionales as $adicional) {
+                if($adicional->cantidad>$cantidadMaxima){
+                    $cantidadMaxima=$adicional->cantidad;
+                }
+            }
+        }
+        if($request->cantidad < $cantidadMaxima){
+            Alert::warning('La cantidad establecida es menor a la que esta actualmente ocupada', 'Error al Modificar el Item')->persistent();
+            return redirect()->back();
+        }
+            $item->update($request->all());
 
+        Alert::success('Item modificado correctamente', 'Item Modificado');
         return redirect()->route('item.index');
     }
 

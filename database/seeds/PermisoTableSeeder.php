@@ -44,7 +44,7 @@ class PermisoTableSeeder extends Seeder
         ]);
         Permission::create([
             'name' => 'Validar usuarios',
-            'slug' => 'usuarios_validate',
+            'slug' => 'usuarios_validates',
             'description' => 'Capacidad de Validar los usuarios dentro del sistema'
         ]);
         Permission::create([
@@ -119,17 +119,17 @@ class PermisoTableSeeder extends Seeder
         ]);
         Permission::create([
             'name' => 'Documentacion',
-            'slug' => 'usuarios_documentacion',
+            'slug' => 'usuario_documentacion',
             'description' => 'Permiso para enviar la documentacion de los usuarios'
         ]);
         Permission::create([
             'name' => 'Ver Pagos Pendientes',
-            'slug' => 'usuarios_pagos',
+            'slug' => 'usuario_pagos',
             'description' => 'Permiso para ver y pagar los pedidos'
         ]);
         Permission::create([
             'name' => 'Ver Mis Pedidos',
-            'slug' => 'usuarios_mispedidos',
+            'slug' => 'usuario_mispedidos',
             'description' => 'Permiso para ver Mis Pedidos'
         ]);
         Permission::create([
@@ -171,6 +171,11 @@ class PermisoTableSeeder extends Seeder
             'name' => 'Nuevo Pedido',
             'slug' => 'usuario_pedido',
             'description' => 'Permiso para realizar pedidos en el sistema'
+        ]);
+        Permission::create([
+            'name' => 'Gestion de Usuarios',
+            'slug' => 'empleado_gestionusuarios',
+            'description' => 'Permiso para realizar cambios en los usuarios del sistema'
         ]);
 
     }

@@ -26,7 +26,7 @@
         <div class="card card-outline card-warning card-body card-small">
             <div class="d-flex flex-column m-auto">
                 <div class="text-center">
-                    <span class="text-muted">PEDIDOS <br> EN ESPERA DE PAGO</span>
+                    <span class="text-muted">PEDIDOS <br>ESPERA DE PAGO</span>
                     <h2 class="mt-2"><strong><span class="badge  badge-warning">{{$pagospendientes}}</span></strong></h2>
                 </div>
             </div>
@@ -57,8 +57,20 @@
             </div>
         </div>
     </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <h3><strong>Evolucion de Habitacion 1</strong></h3>
+                <div>
+                    {!! $chart2->container() !!}
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @push('scripts')
 {!! $chart->script() !!}
+{!! $chart2->script() !!}
 @endpush

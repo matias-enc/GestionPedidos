@@ -172,8 +172,13 @@ class FlujoTrabajoController extends Controller
      */
     public function destroy(FlujoTrabajo $flujo)
     {
+        if (!$flujo->transiciones->isEmpty()) {
+            foreach ($flujo->transiciones as $transicion) {
+                $transicion->delete();
+            }
+        }
         $flujo->delete();
-        Alert::success('Flujo Eliminado correctamente','Flujo Eliminado');
+        Alert::success('Flujo Eliminado correctamente', 'Flujo Eliminado');
         return redirect()->back();
     }
 

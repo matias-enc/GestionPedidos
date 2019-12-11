@@ -147,18 +147,21 @@ class iniciarPedido extends Command
                     }else{
                         $terminado = false;
                     }
+
                 }
+                if ($terminado == true) {
+                    $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
+                    $pedido->save();
+                    $historial = Historial::create();
+                    $historial->pedido_id = $pedido->id;
+                    $historial->estado_id = $pedido->estado_id;
+                    $historial->save();
+                    event(new PedidoRevision('Hay un nuevo Pedido en Revision'));
+                }
+                $terminado = true;
             }
             //FINALIZACION DE UN PEDIDO TERMINADO COMPLETAMENTE
-            if ($terminado == true) {
-                $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
-                $pedido->save();
-                $historial = Historial::create();
-                $historial->pedido_id = $pedido->id;
-                $historial->estado_id = $pedido->estado_id;
-                $historial->save();
-                event(new PedidoRevision('Hay un nuevo Pedido en Revision'));
-            }
+
         }
     }
 }

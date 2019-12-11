@@ -6,6 +6,9 @@ use App\Documentacion;
 use App\Events\ValidacionSolicitada;
 use App\Validacion;
 use Illuminate\Http\Request;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Pais;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Provincia;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Localidad;
 
 class ValidacionController extends Controller
 {
@@ -17,7 +20,8 @@ class ValidacionController extends Controller
                 return view('admin_panel.validacion.pendiente', compact('user'));
             }
             if ($user->dni == null) {
-                return view('admin_panel.validacion.datos', compact('user'));
+                $paises = Pais::all();
+                return view('admin_panel.validacion.datos', compact('user', 'paises'));
             } else {
                 return view('admin_panel.validacion.documentacion', compact('user'));
             }
@@ -25,6 +29,19 @@ class ValidacionController extends Controller
             return redirect()->route('auto_gestion')->withErrors('Usted ya se Encuentra Validado');
         }
     }
+    public function validacion_provincias($pais)
+    {
+        $provincias = Provincia::all()->where('pais_id', $pais);
+        return $provincias;
+    }
+
+    public function validacion_localidad($provincia)
+    {
+        $localidades = Localidad::where('provincia_id', $provincia)->get();
+        // $localidades;
+        return $localidades;
+    }
+
     public function cargar_datos(Request $request)
     {
         // return $request;
@@ -34,9 +51,9 @@ class ValidacionController extends Controller
         $user->dni = $request->dni;
         $user->telefono = $request->telefono;
         $user->celular = $request->celular;
-        $user->pais = $request->pais;
-        $user->provincia = $request->provincia;
-        $user->localidad = $request->localidad;
+        $user->pais_id = $request->seleccionPais;
+        $user->provincia_id = $request->seleccionProvincia;
+        $user->localidad_id = $request->seleccionLocalidad;
         $user->postal = $request->postal;
         $user->save();
         return redirect()->route('validacion_datos');
@@ -76,15 +93,14 @@ class ValidacionController extends Controller
 
     public function ver_validacion_pendiente(Validacion $validacion)
     {
-        if($validacion->estado=='Pendiente'){
+        if ($validacion->estado == 'Pendiente') {
             $usuario = $validacion->usuario;
             $frontal = $validacion->documentaciones->where('descripcion', 'Foto Frontal DNI')->first();
             $dorso = $validacion->documentaciones->where('descripcion', 'Foto Dorso DNI')->first();
             return view('admin_panel.validacion.ver_validacion', compact('validacion', 'usuario', 'frontal', 'dorso'));
-        }else{
+        } else {
             return redirect()->back();
         }
-
     }
     public function aceptar_validacion(Validacion $validacion)
     {

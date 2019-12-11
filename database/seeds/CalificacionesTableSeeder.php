@@ -24,15 +24,15 @@ class CalificacionesTableSeeder extends Seeder
         ]);
         Calificacion::create([
             'nombre' => 'Regular',
-            'color' => 'bg-danger'
+            'color' => 'bg-success'
         ]);
         Calificacion::create([
             'nombre' => 'Buena',
-            'color' => 'bg-danger'
+            'color' => 'bg-success'
         ]);
         Calificacion::create([
             'nombre' => 'Muy Buena',
-            'color' => 'bg-danger'
+            'color' => 'bg-success'
         ]);
 
     }

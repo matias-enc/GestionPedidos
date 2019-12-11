@@ -25,7 +25,9 @@ class HomeController extends Controller
     public function index()
     {
         if(auth()->user()->validacion->aprobado==true){
-
+            if(auth()->user()->hasRole('empleado')){
+                return redirect()->route('pedidos.estadisticas');
+            }
             return view('admin_panel.home');
         }
         return redirect()->route('validacion_datos');

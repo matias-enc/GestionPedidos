@@ -2,13 +2,13 @@
 @section('content')
 <div class="row justify-content-center">
     <div class="col-4">
-        <div class="card card-outline card-info shadow-sm">
+        <div class="card card-outline card-secondary shadow-sm">
             <div class="card-header pb-0 pt-2">
                 <h4 class="text-center"><strong>Detalle de Pedido</strong></h4>
             </div>
             <div class="card-body ">
                 <div class="pl-2">
-                    <label><strong>Solicitante:</strong> {{$pedido->usuario->name}}</label><br>
+                    <label><strong>Solicitante:</strong> {{$pedido->usuario->name}} {{$pedido->usuario->apellido}}</label><br>
                     <label><strong>Emitido:</strong> {{$pedido->updated_at->format('d/m/Y G:i A')}}</label>
 
                 </div>
@@ -27,7 +27,7 @@
                         @foreach ($pedido->seguimientos as $seguimiento)
                         <tr>
                             <td>{{$seguimiento->item->nombre}}</td>
-                            <td style="text-align: end">${{$seguimiento->getCalculoPrecio()}}</td>
+                            <td style="text-align: end">${{number_format($seguimiento->getCalculoPrecio(),2)}}</td>
                         </tr>
 
                         @endforeach
@@ -52,7 +52,7 @@
                         <tr>
                             <td>{{$adicional->item->nombre}}<label
                                     class="text-muted">({{$seguimiento->item->nombre}})</label></td>
-                            <td style="text-align: end">${{$adicional->getCalculoPrecio()}}</td>
+                            <td style="text-align: end">${{number_format($adicional->getCalculoPrecio(),2)}}</td>
                         </tr>
                         @endforeach
                         @endforeach
@@ -65,7 +65,7 @@
                         <h5><strong>TOTAL</strong></h5>
                     </label>
                     <label>
-                        <h5><strong>${{$pedido->getPrecioTotal()}}</strong></h5>
+                        <h5><strong>${{number_format($pedido->getPrecioTotal(),2)}}</strong></h5>
                     </label>
                 </div>
 
@@ -93,7 +93,7 @@
 
     </div>
     <div class="col-6 offset-1">
-        <div class="card card-outline card-secondary shadow-sm">
+        <div class="card card-outline card-primary shadow-sm">
             <div class="card-header pb-0 pt-2">
                 <h4 class="text-center"><strong>Documentacion</strong></h4>
             </div>
@@ -123,7 +123,7 @@
                 </div>
                 <br>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-secondary btn-lg" type="submit">
+                    <button class="btn btn-primary btn-lg" type="submit">
                         Enviar Pedido
                         <i class="fal fa-paper-plane"></i>
                     </button>

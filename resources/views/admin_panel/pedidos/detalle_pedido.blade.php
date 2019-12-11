@@ -37,6 +37,7 @@
             </div>
             <div id="carrusel" class="card-img-top carousel slide shadow-none" data-ride="carousel">
                 <div class="carousel-inner">
+                        @if($item->tipoItem->nombre == 'Albergues')
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="{{asset('imagenes/albergue.jpg')}}" alt="First slide">
                     </div>
@@ -46,6 +47,17 @@
                     <div class="carousel-item">
                         <img class="d-block w-100" src="{{asset('imagenes/albergue.jpg')}}" alt="Third slide">
                     </div>
+                    @endif
+                    @if($item->tipoItem->nombre == 'Complejos')
+                    <div class="carousel-item active">
+                            <img class="d-block w-100" src="{{asset('imagenes/complejo.jpg')}}" alt="First slide">
+                        </div>
+                    @endif
+                    @if($item->tipoItem->nombre == 'Salones de Eventos')
+                    <div class="carousel-item active">
+                            <img class="d-block w-100" src="{{asset('imagenes/salon.jpg')}}" alt="First slide">
+                        </div>
+                    @endif
                 </div>
                 <a class="carousel-control-prev" href="#carrusel" role="button" data-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -57,7 +69,7 @@
                 </a>
             </div>
             <div class="card-body">
-                <label><strong>{{$item->nombre}} Cuenta con:</strong></label>
+                <label><strong>{{$item->nombre}}:</strong></label>
                 <label>{{$item->descripcion}}</label>
             </div>
         </div>
@@ -84,6 +96,7 @@
             <div class="collapse" id="collapseExample{{$item->id}}">
                 <div id="carrusel" class="card-img-top carousel slide shadow-none" data-ride="carousel">
                     <div class="carousel-inner">
+
                         <div class="carousel-item active">
                             <img class="d-block w-100" src="{{asset('imagenes/albergue.jpg')}}" alt="First slide">
                         </div>
@@ -104,7 +117,7 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <label><strong>{{$item->nombre}} Cuenta con:</strong></label><br>
+                    <label><strong>{{$item->nombre}}:</strong></label><br>
                     <label>{{$item->descripcion}}</label>
                 </div>
             </div>
@@ -183,10 +196,10 @@
                         <div class="d-flex justify-content-between my-2 border-bottom">
                             @if ($item->tipoItem->nombre == 'Albergues')
                             <label><strong>Precio</strong></label><a> <i class="fal fa-dollar-sign"> </i>
-                                {{$item->precioUnitario}}/noche</a>
+                                {{number_format($item->precioUnitario,2)}}/noche</a>
                             @else
                             <label><strong>Precio</strong></label><a> <i class="fal fa-dollar-sign"> </i>
-                                {{$item->precioUnitario}}/hora</a>
+                                {{number_format($item->precioUnitario,2)}}/hora</a>
                             @endif
 
                         </div>
@@ -194,7 +207,7 @@
                         <div class="d-flex justify-content-between border mt-2">
                             <div class="ml-4">
 
-                                {{\Carbon\Carbon::create($fechaInicial)->format('d/m/Y')}}
+                                {{\Carbon\Carbon::create($fechaInicial)->format('d/m/Y G:i ')}}
                             </div>
                             <div>
 
@@ -202,14 +215,14 @@
                             </div>
                             <div class="mr-4">
 
-                                {{\Carbon\Carbon::create($fechaFinal)->format('d/m/Y')}}
+                                {{\Carbon\Carbon::create($fechaFinal)->format('d/m/Y G:i ')}}
                             </div>
                         </div>
                         <br>
                         <div class="d-flex justify-content-between pt-2 border-top">
                             <label><strong>TOTAL</strong></label>
                             </label><a> <i class="fas fa-dollar-sign"> </i>
-                                <strong>{{$item->precioUnitario * $diferencia}}</strong></a>
+                                <strong>{{number_format($item->precioUnitario * $diferencia,2)}}</strong></a>
                         </div>
                     </ul>
                     <br>

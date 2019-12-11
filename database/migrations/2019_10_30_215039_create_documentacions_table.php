@@ -16,6 +16,7 @@ class CreateDocumentacionsTable extends Migration
         Schema::create('documentaciones', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('documento')->nullable();
+            $table->string('descripcion')->nullable();
             $table->unsignedBigInteger('validacion_id')->nullable();
             $table->foreign('validacion_id')->references('id')->on('validaciones');
             $table->timestamps();

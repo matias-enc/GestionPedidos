@@ -20,28 +20,35 @@
                             <label class="control-label "><strong>Nombre:</strong> {{ $pedido->usuario->name }} </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Apellido:</strong> {{ $pedido->usuario->apellido }} </label>
+                            <label class="control-label "><strong>Apellido:</strong> {{ $pedido->usuario->apellido }}
+                            </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Direccion:</strong> {{ $pedido->usuario->direccion }} </label>
+                            <label class="control-label "><strong>Direccion:</strong> {{ $pedido->usuario->direccion }}
+                            </label>
                         </div>
                         <div class="form-group ">
                             <label class="control-label "><strong>Dni:</strong> {{ $pedido->usuario->dni }} </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Telefono:</strong> {{ $pedido->usuario->telefono }} </label>
+                            <label class="control-label "><strong>Telefono:</strong> {{ $pedido->usuario->telefono }}
+                            </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Celular:</strong> {{ $pedido->usuario->celular }} </label>
+                            <label class="control-label "><strong>Celular:</strong> {{ $pedido->usuario->celular }}
+                            </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Pais:</strong> {{ $pedido->usuario->pais }} </label>
+                            <label class="control-label "><strong>Pais:</strong> {{ $pedido->usuario->pais->pais }}
+                            </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Provincia:</strong> {{ $pedido->usuario->provincia }} </label>
+                            <label class="control-label "><strong>Provincia:</strong>
+                                {{ $pedido->usuario->provincia->provincia }} </label>
                         </div>
                         <div class="form-group ">
-                            <label class="control-label "><strong>Localidad:</strong> {{ $pedido->usuario->localidad }} </label>
+                            <label class="control-label "><strong>Localidad:</strong>
+                                {{ $pedido->usuario->localidad->localidad }} </label>
                         </div>
 
                     </div>
@@ -99,11 +106,16 @@
                             data-target="#exampleModalScrollable">
                             Aceptar Solicitud
                         </button>
-                        <form action="{{ route("pedidos.finalizar_pedido") }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" value="{{$pedido->id}}" name='pedido_id'>
-                            <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
-                        </form>
+                        <button type="button" class="btn btn-pill btn-danger" data-toggle="modal"
+                            data-target="#modalFinalizar">
+                            Cancelar Solicitud
+                        </button>
+                        {{-- <form action="{{ route("pedidos.finalizar_pedido") }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" value="{{$pedido->id}}" name='pedido_id'>
+                        <input class="btn btn-pill btn-danger" type="submit" value="Cancelar Solicitud">
+                        </form> --}}
                     </div>
                 </div>
 
@@ -114,10 +126,10 @@
         <!-- /.card-body -->
     </div>
 </div>
-</div>
+{{-- </div> --}}
 <form action="{{ route("pedidos.asignar_estado") }}" method="POST" enctype="multipart/form-data">
     @csrf
-    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+    <div class="modal fade " id="exampleModalScrollable" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="shadow-sm rounded modal-dialog modal-dialog-scrollable modal-md " role="document">
             <div class="modal-content">
@@ -150,4 +162,53 @@
     </div>
 
 </form>
+
+
+
 @endsection
+@push('modals')
+<div class="modal fade {{ $errors->has('aviso') ? 'show' : '' }}" id="modalFinalizar" tabindex="-2" role="dialog"
+    aria-labelledby="modalFinalizarTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg " role="document">
+        <div class="modal-content card-outline card-danger shadow-sm">
+            <form action="{{ route("pedidos.finalizar_pedido") }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <input type="hidden" name="pedido_id" value="{{$pedido->id}}">
+
+                    <h4 class="modal-title" id="modalFinalizarTitle"><strong>Finalizacion de Pedido
+                            N°{{$pedido->id}}</strong></h4>
+
+                </div>
+                <div class="modal-body">
+                    <h5>Detalle el motivo de la finalizacion del Pedido.</h5>
+                    <div class="form-group">
+                        <textarea class="form-control {{ $errors->has('aviso') ? 'is-invalid animated flash' : '' }}" rows="3"
+                            placeholder="Detalle...." name="aviso"></textarea>
+                    </div>
+                    @error('aviso')
+                    <p class="text-danger animated fadeIn">
+                        *El campo del Motivo es Obligatorio
+                    </p>
+                    @enderror
+                </div>
+
+                </select>
+
+                <div class="modal-footer justify-content-end">
+                    <button class="btn btn-pill btn-danger btn-lg" type="submit">Finalizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if($errors->has('aviso'))
+<script>
+    $(document).ready(function() {
+        swal.close()
+        $('#modalFinalizar').modal('show');
+
+});
+</script>
+@endif
+@endpush

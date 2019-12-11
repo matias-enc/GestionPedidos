@@ -23,6 +23,7 @@ class CreateItemsTable extends Migration
             $table->foreign('tipoItems_id')->references('id')->on('tipo_items');
             $table->double('precioUnitario')->nullable()->unsigned();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -10,13 +10,16 @@
     <title>Gestion Pedidos</title>
 
     <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
+
+    <link rel="stylesheet"
+        href="{{ asset('admin_panel/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/animate/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin_panel/plugins/select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/dropzone/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('admin_panel/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -32,6 +35,15 @@
             box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
             transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
         }
+
+        .modal-content {
+            border-radius: 0.75rem;
+        }
+
+        /* body.modal-open>:not(.modal) {
+            -webkit-filter: blur(5px) grayscale(90%);
+            filter: blur(5px) grayscale(90%);
+        } */
 
         .card-hover:hover {
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -218,7 +230,6 @@
     <!-- DataTables -->
     <script src="{{asset('admin_panel/plugins/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script> --}}
 
 
     <!-- JQVMap -->
@@ -229,7 +240,7 @@
     <!-- daterangepicker -->
     <script src="{{asset('admin_panel/plugins/moment/moment.min.js')}}"></script>
     <script src="{{asset('admin_panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js')}}"></script>
-    <script src="{{asset('admin_panel/plugins/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('admin_panel/plugins/select2/js/select2.js')}}"></script>
 
     <script src="{{asset('admin_panel/plugins/popper/popper.min.js')}}"></script>
     {{-- <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script> --}}
@@ -433,10 +444,12 @@
     var revision = "{{ url('/cantidad_revision') }}";
     var carrito = "{{ url('/cantidad_carrito') }}";
     </script> --}}
-
-
+    {{-- @if(!request()->is('solicitudes/*')) --}}
     @include('sweet::alert')
+    {{-- @endif --}}
+
     @stack('scripts')
+    @stack('modals')
 
 </body>
 

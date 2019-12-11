@@ -1,6 +1,6 @@
 @extends('admin_panel.index')
 @section('content')
-<div class="container">
+<div class="container animated fadeIn">
     <div class="row">
         <div class="col-5">
 
@@ -102,6 +102,17 @@
                 </div>
 
             </div>
+            @if($pedido->aviso!=null)
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="alert alert-info alert-dismissible shadow-sm " id="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h5><i class="icon fal fa-info"></i> Informacion!</h5>
+                            Este pedido ha sido finalizado por el siguiente motivo: {{$pedido->aviso}}
+                        </div>
+                    </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>

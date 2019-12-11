@@ -7,6 +7,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Caffeinated\Shinobi\Concerns\HasRolesAndPermissions;
 use Carbon\Carbon;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Pais;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Provincia;
+use Cardumen\ArgentinaProvinciasLocalidades\Models\Localidad;
 
 class User extends Authenticatable
 {
@@ -21,11 +24,26 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
-    public function pedidos(){
+    public function pedidos()
+    {
         return $this->hasMany(Pedido::class, 'user_id');
     }
 
-    public function historiales(){
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class);
+    }
+
+    public function provincia()
+    {
+        return $this->belongsTo(Provincia::class);
+    }
+    public function localidad()
+    {
+        return $this->belongsTo(Localidad::class);
+    }
+    public function historiales()
+    {
         return $this->hasMany(Historial::class, 'user_id');
     }
 
@@ -57,20 +75,19 @@ class User extends Authenticatable
 
         $pedidos = $this->pedidos;
         $reputaciones = collect();
-        if(sizeof($pedidos)>0){
+        if (sizeof($pedidos) > 0) {
             foreach ($pedidos as $pedido) {
-                if($pedido->reputacion !=null){
+                if ($pedido->reputacion != null) {
                     $reputaciones->push($pedido->reputacion);
                 }
             }
-
         }
         return $reputaciones->sortByDesc('created_at')->first();
     }
     public function getCalificacion()
     {
         $reputacion = $this->getReputacion();
-        if($reputacion==null){
+        if ($reputacion == null) {
             return Calificacion::where('nombre', 'Buena')->firstOrFail();
         }
         return $this->getReputacion()->calificacion;
@@ -78,18 +95,17 @@ class User extends Authenticatable
 
     public function getPenalizacion()
     {
-        if($this->getReputacion()!=null){
+        if ($this->getReputacion() != null) {
             $reputacion = $this->getReputacion();
             $calificacion = $reputacion->calificacion;
             $fechaExpiracion = $reputacion->created_at->addDays($calificacion->penalizacion);
-            if($fechaExpiracion->lessThanOrEqualTo(Carbon::now())){
+            if ($fechaExpiracion->lessThanOrEqualTo(Carbon::now())) {
                 return 0;
-            }else{
+            } else {
                 return $fechaExpiracion->diffInDays(Carbon::now());
             }
-        }else{
+        } else {
             return 0;
         }
-
     }
 }

@@ -39,14 +39,14 @@
                                     <div class="d-flex justify-content-between py-1  border">
 
                                         <div class="d-flex justify-content-between">
-                                            <div class="pr-3 ml-2">
-                                                {{$seguimiento->getFechaLlegada()->format('d/m/Y')}}
+                                            <div class="pr-2 ml-1">
+                                                {{$seguimiento->getFechaLlegada()->format('d/m/Y G:i ')}}
                                             </div>
                                             <div>
                                                 <i class="fas fa-arrow-right my-auto"></i>
                                             </div>
-                                            <div class="pl-3 mr-2">
-                                                {{$seguimiento->getFechaSalida()->format('d/m/Y')}}
+                                            <div class="pl-2 mr-1">
+                                                {{$seguimiento->getFechaSalida()->format('d/m/Y G:i ')}}
                                             </div>
                                         </div>
 
@@ -162,9 +162,8 @@
                         @foreach ($pedido->seguimientos as $seguimiento)
                         <tr>
                             <td>{{$seguimiento->item->nombre}}</td>
-                            <td style="text-align: end">${{$seguimiento->getCalculoPrecio()}}</td>
+                            <td style="text-align: end">${{number_format($seguimiento->getCalculoPrecio(),2)}}</td>
                         </tr>
-
                         @endforeach
                     </tbody>
 
@@ -187,7 +186,7 @@
                         <tr>
                             <td>{{$adicional->item->nombre}}<label
                                     class="text-muted">({{$seguimiento->item->nombre}})</label></td>
-                            <td style="text-align: end">${{$adicional->getCalculoPrecio()}}</td>
+                            <td style="text-align: end">${{number_format($adicional->getCalculoPrecio(),2)}}</td>
                         </tr>
                         @endforeach
                         @endforeach
@@ -200,7 +199,7 @@
                         <h5><strong>TOTAL</strong></h5>
                     </label>
                     <label>
-                        <h5><strong>${{$pedido->getPrecioTotal()}}</strong></h5>
+                        <h5><strong>${{number_format($pedido->getPrecioTotal(),2)}}</strong></h5>
                     </label>
                 </div>
                 <br>

@@ -49,7 +49,7 @@ class PedidoController extends Controller
                 $items->push($item);
             }
         }
-        $pedidos = Pedido::all()->where('user_id', '!=', null);
+        $pedidos = Pedido::all()->where('user_id', '!=', null)->sortBy('FechaInicial');
         return view('admin_panel.pedidos.index', compact('pedidos', 'estados', 'usuarios', 'items'));
     }
     public function estadisticas()
@@ -74,19 +74,51 @@ class PedidoController extends Controller
         $tipoItem = TipoItem::where('nombre', 'Albergues')->firstOrFail();
         $items = $tipoItem->items;
         $habitaciones = array();
+        $habita = collect();
         $ocurrencias = collect();
         foreach ($items as $id => $item) {
             $hab = $item->nombre;
+            $habita->push($item);
+            array_push($habitaciones, $hab);
             $oc = sizeof(Seguimiento::all()->where('item_id', $item->id));
             $ocurrencias->add($oc);
-            $dc = $colores->random();
-            $chart->dataset($hab, 'bar', $ocurrencias)->color($dc)->backgroundColor($dc);
-            $ocurrencias = collect();
         }
+        $dc = $colores->random();
+        $chart->dataset('Cantidad de Ocurrencias', 'bar', $ocurrencias)->color($dc)->backgroundColor($dc);
         $chart->labels = $habitaciones;
         $chart->barWidth(0.25);
         // return $iniciados;
-        return view('admin_panel.pedidos.estadisticas', compact('iniciados', 'solicitados', 'pagospendientes', 'finalizados', 'chart'));
+
+        //////HABITACION MAS SOLICITADA EN QUE FECHAS
+        $habitacion = $habita->first();
+        $ocurrencias = collect();
+        $meses = array();
+        for ($i = 01; $i <= 12; $i++) {
+            $ha= $i + 1;
+            if($i<10){
+                $desde ='2019-0'. $i .'-01';
+                $hasta ='2019-0'. $ha .'-01';
+            }else{
+                $desde ='2019-'. $i .'-01';
+                $hasta ='2019-'. $ha .'-01';
+            }
+
+            // return $desde . $hasta;
+            $from = date($desde);
+            $to = date($hasta);
+            $ocurrencia = sizeof(Seguimiento::all()->where('item_id', $habitacion->id)->whereBetween('fechaInicial', [$from, $to]));
+            $ocurrencias->push($ocurrencia);
+            array_push($meses, Carbon::create()->month($i)->format('F'));
+        }
+        // return Carbon::create()->month(1)->format('F');
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
+        $ocurrenciass = [2,3,2,13,7,8,1,23,12,1,5,$ocurrencias[11]];
+        $chart2 = new PedidosChart;
+        $chart2->dataset('Ocurrencias', 'line', $ocurrenciass)->color($dc);
+        $chart2->labels = $meses;
+        $chart2->barWidth(0.25);
+        return view('admin_panel.pedidos.estadisticas', compact('iniciados', 'solicitados', 'pagospendientes', 'finalizados', 'chart' , 'chart2'));
     }
 
 
@@ -103,7 +135,6 @@ class PedidoController extends Controller
     public function reporte(Request $request)
     {
         $pedidos = Pedido::all()->where('user_id', '!=', null);
-        // return $request;
         $usuario = null;
         $item = null;
         $estado = null;
@@ -158,13 +189,13 @@ class PedidoController extends Controller
 
 
 
-
+        $nombre = 'Reporte-Pedidos-' . Carbon::now()->format('d/m/Y G:i') . '.pdf';
         $pdf = PDF::loadView('admin_panel.pdf.pedidos', compact('pedidos', 'usuario', 'item', 'estado', 'llegada', 'salida'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
+        return $pdf->download($nombre);
     }
 
     /**
@@ -243,9 +274,12 @@ class PedidoController extends Controller
     }
     public function procesar_revision(Request $request)
     {
-
         if ($request->calificacion != null) {
             $pedido = Pedido::find($request->pedido);
+            if($pedido->calificacion!=null){
+                Alert::error('Este pedido ya se encuentra verificado', 'Error en Valoracion')->persistent();
+                return redirect()->route('pedidos.index');
+            }
             $pedido->estado_id = $pedido->flujoTrabajo->estado_siguiente($pedido->estado)->id;
             $pedido->save();
             $reputacion = Reputacion::create();
@@ -311,7 +345,6 @@ class PedidoController extends Controller
 
     public function consultar_disponibilidad(Request $request)
     {
-        // return $request;
         if ($request->tipoItem != null) {
             $tipoItem = TipoItem::find($request->tipoItem);
             if ($tipoItem->nombre != 'Albergues') {
@@ -647,12 +680,14 @@ class PedidoController extends Controller
 
     public function generar_documentacion(Pedido $pedido)
     {
+        $nombre = 'Solicitud-Pedido-'.$pedido->id.Carbon::now().'.pdf';
         $pdf = PDF::loadView('admin_panel.pdf.documentacion', compact('pedido'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->download();
+        // return $pdf->download($nombre);
+        return $pdf->stream();
     }
 
     function asignar_estado(Request $request)
@@ -836,8 +871,9 @@ class PedidoController extends Controller
 
     public function seguimiento(Pedido $pedido)
     {
+
         $historiales = $pedido->historiales;
-        return view('admin_panel.pedidos.seguimiento', compact('historiales'));
+        return view('admin_panel.pedidos.seguimiento', compact('historiales', 'pedido'));
     }
     public function solicitudes()
     {
@@ -880,9 +916,15 @@ class PedidoController extends Controller
     public function finalizar_pedido(Request $request)
     {
         // return $request;
+        $this->validar_finalizacion();
+
+        // return redirect()->back();
+
         $pedido = Pedido::find($request->pedido_id);
+        // return $pedido;
         $historial = Historial::create();
         $pedido->estado_id = $pedido->flujoTrabajo->estado_final()->id;
+        $pedido->aviso = $request->aviso;
         $historial->user_id = auth()->user()->id;
         $historial->pedido_id = $pedido->id;
         $historial->estado_id = $pedido->estado_id;
@@ -996,6 +1038,13 @@ class PedidoController extends Controller
             'hora_inicial' => 'required',
             'hora_final' => 'required',
             'tipoItem' => 'required',
+        ]);
+    }
+
+    public function validar_finalizacion()
+    {
+        return request()->validate([
+            'aviso' => 'required'
         ]);
     }
 }

@@ -17,7 +17,7 @@
 
         @foreach ($items as $item)
         <form action="{{ route("pedidos.detalle_pedido") }}" method="POST" enctype="multipart/form-data">
-            <div class="card m-4 shadow-sm " style="width: 20rem;">
+            <div class="card m-4 card-hover" style="width: 20rem;">
                 <input type="hidden" id="item" name="item_id" class="form-control" value="{{$item->id}}">
                 {{-- Cambiar al agregar fotos --}}
                 @if ($item->tipoItem->nombre=='Albergues')

@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Date\Date;
 
 class Seguimiento extends Model
 {
@@ -33,8 +34,18 @@ class Seguimiento extends Model
         $fecha = Carbon::create($this->fechaInicial);
         return $fecha;
     }
+
+    public function getFechaLlegadaDoc(){
+        $fecha = Date::create($this->fechaInicial)->format('l d F Y H:i A');
+        return $fecha;
+    }
+
     public function getFechaSalida(){
         $fecha = Carbon::create($this->fechaFinal);
+        return $fecha;
+    }
+    public function getFechaSalidaDoc(){
+        $fecha = Date::create($this->fechaFinal)->format('l d F Y H:i A');
         return $fecha;
     }
 

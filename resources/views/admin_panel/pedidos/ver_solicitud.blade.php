@@ -6,8 +6,14 @@
 
         <div class="card card-primary card-outline">
             <div class="card-header border-bottom">
-                <h3 class="profile-username text-center"><strong>Solicitud de Pedido N°: {{ $pedido->id }}</strong>
-                </h3>
+                <div class="d-flex justify-content-between">
+                        <h3 class="profile-username text-center"><strong>Solicitud de Pedido N°: {{ $pedido->id }}</strong>
+                        </h3>
+                        <a class="btn btn-danger my-auto">
+                            <i class="fal fa-file-pdf" style="color: white; font-size: 20px"></i>
+                        </a>
+                </div>
+
             </div>
             <div class="card-body box-profile">
                 <div class=" row">

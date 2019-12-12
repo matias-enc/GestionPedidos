@@ -31,7 +31,7 @@
                                 <td class="text-center">{{$pedido->getFechaSolicitud()->format('d/m/y H:i')}}</td>
                                 <td class="text-center">{{$pedido->getFechaInicial()->format('d/m/y H:i')}}</td>
                                 <td class="text-center">
-                                    <span class="badge badge-warning">{{ $pedido->usuario->name }}</span>
+                                    <span class="badge badge-warning">{{ $pedido->usuario->name }} {{ $pedido->usuario->apellido }}</span>
                                 </td>
                                 <td>
                                     @foreach ($pedido->seguimientos as $seguimiento)

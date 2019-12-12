@@ -163,6 +163,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Cardumen\ArgentinaProvinciasLocalidades\ArgentinaProvinciasLocalidades::class,
+        Jenssegers\Date\DateServiceProvider::class,
+
+
 
         /*
          * Package Service Providers...
@@ -229,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Alert' => UxWeb\SweetAlert\SweetAlert::class,
         'Pusher' => Pusher\Pusher::class,
+        'Date' => Jenssegers\Date\Date::class,
     ],
 
 ];

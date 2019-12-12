@@ -24,6 +24,8 @@ use App\HistorialSeguimiento;
 use App\Reputacion;
 use App\User;
 use App\Charts\PedidosChart;
+use Jenssegers\Date\Date;
+// use Illuminate\Support\Facades\Date;
 
 class PedidoController extends Controller
 {
@@ -680,14 +682,17 @@ class PedidoController extends Controller
 
     public function generar_documentacion(Pedido $pedido)
     {
+        Date::setLocale('es');
+        $fecha= Date::now()->format('l d F Y');
+        // return $fecha;
         $nombre = 'Solicitud-Pedido-'.$pedido->id.Carbon::now().'.pdf';
-        $pdf = PDF::loadView('admin_panel.pdf.documentacion', compact('pedido'));
+        $pdf = PDF::loadView('admin_panel.pdf.documentacion', compact('pedido', 'fecha'));
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        // return $pdf->download($nombre);
-        return $pdf->stream();
+        return $pdf->download($nombre);
+        // return $pdf->stream();
     }
 
     function asignar_estado(Request $request)
@@ -797,17 +802,19 @@ class PedidoController extends Controller
 
     public function generar_documentacion_historial(HistorialSeguimiento $historial)
     {
+        $fecha= Date::now()->format('l d F Y');
         $seguimiento = $historial->seguimiento;
         if ($historial->estado->nombre == 'Entregado') {
-            $pdf = PDF::loadView('admin_panel.pdf.entrega', compact('seguimiento'));
+            $pdf = PDF::loadView('admin_panel.pdf.entrega', compact('seguimiento', 'fecha'));
         } elseif ($historial->estado->nombre == 'Terminado') {
-            $pdf = PDF::loadView('admin_panel.pdf.devolucion', compact('seguimiento'));
+            $pdf = PDF::loadView('admin_panel.pdf.devolucion', compact('seguimiento', 'fecha'));
         }
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
         $y = $canvas->get_height() - 35;
         $pdf->getDomPDF()->get_canvas()->page_text(500, $y, "Pagina {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->download('comprobante_' . $seguimiento->item->nombre . '_' . $seguimiento->estado->nombre . '.pdf');
+        // return $pdf->stream();
     }
 
     public function asignar_documentacion_historial(Request $request, HistorialSeguimiento $historial)

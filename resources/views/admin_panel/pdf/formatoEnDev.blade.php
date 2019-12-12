@@ -27,7 +27,7 @@
 
 <body>
     <div style="padding-top: 55px; padding-left: 55px; padding-right: 55px; line-height: 20px; font-size: 19px">
-        <h5>Señores encargados de la: <br> Municipalidad de Apostoles, Misiones <br>
+        <h5>    Municipalidad de Apostoles, Misiones <br>
             Juan de San Martín 70 - N3350 - Apóstoles, Misiones <br>
             S_____________/_____________D:
         </h5>
